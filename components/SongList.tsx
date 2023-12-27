@@ -9,23 +9,21 @@ import * as DocumentPicker from "expo-document-picker";
 import * as FileSystem from "expo-file-system";
 import { StorageAccessFramework as SAF } from "expo-file-system";
 import { songItemType } from "../utils/types";
+import { directoryUri } from "../utils/global";
 
 // gpt ne diya hai :D
 const regex = /(?<=%2F)[0-9a-zA-Z]+(?=\.mp4)/;
-export const directoryUri =
-	"content://com.android.externalstorage.documents/tree/primary%3ADownload%2FSongs";
 
 const SongList = () => {
 	const [dataArr, setDataArr] = useState<songItemType[]>(SongData);
 	useEffect(() => {
 		const test = async () => {
-			// const permissions = await SAF.requestDirectoryPermissionsAsync();
-			// if (!permissions.granted) return;
+			const permissions = await SAF.requestDirectoryPermissionsAsync();
+			if (!permissions.granted) return;
 			// const { directoryUri } = permissions;
-
 			const filesInRoot = await SAF.readDirectoryAsync(directoryUri);
 			// console.log(filesInRoot);
-
+			// console.log(filesInRoot);
 			// filesInRoot.map((item) => {
 			// 	const match = item.match(regex);
 			// 	if (match) {

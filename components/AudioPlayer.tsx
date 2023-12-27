@@ -1,9 +1,27 @@
+import { useContext } from "react";
 import { COLORS } from "../constants/theme";
-import { View } from "./Themed";
-import { StyleSheet } from "react-native";
+import { View, Text } from "./Themed";
+import { Pressable, StyleSheet } from "react-native";
+import { AudioContext } from "../utils/AudioContext";
 
 const AudioPlayer = () => {
-	return <View style={styles.container}></View>;
+	const audioContext = useContext(AudioContext);
+	return (
+		<View style={styles.container}>
+			<Pressable
+				onPress={() => {
+					audioContext?.setStatus((prev) => {
+						if (prev === "paused") return "playing";
+						else return "paused";
+					});
+				}}
+			>
+				<Text>
+					{audioContext?.status === "paused" ? "Play" : "Pause"}
+				</Text>
+			</Pressable>
+		</View>
+	);
 };
 
 export default AudioPlayer;

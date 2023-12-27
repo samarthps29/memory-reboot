@@ -1,25 +1,19 @@
-import { Audio } from "expo-av";
-import { useState } from "react";
+import { useContext } from "react";
 import { Image, Pressable, StyleSheet } from "react-native";
 import { COLORS, FONT, SIZES } from "../constants/theme";
+import { AudioContext } from "../utils/AudioContext";
+import { audioUri } from "../utils/global";
 import { songItemType } from "../utils/types";
 import { Text, View } from "./Themed";
 
 const SongItem = ({ song }: { song: songItemType }) => {
-	const videoUri =
-		"content://com.android.externalstorage.documents/tree/primary%3ADownload%2FSongs/document/primary%3ADownload%2FSongs%2FBX7exLYSEy8.mp4";
-
-	const [audio, setAudio] = useState<Audio.Sound | null>(null);
-	const play = async () => {
-		const { sound } = await Audio.Sound.createAsync({ uri: videoUri });
-		setAudio(sound);
-		await sound.playAsync();
-	};
-
+	const audioContext = useContext(AudioContext);
 	return (
 		<Pressable
 			onPress={() => {
-				play();
+				const uri = audioUri + "%2F" + song.sid + ".mp4";
+				// console.log(uri);
+				audioContext?.setSoundUri(uri);
 			}}
 		>
 			<View style={styles.container}>
