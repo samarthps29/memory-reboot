@@ -1,0 +1,33 @@
+// const [status, setStatus] = useState<
+	// 	AVPlaybackStatusSuccess | AVPlaybackStatus | null
+	// >(null);
+// const [show, setShow] = useState(false);
+	// const videoRef = useRef(null);
+{/* {show && (
+				<View
+					style={{
+						// position: "fixed",
+						width: "100%",
+						height: 200,
+					}}
+				>
+					<Video
+						ref={videoRef}
+						useNativeControls
+						resizeMode={ResizeMode.CONTAIN}
+						isLooping
+						source={{ uri: videoUri }}
+						style={{ flex: 1, alignSelf: "stretch" }}
+						onPlaybackStatusUpdate={(status) => setStatus(status)}
+					/>
+					<Pressable
+						onPress={() =>
+							status?.isPlaying
+								? videoRef.current?.pauseAsync()
+								: videoRef.current?.playAsync()
+						}
+					>
+						<Text>play/pause</Text>
+					</Pressable>
+				</View>
+			)} */}
