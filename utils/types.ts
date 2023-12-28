@@ -1,4 +1,5 @@
-import { ImageProps } from "react-native";
+import dayjs from "dayjs";
+
 export type thumbnailItemType = {
 	url: string;
 	height: number;
@@ -6,11 +7,14 @@ export type thumbnailItemType = {
 };
 
 export type songItemType = {
+	itemUri: string;
 	sid: string;
 	sname: string;
 	aname: string;
 	duration: string;
-	thumbnail: ImageProps;
+	thumbnail: string;
+	downloaded: boolean;
+	downloadedAt: dayjs.Dayjs;
 };
 
 export type videoItemType = {

@@ -1,43 +1,29 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { StyleSheet } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
-import { SongData } from "../constants/SongData";
 import { SIZES } from "../constants/theme";
+import { StorageContext } from "../utils/StorageContext";
+import { songItemType } from "../utils/types";
 import SongItem from "./SongItem";
 import { View } from "./Themed";
-import * as DocumentPicker from "expo-document-picker";
-import * as FileSystem from "expo-file-system";
-import { StorageAccessFramework as SAF } from "expo-file-system";
-import { songItemType } from "../utils/types";
-import { directoryUri } from "../utils/global";
-
-// gpt ne diya hai :D
-const regex = /(?<=%2F)[0-9a-zA-Z]+(?=\.mp4)/;
 
 const SongList = () => {
-	const [dataArr, setDataArr] = useState<songItemType[]>(SongData);
+	const storageContext = useContext(StorageContext);
+	const [songData, setSongData] = useState<songItemType[]>([]);
+
 	useEffect(() => {
-		const test = async () => {
-			const permissions = await SAF.requestDirectoryPermissionsAsync();
-			if (!permissions.granted) return;
-			// const { directoryUri } = permissions;
-			const filesInRoot = await SAF.readDirectoryAsync(directoryUri);
-			// console.log(filesInRoot);
-			// console.log(filesInRoot);
-			// filesInRoot.map((item) => {
-			// 	const match = item.match(regex);
-			// 	if (match) {
-			// 		console.log(match[0]);
-			// 	}
-			// });
-		};
-		test();
-	}, []);
+		setSongData(() => {
+			return (
+				storageContext?.songData.filter((item) => item.downloaded) || []
+			);
+		});
+	}, [storageContext?.songData]);
+
 	return (
 		<View style={styles.container}>
 			<FlatList
 				showsVerticalScrollIndicator={false}
-				data={dataArr}
+				data={songData}
 				renderItem={({ item }) => <SongItem song={item} />}
 				contentContainerStyle={{ rowGap: 6 }}
 			/>

@@ -10,6 +10,7 @@ import { useEffect } from "react";
 import { useColorScheme } from "react-native";
 import { SwitchPageContextProvider } from "../utils/SwitchPageContext";
 import { AudioContextProvider } from "../utils/AudioContext";
+import { StorageContextProvider } from "../utils/StorageContext";
 
 export {
 	// Catch any errors thrown by the Layout component.
@@ -56,16 +57,18 @@ function RootLayoutNav() {
 		<ThemeProvider
 			value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
 		>
-			<AudioContextProvider>
-				<SwitchPageContextProvider>
-					<Stack>
-						<Stack.Screen
-							name="index"
-							options={{ headerShown: false }}
-						/>
-					</Stack>
-				</SwitchPageContextProvider>
-			</AudioContextProvider>
+			<StorageContextProvider>
+				<AudioContextProvider>
+					<SwitchPageContextProvider>
+						<Stack>
+							<Stack.Screen
+								name="index"
+								options={{ headerShown: false }}
+							/>
+						</Stack>
+					</SwitchPageContextProvider>
+				</AudioContextProvider>
+			</StorageContextProvider>
 		</ThemeProvider>
 	);
 }

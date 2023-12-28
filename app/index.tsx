@@ -47,5 +47,6 @@ const styles = StyleSheet.create({
 	mainContainer: {
 		flex: 1,
 		padding: SIZES.medium,
+		paddingBottom: SIZES.small + 50,
 	},
 });

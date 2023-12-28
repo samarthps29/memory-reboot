@@ -1,11 +1,65 @@
-import { StyleSheet, Image, useColorScheme } from "react-native";
+import { StorageAccessFramework as SAF } from "expo-file-system";
+import { Image, Pressable, StyleSheet, useColorScheme } from "react-native";
 import { COLORS, FONT, SIZES } from "../constants/theme";
-import { View, Text } from "./Themed";
+import { directoryUri, fileUri, filter, ytTemplate } from "../utils/global";
 import { songItemType, videoItemType } from "../utils/types";
-import { filter } from "../utils/global";
+import { Text, View } from "./Themed";
+import dayjs from "dayjs";
+import { useContext } from "react";
+import { StorageContext } from "../utils/StorageContext";
 
 const VideoItem = ({ video }: { video: videoItemType }) => {
 	const colorScheme = useColorScheme();
+	const storageContext = useContext(StorageContext);
+	const handleDownload = async () => {
+		// this song object goes into async storage
+		const songObj: songItemType = {
+			sid: video.id.videoId,
+			sname: video.snippet.title,
+			aname: video.snippet.channelTitle,
+			thumbnail: video.snippet.thumbnails.high.url,
+			itemUri: "",
+			duration: "",
+			downloaded: false,
+			downloadedAt: dayjs(),
+		};
+		storageContext?.setSongData((prev) => {
+			return [...prev, songObj];
+		});
+		storageContext?.setSongDataUpdate(true);
+		storageContext?.setVidStatusDict((prev) => {
+			return { ...prev, [video.id.videoId]: "pending" };
+		});
+
+		// write the url to data.txt
+		const files = await SAF.readDirectoryAsync(directoryUri);
+		const dataFileUri = fileUri + "%2Fdata.txt";
+		if (files.includes(dataFileUri)) {
+			const content = await SAF.readAsStringAsync(dataFileUri);
+			await SAF.writeAsStringAsync(
+				dataFileUri,
+				content + ytTemplate(video.id.videoId) + ";"
+			);
+		} else {
+			const file = await SAF.createFileAsync(
+				directoryUri,
+				"data.txt",
+				"text/plain"
+			);
+			await SAF.writeAsStringAsync(
+				file,
+				ytTemplate(video.id.videoId) + ";"
+			);
+		}
+	};
+
+	const checkAvailabilityStatus = (id: string) => {
+		const status = storageContext?.vidStatusDict[id];
+		if (status === undefined) return "Download";
+		else if (status === "pending") return "Will be downloaded";
+		else return "Downloaded";
+	};
+
 	return (
 		<View
 			style={[
@@ -79,6 +133,17 @@ const VideoItem = ({ video }: { video: videoItemType }) => {
 					<Text style={styles.artistTitle}>
 						{filter(video.snippet.channelTitle)}
 					</Text>
+					<Pressable
+						onPress={handleDownload}
+						disabled={
+							checkAvailabilityStatus(video.id.videoId) !==
+							"Download"
+						}
+					>
+						<Text style={styles.artistTitle}>
+							{checkAvailabilityStatus(video.id.videoId)}
+						</Text>
+					</Pressable>
 				</View>
 			</View>
 		</View>
