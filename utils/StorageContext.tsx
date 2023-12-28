@@ -76,7 +76,7 @@ export const StorageContextProvider = ({
 
 	const refreshSongs = async () => {
 		const files = await SAF.readDirectoryAsync(directoryUri);
-		console.log(files);
+		// console.log(files);
 		// reduce calculation for setSongData and setVidStatusDict
 		setSongData((prev) => {
 			return prev.map((item) => {

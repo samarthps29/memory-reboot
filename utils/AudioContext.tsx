@@ -1,5 +1,10 @@
-import { Audio } from "expo-av";
-import { createContext, useEffect, useState } from "react";
+import {
+	AVPlaybackStatus,
+	AVPlaybackStatusError,
+	AVPlaybackStatusSuccess,
+	Audio,
+} from "expo-av";
+import { createContext, useCallback, useEffect, useState } from "react";
 
 export const AudioContext = createContext<{
 	sound: Audio.Sound | null;
@@ -16,16 +21,29 @@ export const AudioContextProvider = ({ children }: React.PropsWithChildren) => {
 	const [soundUri, setSoundUri] = useState<string>("");
 	const [sound, setSound] = useState<Audio.Sound | null>(null);
 	const [status, setStatus] = useState<string>("paused");
+	const [audioFinish, setAudioFinish] = useState<boolean>(false);
+
+	const handlePlaybackStatusUpdate = (
+		status: AVPlaybackStatusSuccess | AVPlaybackStatusError
+	) => {
+		if (status.isLoaded && status.didJustFinish) {
+			setAudioFinish(true);
+		}
+	};
 
 	const changeAudio = async () => {
 		if (soundUri !== "") {
 			await sound?.unloadAsync();
-			// onPlaybackStatusUpdate
-			const { sound: newSound } = await Audio.Sound.createAsync({
-				uri: soundUri,
-			});
+			const { sound: newSound } = await Audio.Sound.createAsync(
+				{
+					uri: soundUri,
+				}
+				// { isLooping: false }
+			);
+			newSound.setOnPlaybackStatusUpdate(handlePlaybackStatusUpdate);
 			setSound(newSound);
 			setStatus("playing");
+			setAudioFinish(false);
 		}
 	};
 
@@ -45,7 +63,11 @@ export const AudioContextProvider = ({ children }: React.PropsWithChildren) => {
 		toggleAudio();
 	}, [status, sound]);
 
-	useEffect(() => {}, []);
+	useEffect(() => {
+		if (audioFinish && songInfo["loop"] === "yes") {
+			changeAudio();
+		}
+	}, [songInfo, audioFinish]);
 
 	return (
 		<AudioContext.Provider
