@@ -38,20 +38,17 @@ export const StorageContextProvider = ({
 
 	const checkDirectoryAccess = async () => {
 		const directoryUriStored = await AsyncStorage.getItem("directoryUri");
-		if (directoryUriStored === null) {
+		// console.log(directoryUriStored);
+		if (directoryUriStored === null || directoryUriStored.trim() === "") {
 			const permissions = await SAF.requestDirectoryPermissionsAsync();
 			if (!permissions.granted) return;
 			const { directoryUri: uri } = permissions;
+			// console.log(uri);
 			setDirectoryUri(uri);
-			await AsyncStorage.setItem("directoryUri", JSON.stringify(uri));
+			await AsyncStorage.setItem("directoryUri", uri);
 		} else {
 			setDirectoryUri(directoryUriStored);
 		}
-		// const permissions = await SAF.requestDirectoryPermissionsAsync();
-		// if (!permissions.granted) return;
-		// const { directoryUri: uri } = permissions;
-		// setDirectoryUri(uri);
-		// await AsyncStorage.setItem("directoryUri", uri);
 	};
 
 	const updateDataFile = async () => {
@@ -79,6 +76,7 @@ export const StorageContextProvider = ({
 
 	const refreshSongs = async () => {
 		const files = await SAF.readDirectoryAsync(directoryUri);
+		console.log(files);
 		// reduce calculation for setSongData and setVidStatusDict
 		setSongData((prev) => {
 			return prev.map((item) => {
@@ -98,7 +96,7 @@ export const StorageContextProvider = ({
 			});
 			return dict;
 		});
-		// updateDataFile(); break shit if enabled
+		// updateDataFile(); this deletes the entire directory ahhhhhhhhhhhh never uncomment
 		setShouldRefresh(false);
 	};
 
