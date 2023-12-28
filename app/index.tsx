@@ -16,6 +16,7 @@ import { videoItemType } from "../utils/types";
 const index = () => {
 	const [videoData, setVideoData] =
 		useState<videoItemType[]>(defaultVideoData);
+	const [searchTerm, setSearchTerm] = useState("");
 	const switchContext = useContext(SwitchPageContext);
 	return (
 		<SafeAreaView style={styles.screenContainer}>
@@ -23,8 +24,11 @@ const index = () => {
 				<StatusBar hidden />
 				{!switchContext?.switchPage ? (
 					<>
-						<PrimaryHeader />
-						<SongList />
+						<PrimaryHeader
+							searchTerm={searchTerm}
+							setSearchTerm={setSearchTerm}
+						/>
+						<SongList searchTerm={searchTerm} />
 					</>
 				) : (
 					<>

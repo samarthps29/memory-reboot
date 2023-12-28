@@ -25,10 +25,9 @@ SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
 	const [loaded, error] = useFonts({
-		ageoRegular: require("../assets/fonts/Ageo.otf"),
-		ageoMedium: require("../assets/fonts/AgeoMedium.otf"),
-		ageoBold: require("../assets/fonts/AgeoBold.otf"),
-
+		ageoRegular: require("../assets/fonts/AgeoRegular.ttf"),
+		ageoMedium: require("../assets/fonts/AgeoMedium.ttf"),
+		ageoBold: require("../assets/fonts/AgeoBold.ttf"),
 		...FontAwesome.font,
 	});
 

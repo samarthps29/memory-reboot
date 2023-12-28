@@ -7,17 +7,24 @@ import { songItemType } from "../utils/types";
 import SongItem from "./SongItem";
 import { View } from "./Themed";
 
-const SongList = () => {
+const SongList = ({ searchTerm }: { searchTerm: string }) => {
 	const storageContext = useContext(StorageContext);
+	// local song data
 	const [songData, setSongData] = useState<songItemType[]>([]);
 
 	useEffect(() => {
 		setSongData(() => {
 			return (
-				storageContext?.songData.filter((item) => item.downloaded) || []
+				storageContext?.songData.filter(
+					(item) =>
+						item.downloaded &&
+						item.sname
+							.toLowerCase()
+							.includes(searchTerm.toLowerCase())
+				) || []
 			);
 		});
-	}, [storageContext?.songData]);
+	}, [storageContext?.songData, searchTerm]);
 
 	return (
 		<View style={styles.container}>

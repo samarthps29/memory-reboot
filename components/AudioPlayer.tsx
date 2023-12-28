@@ -24,10 +24,10 @@ const AudioPlayer = () => {
 			</View>
 
 			<View style={styles.songTitleContainer}>
-				<Text style={styles.songText}>
-					{audioContext?.songName === ""
+				<Text style={styles.songText} numberOfLines={1}>
+					{audioContext?.songInfo["sname"] === undefined
 						? "Play Something"
-						: reducedTitle(audioContext?.songName || "")}
+						: reducedTitle(audioContext?.songInfo["sname"] || "")}
 				</Text>
 			</View>
 			<View style={styles.buttonContainer}>
@@ -55,7 +55,7 @@ export default AudioPlayer;
 const styles = StyleSheet.create({
 	container: {
 		// width: "95%",
-		// height: 48,
+		height: 50,
 		backgroundColor: COLORS.white,
 		position: "absolute",
 		bottom: 0,

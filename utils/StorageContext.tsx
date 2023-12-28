@@ -2,6 +2,7 @@ import { SetStateAction, createContext, useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StorageAccessFramework as SAF } from "expo-file-system";
 import { songItemType } from "./types";
+import { ytTemplate } from "./global";
 
 export const StorageContext = createContext<{
 	songData: songItemType[];
@@ -16,6 +17,13 @@ export const StorageContext = createContext<{
 	setVidStatusDict: React.Dispatch<SetStateAction<Record<string, string>>>;
 } | null>(null);
 
+export const checkSubstring = (substring: string, stringArr: string[]) => {
+	for (const idx in stringArr) {
+		if (stringArr[idx].includes(substring)) return stringArr[idx];
+	}
+	return null;
+};
+
 export const StorageContextProvider = ({
 	children,
 }: React.PropsWithChildren) => {
@@ -28,17 +36,49 @@ export const StorageContextProvider = ({
 		{}
 	);
 
-	const checkSubstring = (substring: string, stringArr: string[]) => {
-		for (const idx in stringArr) {
-			if (stringArr[idx].includes(substring)) return stringArr[idx];
+	const checkDirectoryAccess = async () => {
+		const directoryUriStored = await AsyncStorage.getItem("directoryUri");
+		if (directoryUriStored === null) {
+			const permissions = await SAF.requestDirectoryPermissionsAsync();
+			if (!permissions.granted) return;
+			const { directoryUri: uri } = permissions;
+			setDirectoryUri(uri);
+			await AsyncStorage.setItem("directoryUri", JSON.stringify(uri));
+		} else {
+			setDirectoryUri(directoryUriStored);
 		}
-		return null;
+		// const permissions = await SAF.requestDirectoryPermissionsAsync();
+		// if (!permissions.granted) return;
+		// const { directoryUri: uri } = permissions;
+		// setDirectoryUri(uri);
+		// await AsyncStorage.setItem("directoryUri", uri);
+	};
+
+	const updateDataFile = async () => {
+		const files = await SAF.readDirectoryAsync(directoryUri);
+		const dataFileUri = checkSubstring("data.txt", files);
+
+		const pulledSongs = songData
+			.filter((item) => !item.downloaded)
+			.map((item) => item.sid);
+		if (dataFileUri !== null) {
+			let updatedContent: string = "";
+			pulledSongs.forEach((item) => {
+				updatedContent = updatedContent + ytTemplate(item) + ";";
+			});
+			// console.log("upd", updatedContent);
+			await SAF.deleteAsync(dataFileUri);
+			const file = await SAF.createFileAsync(
+				directoryUri,
+				"data.txt",
+				"text/plain"
+			);
+			await SAF.writeAsStringAsync(file, updatedContent);
+		}
 	};
 
 	const refreshSongs = async () => {
-		const files = await SAF.readDirectoryAsync(
-			"content://com.android.externalstorage.documents/tree/primary%3ADownload%2FSongs"
-		);
+		const files = await SAF.readDirectoryAsync(directoryUri);
 		// reduce calculation for setSongData and setVidStatusDict
 		setSongData((prev) => {
 			return prev.map((item) => {
@@ -58,6 +98,7 @@ export const StorageContextProvider = ({
 			});
 			return dict;
 		});
+		// updateDataFile(); break shit if enabled
 		setShouldRefresh(false);
 	};
 
@@ -84,40 +125,22 @@ export const StorageContextProvider = ({
 	};
 
 	useEffect(() => {
+		checkDirectoryAccess();
 		fetchData();
 	}, []);
 
 	useEffect(() => {
-		if (songDataUpdate) {
+		if (songDataUpdate && directoryUri !== "") {
 			saveData();
 		}
-	}, [songDataUpdate, songData]);
+	}, [songDataUpdate, songData, directoryUri]);
 
 	useEffect(() => {
-		if (shouldRefresh) {
+		if (shouldRefresh && directoryUri !== "") {
 			refreshSongs();
 			setSongDataUpdate(true);
 		}
-	}, [shouldRefresh, songData]);
-
-	// useEffect(() => {
-	// 		const regex = /(?<=%2F)[0-9a-zA-Z]+(?=\.)/;
-	// 	const test = async () => {
-	// 		const permissions = await SAF.requestDirectoryPermissionsAsync();
-	// 		if (!permissions.granted) return;
-	// 		const { directoryUri } = permissions;
-	// 		const filesInRoot = await SAF.readDirectoryAsync(directoryUri);
-	// 		console.log(filesInRoot);
-	// 		console.log(filesInRoot);
-	// 		filesInRoot.map((item) => {
-	// 			const match = item.match(regex);
-	// 			if (match) {
-	// 				console.log(match[0]);
-	// 			}
-	// 		});
-	// 	};
-	// 	test();
-	// }, []);
+	}, [shouldRefresh, songData, directoryUri]);
 
 	return (
 		<StorageContext.Provider

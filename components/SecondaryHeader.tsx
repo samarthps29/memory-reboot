@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { StyleSheet } from "react-native";
-import { VideoData } from "../constants/VideoData";
-import { COLORS, FONT, SIZES } from "../constants/theme";
+import { getYTdata } from "../utils/api/ytdata";
 import { videoItemType } from "../utils/types";
 import HeaderButtons from "./HeaderButtons";
 import SearchBar from "./SearchBar";
@@ -16,12 +15,12 @@ const SecondaryHeader = ({
 }) => {
 	const [searchTerm, setSearchTerm] = useState("");
 	const handleSearch = () => {
-		// getYTdata(searchTerm)
-		// 	.then((res) => {
-		// 		setVideoData(res.data.items);
-		// 	})
-		// 	.catch(() => console.log("error"));
-		setVideoData(VideoData);
+		getYTdata(searchTerm)
+			.then((res) => {
+				setVideoData(res.data.items);
+			})
+			.catch(() => console.log("error"));
+		// setVideoData(VideoData);
 	};
 	return (
 		<View style={styles.container}>

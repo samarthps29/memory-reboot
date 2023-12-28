@@ -4,15 +4,15 @@ import { createContext, useEffect, useState } from "react";
 export const AudioContext = createContext<{
 	sound: Audio.Sound | null;
 	status: string;
-	songName: string;
+	songInfo: Record<string, string>;
 	setSound: React.Dispatch<React.SetStateAction<Audio.Sound | null>>;
-	setSongName: React.Dispatch<React.SetStateAction<string>>;
+	setSongInfo: React.Dispatch<React.SetStateAction<Record<string, string>>>;
 	setStatus: React.Dispatch<React.SetStateAction<string>>;
 	setSoundUri: React.Dispatch<React.SetStateAction<string>>;
 } | null>(null);
 
 export const AudioContextProvider = ({ children }: React.PropsWithChildren) => {
-	const [songName, setSongName] = useState<string>("");
+	const [songInfo, setSongInfo] = useState<Record<string, string>>({});
 	const [soundUri, setSoundUri] = useState<string>("");
 	const [sound, setSound] = useState<Audio.Sound | null>(null);
 	const [status, setStatus] = useState<string>("paused");
@@ -20,6 +20,7 @@ export const AudioContextProvider = ({ children }: React.PropsWithChildren) => {
 	const changeAudio = async () => {
 		if (soundUri !== "") {
 			await sound?.unloadAsync();
+			// onPlaybackStatusUpdate
 			const { sound: newSound } = await Audio.Sound.createAsync({
 				uri: soundUri,
 			});
@@ -44,14 +45,16 @@ export const AudioContextProvider = ({ children }: React.PropsWithChildren) => {
 		toggleAudio();
 	}, [status, sound]);
 
+	useEffect(() => {}, []);
+
 	return (
 		<AudioContext.Provider
 			value={{
 				sound,
-				songName,
+				songInfo,
 				status,
 				setSound,
-				setSongName,
+				setSongInfo,
 				setStatus,
 				setSoundUri,
 			}}

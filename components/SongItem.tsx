@@ -19,13 +19,24 @@ const SongItem = ({ song }: { song: songItemType }) => {
 	return (
 		<Pressable
 			onPress={() => {
-				// const uri = fileUri + "%2F" + song.sid + ".mp4";
-				// console.log(uri);
-				audioContext?.setSongName(song.sname);
+				audioContext?.setSongInfo((prev) => {
+					return { ...prev, sid: song.sid, sname: song.sname };
+				});
 				audioContext?.setSoundUri(song.itemUri);
 			}}
 		>
-			<View style={styles.container}>
+			<View
+				style={[
+					{
+						backgroundColor:
+							audioContext?.songInfo["sid"] !== undefined &&
+							audioContext.songInfo["sid"] === song.sid
+								? "#c8c3d8"
+								: COLORS.white,
+					},
+					styles.container,
+				]}
+			>
 				<View style={styles.imageContainer}>
 					<Image
 						source={{ uri: song.thumbnail }}
@@ -79,7 +90,6 @@ export default SongItem;
 const styles = StyleSheet.create({
 	container: {
 		width: "100%",
-		backgroundColor: COLORS.white,
 		padding: SIZES.xSmall,
 		borderRadius: SIZES.medium,
 		flexDirection: "row",

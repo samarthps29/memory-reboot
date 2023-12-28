@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { SetStateAction, useState } from "react";
 import { Pressable, StyleSheet } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { COLORS, FONT, SIZES } from "../constants/theme";
@@ -8,9 +8,14 @@ import HeaderButtons from "./HeaderButtons";
 
 const playlists = ["all", "sam", "mreboot"];
 
-const PrimaryHeader = () => {
-	const [searchTerm, setSearchTerm] = useState("");
-	const [selectedOption, setSelectedOption] = useState(0);
+const PrimaryHeader = ({
+	searchTerm,
+	setSearchTerm,
+}: {
+	searchTerm: string;
+	setSearchTerm: React.Dispatch<SetStateAction<string>>;
+}) => {
+	// const [selectedOption, setSelectedOption] = useState(0);
 	return (
 		<View style={styles.container}>
 			<HeaderButtons optionsArr={playlists} />

@@ -1,12 +1,12 @@
+import dayjs from "dayjs";
 import { StorageAccessFramework as SAF } from "expo-file-system";
+import { useContext } from "react";
 import { Image, Pressable, StyleSheet, useColorScheme } from "react-native";
 import { COLORS, FONT, SIZES } from "../constants/theme";
+import { StorageContext, checkSubstring } from "../utils/StorageContext";
 import { directoryUri, fileUri, filter, ytTemplate } from "../utils/global";
 import { songItemType, videoItemType } from "../utils/types";
 import { Text, View } from "./Themed";
-import dayjs from "dayjs";
-import { useContext } from "react";
-import { StorageContext } from "../utils/StorageContext";
 
 const VideoItem = ({ video }: { video: videoItemType }) => {
 	const colorScheme = useColorScheme();
@@ -33,8 +33,8 @@ const VideoItem = ({ video }: { video: videoItemType }) => {
 
 		// write the url to data.txt
 		const files = await SAF.readDirectoryAsync(directoryUri);
-		const dataFileUri = fileUri + "%2Fdata.txt";
-		if (files.includes(dataFileUri)) {
+		const dataFileUri = checkSubstring("data.txt", files);
+		if (dataFileUri !== null) {
 			const content = await SAF.readAsStringAsync(dataFileUri);
 			await SAF.writeAsStringAsync(
 				dataFileUri,
@@ -58,6 +58,18 @@ const VideoItem = ({ video }: { video: videoItemType }) => {
 		if (status === undefined) return "Download";
 		else if (status === "pending") return "Will be downloaded";
 		else return "Downloaded";
+	};
+
+	const checkAge = (date: dayjs.Dayjs) => {
+		const currDate = dayjs();
+		const dDiff = currDate.diff(date, "days");
+		const mDiff = currDate.diff(date, "months");
+		const yDiff = currDate.diff(date, "years");
+		if (yDiff !== 0) {
+			return `${yDiff} years ago`;
+		} else if (mDiff !== 0) {
+			return `${mDiff} months ago`;
+		} else return `${dDiff} days ago`;
 	};
 
 	return (
@@ -97,41 +109,8 @@ const VideoItem = ({ video }: { video: videoItemType }) => {
 						marginTop: 2,
 					}}
 				>
-					<Text>
-						38
-						<Text style={{ fontFamily: FONT.medium }}>M Views</Text>
-					</Text>
-					<Text>
-						2{" "}
-						<Text style={{ fontFamily: FONT.medium }}>
-							years ago
-						</Text>
-					</Text>
-				</View>
-
-				<View
-					style={{
-						flexDirection: "row",
-						justifyContent: "space-between",
-						backgroundColor: "transparent",
-						marginTop: 4,
-					}}
-				>
-					<Text style={styles.videoTitle}>
-						{filter(video.snippet.title)}
-					</Text>
-					<Text>3:56</Text>
-				</View>
-				<View
-					style={{
-						flexDirection: "row",
-						justifyContent: "space-between",
-						backgroundColor: "transparent",
-						marginTop: 2,
-					}}
-				>
-					<Text style={styles.artistTitle}>
-						{filter(video.snippet.channelTitle)}
+					<Text style={{ fontFamily: FONT.medium }}>
+						{checkAge(dayjs(video.snippet.publishedAt))}
 					</Text>
 					<Pressable
 						onPress={handleDownload}
@@ -144,6 +123,31 @@ const VideoItem = ({ video }: { video: videoItemType }) => {
 							{checkAvailabilityStatus(video.id.videoId)}
 						</Text>
 					</Pressable>
+				</View>
+
+				<View
+					style={{
+						flexDirection: "row",
+						justifyContent: "space-between",
+						backgroundColor: "transparent",
+						marginTop: 6,
+					}}
+				>
+					<Text style={styles.videoTitle}>
+						{filter(video.snippet.title)}
+					</Text>
+				</View>
+				<View
+					style={{
+						flexDirection: "row",
+						justifyContent: "space-between",
+						backgroundColor: "transparent",
+						marginTop: 2,
+					}}
+				>
+					<Text style={styles.artistTitle}>
+						{filter(video.snippet.channelTitle)}
+					</Text>
 				</View>
 			</View>
 		</View>
@@ -168,7 +172,7 @@ const styles = StyleSheet.create({
 		marginRight: SIZES.xSmall,
 	},
 	videoTitle: {
-		width: "90%",
+		// width: "90%",
 		fontFamily: FONT.medium,
 		fontSize: 18,
 	},
