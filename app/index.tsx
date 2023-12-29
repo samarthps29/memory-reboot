@@ -12,14 +12,20 @@ import { defaultVideoData } from "../constants/VideoData";
 import { SIZES } from "../constants/theme";
 import { SwitchPageContext } from "../utils/SwitchPageContext";
 import { videoItemType } from "../utils/types";
+import FloatingDialogBox from "../components/FloatingDialogBox";
+import { FloatingContext } from "../utils/FloatingContext";
 
 const index = () => {
 	const [videoData, setVideoData] =
 		useState<videoItemType[]>(defaultVideoData);
 	const [searchTerm, setSearchTerm] = useState("");
+	const [selectedHeaderButton, setSelectedHeaderButton] =
+		useState<string>("0");
 	const switchContext = useContext(SwitchPageContext);
+	const floatingContext = useContext(FloatingContext);
 	return (
 		<SafeAreaView style={styles.screenContainer}>
+			{floatingContext?.floatToggle && <FloatingDialogBox />}
 			<View style={styles.mainContainer}>
 				<StatusBar hidden />
 				{!switchContext?.switchPage ? (
@@ -27,12 +33,21 @@ const index = () => {
 						<PrimaryHeader
 							searchTerm={searchTerm}
 							setSearchTerm={setSearchTerm}
+							selectedHeaderButton={selectedHeaderButton}
+							setSelectedHeaderButton={setSelectedHeaderButton}
 						/>
-						<SongList searchTerm={searchTerm} />
+						<SongList
+							searchTerm={searchTerm}
+							selectedHeaderButton={selectedHeaderButton}
+						/>
 					</>
 				) : (
 					<>
-						<SecondaryHeader setVideoData={setVideoData} />
+						<SecondaryHeader
+							setVideoData={setVideoData}
+							selectedHeaderButton={selectedHeaderButton}
+							setSelectedHeaderButton={setSelectedHeaderButton}
+						/>
 						<VideoList videoData={videoData} />
 					</>
 				)}

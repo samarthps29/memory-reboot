@@ -15,6 +15,7 @@ export type songItemType = {
 	thumbnail: string;
 	downloaded: boolean;
 	downloadedAt: dayjs.Dayjs;
+	playlists: string[];
 };
 
 export type videoItemType = {

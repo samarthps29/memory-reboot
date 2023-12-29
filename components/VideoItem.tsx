@@ -22,6 +22,7 @@ const VideoItem = ({ video }: { video: videoItemType }) => {
 			duration: "",
 			downloaded: false,
 			downloadedAt: dayjs(),
+			playlists: [],
 		};
 		storageContext?.setSongData((prev) => {
 			return [...prev, songObj];

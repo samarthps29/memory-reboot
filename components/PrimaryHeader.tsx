@@ -1,24 +1,32 @@
-import { SetStateAction, useState } from "react";
-import { Pressable, StyleSheet } from "react-native";
-import { ScrollView } from "react-native-gesture-handler";
+import { SetStateAction, useContext } from "react";
+import { StyleSheet } from "react-native";
 import { COLORS, FONT, SIZES } from "../constants/theme";
-import SearchBar from "./SearchBar";
-import { Text, View } from "./Themed";
+import { StorageContext } from "../utils/StorageContext";
 import HeaderButtons from "./HeaderButtons";
-
-const playlists = ["all", "sam", "mreboot"];
+import SearchBar from "./SearchBar";
+import { View } from "./Themed";
 
 const PrimaryHeader = ({
 	searchTerm,
 	setSearchTerm,
+	selectedHeaderButton,
+	setSelectedHeaderButton,
 }: {
 	searchTerm: string;
 	setSearchTerm: React.Dispatch<SetStateAction<string>>;
+	selectedHeaderButton: string;
+	setSelectedHeaderButton: React.Dispatch<SetStateAction<string>>;
 }) => {
 	// const [selectedOption, setSelectedOption] = useState(0);
+	const storageContext = useContext(StorageContext);
 	return (
 		<View style={styles.container}>
-			<HeaderButtons optionsArr={playlists} />
+			<HeaderButtons
+				optionsArr={storageContext?.playlistData || []}
+				selectedHeaderButton={selectedHeaderButton}
+				setSelectedHeaderButton={setSelectedHeaderButton}
+				source="primary"
+			/>
 			<SearchBar
 				searchTerm={searchTerm}
 				setSearchTerm={setSearchTerm}

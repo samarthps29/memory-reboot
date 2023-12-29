@@ -7,7 +7,13 @@ import { songItemType } from "../utils/types";
 import SongItem from "./SongItem";
 import { View } from "./Themed";
 
-const SongList = ({ searchTerm }: { searchTerm: string }) => {
+const SongList = ({
+	searchTerm,
+	selectedHeaderButton,
+}: {
+	searchTerm: string;
+	selectedHeaderButton: string;
+}) => {
 	const storageContext = useContext(StorageContext);
 	// local song data
 	const [songData, setSongData] = useState<songItemType[]>([]);
@@ -20,11 +26,13 @@ const SongList = ({ searchTerm }: { searchTerm: string }) => {
 						item.downloaded &&
 						item.sname
 							.toLowerCase()
-							.includes(searchTerm.toLowerCase())
+							.includes(searchTerm.toLowerCase()) &&
+						(selectedHeaderButton === "0" ||
+							item?.playlists?.includes(selectedHeaderButton))
 				) || []
 			);
 		});
-	}, [storageContext?.songData, searchTerm]);
+	}, [storageContext?.songData, searchTerm, selectedHeaderButton]);
 
 	return (
 		<View style={styles.container}>

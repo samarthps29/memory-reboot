@@ -11,6 +11,7 @@ import { useColorScheme } from "react-native";
 import { SwitchPageContextProvider } from "../utils/SwitchPageContext";
 import { AudioContextProvider } from "../utils/AudioContext";
 import { StorageContextProvider } from "../utils/StorageContext";
+import { FloatingContextProvider } from "../utils/FloatingContext";
 
 export {
 	// Catch any errors thrown by the Layout component.
@@ -57,16 +58,18 @@ function RootLayoutNav() {
 			value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
 		>
 			<StorageContextProvider>
-				<AudioContextProvider>
-					<SwitchPageContextProvider>
-						<Stack>
-							<Stack.Screen
-								name="index"
-								options={{ headerShown: false }}
-							/>
-						</Stack>
-					</SwitchPageContextProvider>
-				</AudioContextProvider>
+				<FloatingContextProvider>
+					<AudioContextProvider>
+						<SwitchPageContextProvider>
+							<Stack>
+								<Stack.Screen
+									name="index"
+									options={{ headerShown: false }}
+								/>
+							</Stack>
+						</SwitchPageContextProvider>
+					</AudioContextProvider>
+				</FloatingContextProvider>
 			</StorageContextProvider>
 		</ThemeProvider>
 	);

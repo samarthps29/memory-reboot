@@ -15,6 +15,18 @@ export const StorageContext = createContext<{
 	setShouldRefresh: React.Dispatch<SetStateAction<boolean>>;
 	vidStatusDict: Record<string, string>;
 	setVidStatusDict: React.Dispatch<SetStateAction<Record<string, string>>>;
+	playlistData: {
+		pid: string;
+		pname: string;
+	}[];
+	setPlaylistData: React.Dispatch<
+		SetStateAction<
+			{
+				pid: string;
+				pname: string;
+			}[]
+		>
+	>;
 } | null>(null);
 
 export const checkSubstring = (substring: string, stringArr: string[]) => {
@@ -35,6 +47,11 @@ export const StorageContextProvider = ({
 	const [vidStatusDict, setVidStatusDict] = useState<Record<string, string>>(
 		{}
 	);
+	const [playlistData, setPlaylistData] = useState<
+		{ pid: string; pname: string }[]
+	>([{ pid: "0", pname: "all" }]);
+
+	// TODO: rename songdateupdate to savetoggle and shouldrefresh to refreshtoggle
 
 	const checkDirectoryAccess = async () => {
 		const directoryUriStored = await AsyncStorage.getItem("directoryUri");
@@ -51,28 +68,28 @@ export const StorageContextProvider = ({
 		}
 	};
 
-	const updateDataFile = async () => {
-		const files = await SAF.readDirectoryAsync(directoryUri);
-		const dataFileUri = checkSubstring("data.txt", files);
+	// const updateDataFile = async () => {
+	// 	const files = await SAF.readDirectoryAsync(directoryUri);
+	// 	const dataFileUri = checkSubstring("data.txt", files);
 
-		const pulledSongs = songData
-			.filter((item) => !item.downloaded)
-			.map((item) => item.sid);
-		if (dataFileUri !== null) {
-			let updatedContent: string = "";
-			pulledSongs.forEach((item) => {
-				updatedContent = updatedContent + ytTemplate(item) + ";";
-			});
-			// console.log("upd", updatedContent);
-			await SAF.deleteAsync(dataFileUri);
-			const file = await SAF.createFileAsync(
-				directoryUri,
-				"data.txt",
-				"text/plain"
-			);
-			await SAF.writeAsStringAsync(file, updatedContent);
-		}
-	};
+	// 	const pulledSongs = songData
+	// 		.filter((item) => !item.downloaded)
+	// 		.map((item) => item.sid);
+	// 	if (dataFileUri !== null) {
+	// 		let updatedContent: string = "";
+	// 		pulledSongs.forEach((item) => {
+	// 			updatedContent = updatedContent + ytTemplate(item) + ";";
+	// 		});
+	// 		// console.log("upd", updatedContent);
+	// 		await SAF.deleteAsync(dataFileUri);
+	// 		const file = await SAF.createFileAsync(
+	// 			directoryUri,
+	// 			"data.txt",
+	// 			"text/plain"
+	// 		);
+	// 		await SAF.writeAsStringAsync(file, updatedContent);
+	// 	}
+	// };
 
 	const refreshSongs = async () => {
 		const files = await SAF.readDirectoryAsync(directoryUri);
@@ -111,6 +128,18 @@ export const StorageContextProvider = ({
 				setVidStatusDict(JSON.parse(res));
 			} else await AsyncStorage.setItem("vidStatusDict", "{}");
 		});
+		AsyncStorage.getItem("playlistData").then(async (res) => {
+			if (res !== null) {
+				// console.log(res);
+				setPlaylistData(JSON.parse(res));
+			} else {
+				const newPlaylistData = [{ pid: "0", pname: "all" }];
+				await AsyncStorage.setItem(
+					"playlistData",
+					JSON.stringify(newPlaylistData)
+				);
+			}
+		});
 	};
 
 	const saveData = async () => {
@@ -118,6 +147,10 @@ export const StorageContextProvider = ({
 		await AsyncStorage.setItem(
 			"vidStatusDict",
 			JSON.stringify(vidStatusDict)
+		);
+		await AsyncStorage.setItem(
+			"playlistData",
+			JSON.stringify(playlistData)
 		);
 		setSongDataUpdate(false);
 	};
@@ -131,14 +164,14 @@ export const StorageContextProvider = ({
 		if (songDataUpdate && directoryUri !== "") {
 			saveData();
 		}
-	}, [songDataUpdate, songData, directoryUri]);
+	}, [songDataUpdate, songData, vidStatusDict, playlistData, directoryUri]);
 
 	useEffect(() => {
 		if (shouldRefresh && directoryUri !== "") {
 			refreshSongs();
 			setSongDataUpdate(true);
 		}
-	}, [shouldRefresh, songData, directoryUri]);
+	}, [shouldRefresh, songData, vidStatusDict, playlistData, directoryUri]);
 
 	return (
 		<StorageContext.Provider
@@ -153,6 +186,8 @@ export const StorageContextProvider = ({
 				setShouldRefresh,
 				vidStatusDict,
 				setVidStatusDict,
+				playlistData,
+				setPlaylistData,
 			}}
 		>
 			{children}
