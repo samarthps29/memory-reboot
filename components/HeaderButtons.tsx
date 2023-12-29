@@ -72,11 +72,11 @@ const HeaderButtons = ({
 											}
 										);
 										storageContext?.setSongDataUpdate(true);
-										floatingContext?.setFloatToggle(false);
+										floatingContext?.setFloatDialogToggle(false);
 									},
 								};
 							});
-							floatingContext?.setFloatToggle((prev) => !prev);
+							floatingContext?.setFloatDialogToggle((prev) => !prev);
 						}}
 					>
 						<Text style={styles.buttonText}>Create Playlist</Text>

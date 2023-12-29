@@ -45,7 +45,9 @@ const FloatingDialogBox = () => {
 					</Pressable>
 					<Pressable
 						style={styles.button}
-						onPress={() => floatingContext?.setFloatToggle(false)}
+						onPress={() =>
+							floatingContext?.setFloatDialogToggle(false)
+						}
 					>
 						<Text style={styles.buttonText}>Close</Text>
 					</Pressable>

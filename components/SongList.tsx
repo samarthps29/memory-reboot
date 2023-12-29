@@ -39,7 +39,12 @@ const SongList = ({
 			<FlatList
 				showsVerticalScrollIndicator={false}
 				data={songData}
-				renderItem={({ item }) => <SongItem song={item} />}
+				renderItem={({ item }) => (
+					<SongItem
+						song={item}
+						selectedPlaylist={selectedHeaderButton}
+					/>
+				)}
 				contentContainerStyle={{ rowGap: 6 }}
 			/>
 		</View>

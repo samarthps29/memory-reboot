@@ -1,10 +1,13 @@
+import { Ionicons } from "@expo/vector-icons";
 import { useContext } from "react";
 import { Image, Pressable, StyleSheet } from "react-native";
 import { COLORS, FONT, SIZES } from "../constants/theme";
 import { AudioContext } from "../utils/AudioContext";
-import { fileUri, filter } from "../utils/global";
+import { filter } from "../utils/global";
 import { songItemType } from "../utils/types";
 import { Text, View } from "./Themed";
+import { FloatingContext } from "../utils/FloatingContext";
+import FloatingMenu from "./FloatingMenu";
 
 export const reducedTitle = (str: string) => {
 	const filteredString = filter(str);
@@ -13,9 +16,15 @@ export const reducedTitle = (str: string) => {
 	} else return filteredString;
 };
 
-const SongItem = ({ song }: { song: songItemType }) => {
+const SongItem = ({
+	song,
+	selectedPlaylist,
+}: {
+	song: songItemType;
+	selectedPlaylist: string;
+}) => {
 	const audioContext = useContext(AudioContext);
-
+	const floatingContext = useContext(FloatingContext);
 	return (
 		<Pressable
 			onPress={() => {
@@ -65,7 +74,18 @@ const SongItem = ({ song }: { song: songItemType }) => {
 						<Text style={styles.songTitle}>
 							{reducedTitle(song.sname)}
 						</Text>
-						<Text>{song.duration}</Text>
+						<View
+							style={{
+								width: "25%",
+								backgroundColor: "transparent",
+								paddingTop: 1,
+							}}
+						>
+							<FloatingMenu
+								sid={song.sid}
+								currPlaylist={selectedPlaylist}
+							/>
+						</View>
 					</View>
 					<View
 						style={{
@@ -102,9 +122,10 @@ const styles = StyleSheet.create({
 		marginRight: SIZES.xSmall,
 	},
 	songTitle: {
-		width: "80%",
+		width: "75%",
 		fontFamily: FONT.medium,
 		fontSize: 18,
+		// backgroundColor:"black"
 	},
 	artistTitle: {
 		fontFamily: FONT.regular,

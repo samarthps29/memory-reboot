@@ -1,10 +1,5 @@
-import {
-	AVPlaybackStatus,
-	AVPlaybackStatusError,
-	AVPlaybackStatusSuccess,
-	Audio,
-} from "expo-av";
-import { createContext, useCallback, useEffect, useState } from "react";
+import { AVPlaybackStatusError, AVPlaybackStatusSuccess, Audio } from "expo-av";
+import { createContext, useEffect, useState } from "react";
 
 export const AudioContext = createContext<{
 	sound: Audio.Sound | null;
@@ -85,3 +80,5 @@ export const AudioContextProvider = ({ children }: React.PropsWithChildren) => {
 		</AudioContext.Provider>
 	);
 };
+
+// TODO: Implement concurrency in everthing using promise.all([task1, task2])

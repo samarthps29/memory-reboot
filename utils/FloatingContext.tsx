@@ -1,8 +1,10 @@
 import { SetStateAction, createContext, useEffect, useState } from "react";
 
 export const FloatingContext = createContext<{
-	floatToggle: boolean;
-	setFloatToggle: React.Dispatch<React.SetStateAction<boolean>>;
+	floatDialogToggle: boolean;
+	setFloatDialogToggle: React.Dispatch<React.SetStateAction<boolean>>;
+	floatMenuToggle: boolean;
+	setFloatMenuToggle: React.Dispatch<React.SetStateAction<boolean>>;
 	floatInfo: {
 		title: string;
 		placeholder: string;
@@ -22,7 +24,8 @@ export const FloatingContext = createContext<{
 export const FloatingContextProvider = ({
 	children,
 }: React.PropsWithChildren) => {
-	const [floatToggle, setFloatToggle] = useState(false);
+	const [floatDialogToggle, setFloatDialogToggle] = useState(false);
+	const [floatMenuToggle, setFloatMenuToggle] = useState(false);
 	const [floatInfo, setFloatInfo] = useState<{
 		title: string;
 		placeholder: string;
@@ -32,7 +35,14 @@ export const FloatingContextProvider = ({
 
 	return (
 		<FloatingContext.Provider
-			value={{ floatToggle, setFloatToggle, floatInfo, setFloatInfo }}
+			value={{
+				floatDialogToggle,
+				floatMenuToggle,
+				setFloatDialogToggle,
+				setFloatMenuToggle,
+				floatInfo,
+				setFloatInfo,
+			}}
 		>
 			{children}
 		</FloatingContext.Provider>

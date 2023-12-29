@@ -68,29 +68,6 @@ export const StorageContextProvider = ({
 		}
 	};
 
-	// const updateDataFile = async () => {
-	// 	const files = await SAF.readDirectoryAsync(directoryUri);
-	// 	const dataFileUri = checkSubstring("data.txt", files);
-
-	// 	const pulledSongs = songData
-	// 		.filter((item) => !item.downloaded)
-	// 		.map((item) => item.sid);
-	// 	if (dataFileUri !== null) {
-	// 		let updatedContent: string = "";
-	// 		pulledSongs.forEach((item) => {
-	// 			updatedContent = updatedContent + ytTemplate(item) + ";";
-	// 		});
-	// 		// console.log("upd", updatedContent);
-	// 		await SAF.deleteAsync(dataFileUri);
-	// 		const file = await SAF.createFileAsync(
-	// 			directoryUri,
-	// 			"data.txt",
-	// 			"text/plain"
-	// 		);
-	// 		await SAF.writeAsStringAsync(file, updatedContent);
-	// 	}
-	// };
-
 	const refreshSongs = async () => {
 		const files = await SAF.readDirectoryAsync(directoryUri);
 		// console.log(files);
@@ -113,7 +90,6 @@ export const StorageContextProvider = ({
 			});
 			return dict;
 		});
-		// updateDataFile(); this deletes the entire directory ahhhhhhhhhhhh never uncomment
 		setShouldRefresh(false);
 	};
 

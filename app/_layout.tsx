@@ -12,6 +12,7 @@ import { SwitchPageContextProvider } from "../utils/SwitchPageContext";
 import { AudioContextProvider } from "../utils/AudioContext";
 import { StorageContextProvider } from "../utils/StorageContext";
 import { FloatingContextProvider } from "../utils/FloatingContext";
+import { MenuProvider } from "react-native-popup-menu";
 
 export {
 	// Catch any errors thrown by the Layout component.
@@ -57,20 +58,22 @@ function RootLayoutNav() {
 		<ThemeProvider
 			value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
 		>
-			<StorageContextProvider>
-				<FloatingContextProvider>
-					<AudioContextProvider>
-						<SwitchPageContextProvider>
-							<Stack>
-								<Stack.Screen
-									name="index"
-									options={{ headerShown: false }}
-								/>
-							</Stack>
-						</SwitchPageContextProvider>
-					</AudioContextProvider>
-				</FloatingContextProvider>
-			</StorageContextProvider>
+			<MenuProvider>
+				<StorageContextProvider>
+					<FloatingContextProvider>
+						<AudioContextProvider>
+							<SwitchPageContextProvider>
+								<Stack>
+									<Stack.Screen
+										name="index"
+										options={{ headerShown: false }}
+									/>
+								</Stack>
+							</SwitchPageContextProvider>
+						</AudioContextProvider>
+					</FloatingContextProvider>
+				</StorageContextProvider>
+			</MenuProvider>
 		</ThemeProvider>
 	);
 }
