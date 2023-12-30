@@ -31,3 +31,8 @@ export type videoItemType = {
 		};
 	};
 };
+
+export type queueType = {
+	queue: songItemType[];
+	currentIndex: number;
+};

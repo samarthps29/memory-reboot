@@ -28,6 +28,7 @@ const SongItem = ({
 	return (
 		<Pressable
 			onPress={() => {
+				console.log(audioContext?.songInfo);
 				audioContext?.setSongInfo((prev) => {
 					return { ...prev, sid: song.sid, sname: song.sname };
 				});

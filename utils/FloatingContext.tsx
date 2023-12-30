@@ -3,8 +3,8 @@ import { SetStateAction, createContext, useEffect, useState } from "react";
 export const FloatingContext = createContext<{
 	floatDialogToggle: boolean;
 	setFloatDialogToggle: React.Dispatch<React.SetStateAction<boolean>>;
-	floatMenuToggle: boolean;
-	setFloatMenuToggle: React.Dispatch<React.SetStateAction<boolean>>;
+	// floatMenuToggle: boolean;
+	// setFloatMenuToggle: React.Dispatch<React.SetStateAction<boolean>>;
 	floatInfo: {
 		title: string;
 		placeholder: string;
@@ -37,9 +37,9 @@ export const FloatingContextProvider = ({
 		<FloatingContext.Provider
 			value={{
 				floatDialogToggle,
-				floatMenuToggle,
+				// floatMenuToggle,
 				setFloatDialogToggle,
-				setFloatMenuToggle,
+				// setFloatMenuToggle,
 				floatInfo,
 				setFloatInfo,
 			}}

@@ -25,7 +25,7 @@ const index = () => {
 	const floatingContext = useContext(FloatingContext);
 	return (
 		<SafeAreaView style={styles.screenContainer}>
-			{floatingContext?.floatToggle && <FloatingDialogBox />}
+			{floatingContext?.floatDialogToggle && <FloatingDialogBox />}
 			<View style={styles.mainContainer}>
 				<StatusBar hidden />
 				{!switchContext?.switchPage ? (

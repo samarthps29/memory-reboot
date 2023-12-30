@@ -1,11 +1,12 @@
 import { useContext, useEffect, useState } from "react";
-import { StyleSheet } from "react-native";
+import { Pressable, StyleSheet } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
-import { SIZES } from "../constants/theme";
+import { FONT, SIZES } from "../constants/theme";
 import { StorageContext } from "../utils/StorageContext";
 import { songItemType } from "../utils/types";
 import SongItem from "./SongItem";
-import { View } from "./Themed";
+import { Text, View } from "./Themed";
+import { AudioContext } from "../utils/AudioContext";
 
 const SongList = ({
 	searchTerm,
@@ -15,6 +16,7 @@ const SongList = ({
 	selectedHeaderButton: string;
 }) => {
 	const storageContext = useContext(StorageContext);
+	const audioContext = useContext(AudioContext);
 	// local song data
 	const [songData, setSongData] = useState<songItemType[]>([]);
 
@@ -34,8 +36,26 @@ const SongList = ({
 		});
 	}, [storageContext?.songData, searchTerm, selectedHeaderButton]);
 
+	// useEffect(() => {
+	// 	console.log(songData);
+	// }, [songData]);
+
 	return (
 		<View style={styles.container}>
+			<View style={styles.buttonsContainer}>
+				<Pressable
+					onPress={() => {
+						audioContext?.setGlobalQueue({
+							currentIndex: 0,
+							queue: songData,
+						});
+						audioContext?.setToggleQueue(true);
+					}}
+				>
+					<Text style={styles.buttonText}>Play All</Text>
+				</Pressable>
+				<Text style={styles.buttonText}>Shuffle</Text>
+			</View>
 			<FlatList
 				showsVerticalScrollIndicator={false}
 				data={songData}
@@ -59,5 +79,17 @@ const styles = StyleSheet.create({
 		width: "100%",
 		backgroundColor: "transparent",
 		marginTop: SIZES.medium,
+	},
+	buttonsContainer: {
+		width: "100%",
+		justifyContent: "space-between",
+		alignItems: "center",
+		marginBottom: SIZES.xxSmall,
+		flexDirection: "row",
+		gap: SIZES.small,
+		paddingHorizontal: 4,
+	},
+	buttonText: {
+		fontFamily: FONT.regular,
 	},
 });
