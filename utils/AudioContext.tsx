@@ -1,4 +1,9 @@
-import { AVPlaybackStatusError, AVPlaybackStatusSuccess, Audio } from "expo-av";
+import {
+	AVPlaybackStatusError,
+	AVPlaybackStatusSuccess,
+	Audio,
+	InterruptionModeAndroid,
+} from "expo-av";
 import { createContext, useEffect, useState } from "react";
 import { queueType, songItemType } from "./types";
 
@@ -113,6 +118,18 @@ export const AudioContextProvider = ({ children }: React.PropsWithChildren) => {
 		if (toggleQueue) setToggleQueue(false);
 	};
 
+	const requestAudioMode = async () => {
+		await Audio.setAudioModeAsync({
+			staysActiveInBackground: true,
+			interruptionModeAndroid: 2,
+			shouldDuckAndroid: false,
+			playThroughEarpieceAndroid: true,
+			// allowsRecordingIOS: true,
+			// interruptionModeIOS: Audio.INTERRUPTION_MODE_IOS_DO_NOT_MIX,
+			// playsInSilentModeIOS: true,
+		});
+	};
+
 	useEffect(() => {
 		changeAudio();
 	}, [soundUri]);
@@ -151,6 +168,12 @@ export const AudioContextProvider = ({ children }: React.PropsWithChildren) => {
 			setSkip(false);
 		}
 	}, [skip, globalQueue]);
+
+	useEffect(() => {
+		requestAudioMode()
+			.then(() => console.log("audio mode success"))
+			.catch(() => console.log("audio mode failed"));
+	}, []);
 
 	return (
 		<AudioContext.Provider
