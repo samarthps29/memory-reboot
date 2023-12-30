@@ -1,12 +1,13 @@
 import { useContext, useEffect, useState } from "react";
-import { Pressable, StyleSheet } from "react-native";
+import { Pressable, StyleSheet, useColorScheme } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
-import { FONT, SIZES } from "../constants/theme";
+import { COLORS, FONT, SIZES } from "../constants/theme";
 import { StorageContext } from "../utils/StorageContext";
 import { songItemType } from "../utils/types";
 import SongItem from "./SongItem";
 import { Text, View } from "./Themed";
 import { AudioContext } from "../utils/AudioContext";
+import { durstenfeldShuffle } from "../utils/global";
 
 const SongList = ({
 	searchTerm,
@@ -19,7 +20,7 @@ const SongList = ({
 	const audioContext = useContext(AudioContext);
 	// local song data
 	const [songData, setSongData] = useState<songItemType[]>([]);
-
+	const colorScheme = useColorScheme();
 	useEffect(() => {
 		setSongData(() => {
 			return (
@@ -52,9 +53,45 @@ const SongList = ({
 						audioContext?.setToggleQueue(true);
 					}}
 				>
-					<Text style={styles.buttonText}>Play All</Text>
+					<Text
+						style={[
+							styles.buttonText,
+							{
+								color:
+									colorScheme === "light"
+										? "black"
+										: COLORS.whitePrimary,
+							},
+						]}
+					>
+						Play All
+					</Text>
 				</Pressable>
-				<Text style={styles.buttonText}>Shuffle</Text>
+				<Pressable
+					onPress={() => {
+						let temp = [...songData];
+						temp = durstenfeldShuffle(temp);
+						audioContext?.setGlobalQueue({
+							currentIndex: 0,
+							queue: temp,
+						});
+						audioContext?.setToggleQueue(true);
+					}}
+				>
+					<Text
+						style={[
+							styles.buttonText,
+							{
+								color:
+									colorScheme === "light"
+										? "black"
+										: COLORS.whitePrimary,
+							},
+						]}
+					>
+						Shuffle
+					</Text>
+				</Pressable>
 			</View>
 			<FlatList
 				showsVerticalScrollIndicator={false}

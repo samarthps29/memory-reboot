@@ -1,24 +1,48 @@
-import { Pressable, StyleSheet } from "react-native";
+import { Pressable, StyleSheet, useColorScheme } from "react-native";
 import { COLORS, FONT, SIZES } from "../constants/theme";
 import { View, Text } from "./Themed";
 import { TextInput } from "react-native-gesture-handler";
 import { FloatingContext } from "../utils/FloatingContext";
 import { useContext, useState } from "react";
+import { StatusBar } from "react-native";
 
 const FloatingDialogBox = () => {
 	const floatingContext = useContext(FloatingContext);
 	const { title, placeholder, btnText, handleButtonClick } =
 		floatingContext?.floatInfo || {};
 	const [inputVal, setInputVal] = useState("");
+	const colorScheme = useColorScheme();
 	return (
-		<View style={styles.container}>
-			<View style={styles.floatContainer}>
+		<View
+			style={[
+				styles.container,
+				{
+					backgroundColor:
+						colorScheme === "light" ? "#00000080" : "#ffffff20",
+				},
+			]}
+		>
+			<View
+				style={[
+					styles.floatContainer,
+					{
+						backgroundColor:
+							colorScheme === "light"
+								? "#fff"
+								: COLORS.darkPrimary,
+					},
+				]}
+			>
 				<View style={styles.titleContainer}>
 					<Text
 						style={{
 							fontFamily: FONT.bold,
 							textAlign: "left",
 							fontSize: 20,
+							color:
+								colorScheme === "light"
+									? "black"
+									: COLORS.whitePrimary,
 						}}
 					>
 						{title}
@@ -61,18 +85,17 @@ export default FloatingDialogBox;
 
 const styles = StyleSheet.create({
 	container: {
+		marginTop: StatusBar.currentHeight,
 		zIndex: 10,
 		width: "100%",
 		height: "100%",
 		alignItems: "center",
 		justifyContent: "center",
-		backgroundColor: "#00000080",
 		position: "absolute",
 	},
 	floatContainer: {
 		width: "80%",
 		// height: "40%",
-		backgroundColor: "#fff",
 		alignItems: "center",
 		justifyContent: "center",
 		borderRadius: SIZES.medium,
@@ -80,13 +103,14 @@ const styles = StyleSheet.create({
 	},
 	titleContainer: {
 		width: "80%",
-		marginBottom: SIZES.medium,
+		marginBottom: SIZES.small,
+		backgroundColor: "transparent",
 	},
 	inputContainer: {
 		width: "80%",
 		padding: SIZES.small,
 		borderRadius: SIZES.medium,
-		backgroundColor: COLORS.white,
+		backgroundColor: COLORS.whiteSecondary,
 		marginBottom: SIZES.xSmall,
 	},
 	buttonContainer: {
@@ -97,6 +121,7 @@ const styles = StyleSheet.create({
 		marginBottom: SIZES.gap,
 		flexDirection: "row",
 		gap: 6,
+		backgroundColor: "transparent",
 		overflow: "hidden",
 	},
 	button: {

@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useContext } from "react";
-import { Image, Pressable, StyleSheet } from "react-native";
+import { Image, Pressable, StyleSheet, useColorScheme } from "react-native";
 import { COLORS, FONT, SIZES } from "../constants/theme";
 import { AudioContext } from "../utils/AudioContext";
 import { filter } from "../utils/global";
@@ -9,10 +9,10 @@ import { Text, View } from "./Themed";
 import { FloatingContext } from "../utils/FloatingContext";
 import FloatingMenu from "./FloatingMenu";
 
-export const reducedTitle = (str: string) => {
+export const reducedTitle = (str: string, reductionParam: number = 40) => {
 	const filteredString = filter(str);
-	if (filteredString.length > 35) {
-		return filteredString.slice(0, 35) + "...";
+	if (filteredString.length > reductionParam) {
+		return filteredString.slice(0, reductionParam) + "...";
 	} else return filteredString;
 };
 
@@ -24,7 +24,7 @@ const SongItem = ({
 	selectedPlaylist: string;
 }) => {
 	const audioContext = useContext(AudioContext);
-	const floatingContext = useContext(FloatingContext);
+	const colorScheme = useColorScheme();
 	return (
 		<Pressable
 			onPress={() => {
@@ -41,8 +41,12 @@ const SongItem = ({
 						backgroundColor:
 							audioContext?.songInfo["sid"] !== undefined &&
 							audioContext.songInfo["sid"] === song.sid
-								? "#c8c3d8"
-								: COLORS.white,
+								? colorScheme === "light"
+									? "#c8c3d8"
+									: "#afa3d8"
+								: colorScheme === "light"
+								? COLORS.whiteSecondary
+								: COLORS.darkSecondary,
 					},
 					styles.container,
 				]}
@@ -72,14 +76,27 @@ const SongItem = ({
 							backgroundColor: "transparent",
 						}}
 					>
-						<Text style={styles.songTitle}>
+						<Text
+							style={[
+								styles.songTitle,
+								{
+									color:
+										colorScheme === "light" ||
+										audioContext?.songInfo["sid"] ===
+											song.sid
+											? "black"
+											: COLORS.whitePrimary,
+								},
+							]}
+						>
 							{reducedTitle(song.sname)}
 						</Text>
 						<View
 							style={{
-								width: "25%",
+								width: "30%",
 								backgroundColor: "transparent",
 								paddingTop: 1,
+								paddingLeft: SIZES.small,
 							}}
 						>
 							<FloatingMenu
@@ -96,7 +113,19 @@ const SongItem = ({
 							marginTop: 2,
 						}}
 					>
-						<Text style={styles.artistTitle}>
+						<Text
+							style={[
+								styles.artistTitle,
+								{
+									color:
+										colorScheme === "light" ||
+										audioContext?.songInfo["sid"] ===
+											song.sid
+											? "black"
+											: COLORS.whiteSecondary,
+								},
+							]}
+						>
 							{reducedTitle(song.aname)}
 						</Text>
 					</View>
@@ -116,17 +145,16 @@ const styles = StyleSheet.create({
 		flexDirection: "row",
 	},
 	imageContainer: {
-		height: 55,
-		width: 55,
+		height: 60,
+		width: 60,
 		borderRadius: SIZES.small,
 		overflow: "hidden",
 		marginRight: SIZES.xSmall,
 	},
 	songTitle: {
-		width: "75%",
+		width: "70%",
 		fontFamily: FONT.medium,
-		fontSize: 18,
-		// backgroundColor:"black"
+		fontSize: 17,
 	},
 	artistTitle: {
 		fontFamily: FONT.regular,

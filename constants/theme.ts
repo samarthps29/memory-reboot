@@ -6,16 +6,18 @@ const COLORS = {
 	gray: "#969696",
 	gray2: "#C1C0C8",
 
-	white: "#dadada",
-	black: "#2e2e2e",
-	lightWhite: "#FAFAFC",
+	whitePrimary: "#fff",
+	whiteSecondary: "#dadada",
+	whiteTertiary: "#",
 
+	darkPrimary: "#121212",
+	darkSecondary: "#2a2a2a",
+	darkTertiary: "#555555",
+
+	lightWhite: "#FAFAFC",
 	lightBg: "#fcf8e9",
-	darkBg: "#121212",
-	lightText: "",
+	lightText: "#000",
 	darkText: "",
-	active: "#161A30",
-	inactive: "#B6BBC4",
 };
 
 const FONT = {

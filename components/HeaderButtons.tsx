@@ -1,5 +1,5 @@
 import { SetStateAction, useContext } from "react";
-import { Pressable, StyleSheet } from "react-native";
+import { Pressable, StyleSheet, useColorScheme } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import "react-native-get-random-values";
 import { v4 as uuidv4 } from "uuid";
@@ -23,6 +23,7 @@ const HeaderButtons = ({
 	const switchContext = useContext(SwitchPageContext);
 	const floatingContext = useContext(FloatingContext);
 	const storageContext = useContext(StorageContext);
+	const colorScheme = useColorScheme();
 	return (
 		<View
 			style={{
@@ -48,7 +49,12 @@ const HeaderButtons = ({
 				<View
 					style={[
 						styles.buttonContainer,
-						{ backgroundColor: COLORS.white },
+						{
+							backgroundColor:
+								colorScheme === "light"
+									? COLORS.whiteSecondary
+									: COLORS.darkSecondary,
+						},
 					]}
 				>
 					<Pressable
@@ -72,14 +78,30 @@ const HeaderButtons = ({
 											}
 										);
 										storageContext?.setSongDataUpdate(true);
-										floatingContext?.setFloatDialogToggle(false);
+										floatingContext?.setFloatDialogToggle(
+											false
+										);
 									},
 								};
 							});
-							floatingContext?.setFloatDialogToggle((prev) => !prev);
+							floatingContext?.setFloatDialogToggle(
+								(prev) => !prev
+							);
 						}}
 					>
-						<Text style={styles.buttonText}>Create Playlist</Text>
+						<Text
+							style={[
+								styles.buttonText,
+								{
+									color:
+										colorScheme === "light"
+											? "black"
+											: COLORS.whitePrimary,
+								},
+							]}
+						>
+							Create Playlist
+						</Text>
 					</Pressable>
 				</View>
 			)}
@@ -100,8 +122,12 @@ const HeaderButtons = ({
 								{
 									backgroundColor:
 										item.pid === selectedHeaderButton
-											? COLORS.secondary
-											: COLORS.white,
+											? colorScheme === "light"
+												? COLORS.secondary
+												: "#8fd66e"
+											: colorScheme === "light"
+											? COLORS.whiteSecondary
+											: COLORS.darkSecondary,
 								},
 							]}
 							key={item.pid}
@@ -112,7 +138,19 @@ const HeaderButtons = ({
 									setSelectedHeaderButton!(item.pid)
 								}
 							>
-								<Text style={styles.buttonText}>
+								<Text
+									style={[
+										styles.buttonText,
+										{
+											color:
+												colorScheme === "light" ||
+												selectedHeaderButton ===
+													item.pid
+													? "black"
+													: COLORS.whitePrimary,
+										},
+									]}
+								>
 									{item.pname}
 								</Text>
 							</Pressable>
@@ -129,7 +167,7 @@ export default HeaderButtons;
 const styles = StyleSheet.create({
 	buttonContainer: {
 		borderRadius: SIZES.xLarge,
-		// backgroundColor: COLORS.white,
+		// backgroundColor: COLORS.whiteSecondary,
 		alignItems: "center",
 		justifyContent: "center",
 		padding: SIZES.xSmall,

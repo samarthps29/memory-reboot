@@ -23,11 +23,12 @@ const index = () => {
 		useState<string>("0");
 	const switchContext = useContext(SwitchPageContext);
 	const floatingContext = useContext(FloatingContext);
+	const [isLoading, setIsLoading] = useState(false);
 	return (
 		<SafeAreaView style={styles.screenContainer}>
 			{floatingContext?.floatDialogToggle && <FloatingDialogBox />}
 			<View style={styles.mainContainer}>
-				<StatusBar hidden />
+				<StatusBar />
 				{!switchContext?.switchPage ? (
 					<>
 						<PrimaryHeader
@@ -47,8 +48,12 @@ const index = () => {
 							setVideoData={setVideoData}
 							selectedHeaderButton={selectedHeaderButton}
 							setSelectedHeaderButton={setSelectedHeaderButton}
+							setIsLoading={setIsLoading}
 						/>
-						<VideoList videoData={videoData} />
+						<VideoList
+							videoData={videoData}
+							isLoading={isLoading}
+						/>
 					</>
 				)}
 			</View>

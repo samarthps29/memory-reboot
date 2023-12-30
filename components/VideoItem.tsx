@@ -79,7 +79,9 @@ const VideoItem = ({ video }: { video: videoItemType }) => {
 				styles.container,
 				{
 					backgroundColor:
-						colorScheme === "light" ? COLORS.white : COLORS.black,
+						colorScheme === "light"
+							? COLORS.whiteSecondary
+							: COLORS.darkSecondary,
 				},
 			]}
 		>
@@ -110,7 +112,15 @@ const VideoItem = ({ video }: { video: videoItemType }) => {
 						marginTop: 2,
 					}}
 				>
-					<Text style={{ fontFamily: FONT.medium }}>
+					<Text
+						style={{
+							fontFamily: FONT.medium,
+							color:
+								colorScheme === "light"
+									? "black"
+									: COLORS.whiteSecondary,
+						}}
+					>
 						{checkAge(dayjs(video.snippet.publishedAt))}
 					</Text>
 					<Pressable
@@ -120,12 +130,21 @@ const VideoItem = ({ video }: { video: videoItemType }) => {
 							"Download"
 						}
 					>
-						<Text style={styles.artistTitle}>
+						<Text
+							style={[
+								styles.artistTitle,
+								{
+									color:
+										colorScheme === "light"
+											? "black"
+											: COLORS.whiteSecondary,
+								},
+							]}
+						>
 							{checkAvailabilityStatus(video.id.videoId)}
 						</Text>
 					</Pressable>
 				</View>
-
 				<View
 					style={{
 						flexDirection: "row",
@@ -134,7 +153,17 @@ const VideoItem = ({ video }: { video: videoItemType }) => {
 						marginTop: 6,
 					}}
 				>
-					<Text style={styles.videoTitle}>
+					<Text
+						style={[
+							styles.videoTitle,
+							{
+								color:
+									colorScheme === "light"
+										? "black"
+										: COLORS.whitePrimary,
+							},
+						]}
+					>
 						{filter(video.snippet.title)}
 					</Text>
 				</View>
@@ -146,7 +175,17 @@ const VideoItem = ({ video }: { video: videoItemType }) => {
 						marginTop: 2,
 					}}
 				>
-					<Text style={styles.artistTitle}>
+					<Text
+						style={[
+							styles.artistTitle,
+							{
+								color:
+									colorScheme === "light"
+										? "black"
+										: COLORS.whiteSecondary,
+							},
+						]}
+					>
 						{filter(video.snippet.channelTitle)}
 					</Text>
 				</View>

@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
 	},
 	buttonContainer: {
 		borderRadius: SIZES.xLarge,
-		// backgroundColor: COLORS.white,
+		// backgroundColor: COLORS.whiteSecondary,
 		alignItems: "center",
 		justifyContent: "center",
 		padding: SIZES.xSmall,
@@ -64,6 +64,6 @@ const styles = StyleSheet.create({
 		fontFamily: FONT.medium,
 		fontSize: SIZES.medium,
 		padding: SIZES.medium,
-		backgroundColor: COLORS.white,
+		backgroundColor: COLORS.whiteSecondary,
 	},
 });

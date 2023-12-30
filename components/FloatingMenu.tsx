@@ -1,15 +1,16 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useContext, useState } from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, useColorScheme } from "react-native";
 import {
 	Menu,
 	MenuOption,
 	MenuOptions,
 	MenuTrigger,
 } from "react-native-popup-menu";
-import { SIZES } from "../constants/theme";
+import { COLORS, SIZES } from "../constants/theme";
 import { StorageContext } from "../utils/StorageContext";
 import { View } from "./Themed";
+import { AudioContext } from "../utils/AudioContext";
 
 const Divider = () => <View style={styles.divider} />;
 
@@ -22,10 +23,21 @@ const FloatingMenu = ({
 }) => {
 	const [renderPlaylists, setRenderPlaylists] = useState(false);
 	const storageContext = useContext(StorageContext);
+	const audioContext = useContext(AudioContext);
+	const colorScheme = useColorScheme();
 	return (
 		<Menu style={styles.container}>
 			<MenuTrigger>
-				<Ionicons name="reorder-four-outline" size={20} />
+				<Ionicons
+					name="reorder-four-outline"
+					size={20}
+					color={
+						colorScheme === "light" ||
+						sid === audioContext?.songInfo["sid"]
+							? "black"
+							: COLORS.whiteSecondary
+					}
+				/>
 			</MenuTrigger>
 			<MenuOptions
 				customStyles={{

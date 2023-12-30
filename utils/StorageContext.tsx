@@ -49,7 +49,7 @@ export const StorageContextProvider = ({
 	);
 	const [playlistData, setPlaylistData] = useState<
 		{ pid: string; pname: string }[]
-	>([{ pid: "0", pname: "all" }]);
+	>([{ pid: "0", pname: "all songs" }]);
 
 	// TODO: rename songdateupdate to savetoggle and shouldrefresh to refreshtoggle
 
@@ -109,7 +109,7 @@ export const StorageContextProvider = ({
 				// console.log(res);
 				setPlaylistData(JSON.parse(res));
 			} else {
-				const newPlaylistData = [{ pid: "0", pname: "all" }];
+				const newPlaylistData = [{ pid: "0", pname: "all songs" }];
 				await AsyncStorage.setItem(
 					"playlistData",
 					JSON.stringify(newPlaylistData)

@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { Pressable, StyleSheet } from "react-native";
+import { Pressable, StyleSheet, useColorScheme } from "react-native";
 import { COLORS, FONT, SIZES } from "../constants/theme";
 import { AudioContext } from "../utils/AudioContext";
 import { Text, View } from "./Themed";
@@ -16,6 +16,7 @@ const AudioPlayer = () => {
 	const audioContext = useContext(AudioContext);
 	const storageContext = useContext(StorageContext);
 	const [backClickCount, setBackClickCount] = useState<number | null>(null);
+	const colorScheme = useColorScheme();
 
 	const handleBackOnce = () => {
 		audioContext?.sound?.playFromPositionAsync(0);
@@ -62,13 +63,37 @@ const AudioPlayer = () => {
 	}, [backClickCount]);
 
 	return (
-		<View style={styles.container}>
+		<View
+			style={[
+				styles.container,
+				{
+					backgroundColor:
+						colorScheme === "light"
+							? COLORS.lightWhite
+							: COLORS.darkSecondary,
+				},
+			]}
+		>
 			<View style={styles.songTitleContainer}>
-				<Text style={styles.songText} numberOfLines={1}>
+				<Text
+					style={[
+						styles.songText,
+						{
+							color:
+								colorScheme === "light"
+									? "black"
+									: COLORS.whitePrimary,
+						},
+					]}
+					numberOfLines={1}
+				>
 					{audioContext?.songInfo["sname"] === undefined ||
 					audioContext.songInfo["sname"] === ""
 						? "Play Something"
-						: reducedTitle(audioContext?.songInfo["sname"] || "")}
+						: reducedTitle(
+								audioContext?.songInfo["sname"] || "",
+								25
+						  )}
 				</Text>
 			</View>
 			<View style={styles.buttonContainer}>
@@ -77,9 +102,18 @@ const AudioPlayer = () => {
 						storageContext?.setShouldRefresh(true);
 					}}
 				>
-					<Ionicons name="ios-refresh" size={24} color="black" />
+					<Ionicons
+						name="ios-refresh"
+						size={24}
+						color={
+							colorScheme === "light"
+								? "black"
+								: COLORS.whiteSecondary
+						}
+					/>
 				</Pressable>
 				<Pressable
+					style={{ alignItems: "center", justifyContent: "center" }}
 					onPress={() => {
 						// console.log("Loop pressed");
 						audioContext?.setSongInfo((prev) => {
@@ -92,7 +126,30 @@ const AudioPlayer = () => {
 						});
 					}}
 				>
-					<Ionicons name="sync-outline" size={24} color="black" />
+					<Ionicons
+						name="sync-outline"
+						size={24}
+						color={
+							colorScheme === "light"
+								? "black"
+								: COLORS.whiteSecondary
+						}
+					/>
+					{audioContext?.songInfo["loop"] === "yes" && (
+						<View
+							style={{
+								height: 3,
+								width: 3,
+								backgroundColor:
+									colorScheme === "light"
+										? "black"
+										: COLORS.whiteSecondary,
+								borderRadius: 100,
+								position: "absolute",
+								bottom: -3,
+							}}
+						/>
+					)}
 				</Pressable>
 				<Pressable
 					disabled={
@@ -109,7 +166,11 @@ const AudioPlayer = () => {
 					<Ionicons
 						name="play-skip-back-outline"
 						size={24}
-						color="black"
+						color={
+							colorScheme === "light"
+								? "black"
+								: COLORS.whiteSecondary
+						}
 					/>
 				</Pressable>
 				<Pressable
@@ -122,12 +183,24 @@ const AudioPlayer = () => {
 					}}
 				>
 					{audioContext?.status === "paused" ? (
-						<Ionicons name="play-outline" size={24} color="black" />
+						<Ionicons
+							name="play-outline"
+							size={24}
+							color={
+								colorScheme === "light"
+									? "black"
+									: COLORS.whiteSecondary
+							}
+						/>
 					) : (
 						<Ionicons
 							name="pause-outline"
 							size={24}
-							color="black"
+							color={
+								colorScheme === "light"
+									? "black"
+									: COLORS.whiteSecondary
+							}
 						/>
 					)}
 				</Pressable>
@@ -142,7 +215,11 @@ const AudioPlayer = () => {
 					<Ionicons
 						name="play-skip-forward-outline"
 						size={24}
-						color="black"
+						color={
+							colorScheme === "light"
+								? "black"
+								: COLORS.whiteSecondary
+						}
 					/>
 				</Pressable>
 			</View>
@@ -154,7 +231,7 @@ export default AudioPlayer;
 
 const styles = StyleSheet.create({
 	container: {
-		backgroundColor: COLORS.white,
+		// backgroundColor: COLORS.whiteSecondary,
 		position: "absolute",
 		bottom: 0,
 		flexDirection: "row",

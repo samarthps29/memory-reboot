@@ -18,13 +18,14 @@ const SearchBar = ({
 			<TextInput
 				spellCheck={false}
 				placeholder="Search for your song"
+				selectionColor={COLORS.gray}
 				style={[
 					styles.searchBar,
 					{
 						backgroundColor:
 							colorScheme === "light"
-								? COLORS.white
-								: COLORS.black,
+								? COLORS.whiteSecondary
+								: COLORS.darkSecondary,
 						color: colorScheme === "light" ? "black" : "white",
 					},
 				]}
@@ -32,6 +33,9 @@ const SearchBar = ({
 				onChangeText={(text) => setSearchTerm(text)}
 				onSubmitEditing={handleSearch}
 				returnKeyType="search"
+				placeholderTextColor={
+					colorScheme === "light" ? COLORS.darkTertiary : COLORS.gray
+				}
 			/>
 		</View>
 	);
