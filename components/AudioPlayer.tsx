@@ -79,8 +79,8 @@ const AudioPlayer = () => {
 					width: "100%",
 					backgroundColor:
 						colorScheme === "light"
-							? COLORS.lightWhite
-							: COLORS.darkSecondary,
+							? COLORS.whiteSecondary
+							: "#262626",
 					flexDirection: fullScreen ? "column" : "row",
 					paddingVertical: fullScreen ? SIZES.medium : SIZES.small,
 					borderTopRightRadius: fullScreen ? SIZES.medium : 0,
@@ -88,6 +88,7 @@ const AudioPlayer = () => {
 					// backgroundImage: fullScreen
 					// 	? audioContext?.songInfo["thumbnail"]
 					// 	: undefined,
+					// paddingBottom: fullScreen ? SIZES.large : SIZES.small,
 				},
 			]}
 		>
@@ -97,15 +98,15 @@ const AudioPlayer = () => {
 					{
 						alignItems: fullScreen ? "center" : "flex-start",
 						width: fullScreen ? "95%" : "60%",
-						marginBottom: fullScreen ? SIZES.small : 0,
+						marginBottom: fullScreen ? 14 : 0,
 					},
 				]}
 			>
 				<Pressable
-					disabled={
-						audioContext?.songInfo["sname"] === undefined ||
-						audioContext.songInfo["sname"] === ""
-					}
+					// disabled={
+					// 	audioContext?.songInfo["sname"] === undefined ||
+					// 	audioContext.songInfo["sname"] === ""
+					// }
 					onPress={() => {
 						setFullScreen((prev) => !prev);
 					}}
@@ -144,6 +145,7 @@ const AudioPlayer = () => {
 					styles.buttonContainer,
 					{
 						width: fullScreen ? "95%" : "40%",
+						alignItems: "center",
 						justifyContent: fullScreen ? "center" : "flex-end",
 						marginBottom: fullScreen ? SIZES.large : 0,
 					},
@@ -178,8 +180,8 @@ const AudioPlayer = () => {
 					<Slider
 						style={{
 							width: "98%",
-							height: 8,
-							marginBottom: SIZES.small,
+							height: 4,
+							marginBottom: SIZES.xxSmall,
 						}}
 						minimumValue={0}
 						maximumValue={audioContext?.songDuration}
@@ -187,9 +189,19 @@ const AudioPlayer = () => {
 						onSlidingComplete={(value: number) => {
 							audioContext?.sound?.setPositionAsync(value);
 						}}
-						minimumTrackTintColor={COLORS.whiteSecondary}
-						maximumTrackTintColor={COLORS.whitePrimary}
-						thumbTintColor="white"
+						minimumTrackTintColor={
+							colorScheme === "light"
+								? COLORS.darkSecondary
+								: COLORS.whitePrimary
+						}
+						maximumTrackTintColor={
+							colorScheme === "light"
+								? COLORS.darkTertiary
+								: COLORS.whiteSecondary
+						}
+						thumbTintColor={
+							colorScheme === "light" ? "black" : "white"
+						}
 					/>
 					<View
 						style={{
@@ -218,7 +230,7 @@ const AudioPlayer = () => {
 								color:
 									colorScheme === "light"
 										? "black"
-										: COLORS.whitePrimary,
+										: COLORS.whiteSecondary,
 							}}
 						>
 							{convertToTime(audioContext?.songDuration || 0)}

@@ -39,17 +39,20 @@ const HeaderButtons = ({
 				gap: 6,
 			}}
 		>
-			<View
-				style={[styles.buttonContainer, { backgroundColor: "#e6c8ff" }]}
+			<Pressable
+				onPress={() => {
+					switchContext?.setSwitchPage((prev) => !prev);
+				}}
 			>
-				<Pressable
-					onPress={() => {
-						switchContext?.setSwitchPage((prev) => !prev);
-					}}
+				<View
+					style={[
+						styles.buttonContainer,
+						{ backgroundColor: "#e6c8ff" },
+					]}
 				>
 					<Text style={styles.userText}>cdz</Text>
-				</Pressable>
-			</View>
+				</View>
+			</Pressable>
 			{source === "primary" && (
 				<View
 					style={[
@@ -137,7 +140,7 @@ const HeaderButtons = ({
 							key={item.pid}
 						>
 							<TouchableWithoutFeedback
-								delayLongPress={2500}
+								delayLongPress={1000}
 								onPress={() =>
 									setSelectedHeaderButton(item.pid)
 								}

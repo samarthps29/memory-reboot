@@ -1,10 +1,9 @@
-import { Pressable, StyleSheet, useColorScheme } from "react-native";
-import { COLORS, FONT, SIZES } from "../constants/theme";
-import { View, Text } from "./Themed";
-import { TextInput } from "react-native-gesture-handler";
-import { FloatingContext } from "../utils/FloatingContext";
 import { useContext, useState } from "react";
-import { StatusBar } from "react-native";
+import { Pressable, StatusBar, StyleSheet, useColorScheme } from "react-native";
+import { TextInput } from "react-native-gesture-handler";
+import { COLORS, FONT, SIZES } from "../constants/theme";
+import { FloatingContext } from "../utils/FloatingContext";
+import { Text, View } from "./Themed";
 
 const FloatingDialogBox = () => {
 	const floatingContext = useContext(FloatingContext);
@@ -63,7 +62,15 @@ const FloatingDialogBox = () => {
 					onChangeText={(text) => {
 						setInputVal!(text);
 					}}
-					style={styles.inputContainer}
+					style={[
+						styles.inputContainer,
+						{
+							backgroundColor:
+								colorScheme === "light"
+									? COLORS.whiteSecondary
+									: COLORS.whitePrimary,
+						},
+					]}
 					placeholder={placeholder}
 				/>
 				<View style={styles.buttonContainer}>
@@ -127,19 +134,19 @@ const styles = StyleSheet.create({
 	},
 	titleContainer: {
 		width: "80%",
-		marginBottom: SIZES.small,
+		marginBottom: SIZES.xxSmall,
 		backgroundColor: "transparent",
 	},
 	inputContainer: {
 		width: "80%",
 		padding: SIZES.small,
 		borderRadius: SIZES.medium,
-		backgroundColor: COLORS.whiteSecondary,
-		marginBottom: SIZES.xSmall,
+		marginBottom: SIZES.medium,
+		fontFamily: FONT.regular,
 	},
 	buttonContainer: {
 		width: "80%",
-		borderRadius: SIZES.large,
+		borderRadius: SIZES.medium,
 		alignItems: "center",
 		justifyContent: "center",
 		marginBottom: SIZES.gap,
@@ -152,7 +159,7 @@ const styles = StyleSheet.create({
 		flexGrow: 1,
 		backgroundColor: COLORS.secondary,
 		padding: SIZES.small,
-		borderRadius: SIZES.large,
+		borderRadius: SIZES.medium,
 		alignItems: "center",
 	},
 	buttonText: {
