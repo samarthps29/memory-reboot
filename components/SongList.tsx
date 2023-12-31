@@ -20,7 +20,9 @@ const SongList = ({
 	const audioContext = useContext(AudioContext);
 	// local song data
 	const [songData, setSongData] = useState<songItemType[]>([]);
+	const [showQueue, setShowQueue] = useState<boolean>(false);
 	const colorScheme = useColorScheme();
+
 	useEffect(() => {
 		setSongData(() => {
 			return (
@@ -44,29 +46,60 @@ const SongList = ({
 	return (
 		<View style={styles.container}>
 			<View style={styles.buttonsContainer}>
-				<Pressable
-					onPress={() => {
-						audioContext?.setGlobalQueue({
-							currentIndex: 0,
-							queue: songData,
-						});
-						audioContext?.setToggleQueue(true);
+				<View
+					style={{
+						backgroundColor: "transparent",
+						flexDirection: "row",
+						gap: 12,
 					}}
 				>
-					<Text
-						style={[
-							styles.buttonText,
-							{
-								color:
-									colorScheme === "light"
-										? "black"
-										: COLORS.whitePrimary,
-							},
-						]}
+					<Pressable
+						onPress={() => {
+							audioContext?.setGlobalQueue({
+								currentIndex: 0,
+								queue: songData,
+							});
+							audioContext?.setToggleQueue(true);
+						}}
 					>
-						Play All
-					</Text>
-				</Pressable>
+						<Text
+							style={[
+								styles.buttonText,
+								{
+									color:
+										colorScheme === "light"
+											? "black"
+											: COLORS.whitePrimary,
+								},
+							]}
+						>
+							Play All
+						</Text>
+					</Pressable>
+					<Pressable
+						disabled={
+							audioContext?.globalQueue?.queue === undefined ||
+							audioContext?.globalQueue?.queue.length === 0
+						}
+						onPress={() => {
+							setShowQueue((prev) => !prev);
+						}}
+					>
+						<Text
+							style={[
+								styles.buttonText,
+								{
+									color:
+										colorScheme === "light"
+											? "black"
+											: COLORS.whitePrimary,
+								},
+							]}
+						>
+							{showQueue ? "Back" : "Queue"}
+						</Text>
+					</Pressable>
+				</View>
 				<Pressable
 					onPress={() => {
 						let temp = [...songData];
@@ -95,7 +128,7 @@ const SongList = ({
 			</View>
 			<FlatList
 				showsVerticalScrollIndicator={false}
-				data={songData}
+				data={showQueue ? audioContext?.globalQueue?.queue : songData}
 				renderItem={({ item }) => (
 					<SongItem
 						song={item}

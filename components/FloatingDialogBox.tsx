@@ -8,9 +8,19 @@ import { StatusBar } from "react-native";
 
 const FloatingDialogBox = () => {
 	const floatingContext = useContext(FloatingContext);
-	const { title, placeholder, btnText, handleButtonClick } =
-		floatingContext?.floatInfo || {};
-	const [inputVal, setInputVal] = useState("");
+	const {
+		title,
+		placeholder,
+		btnText,
+		handleButtonClick,
+		btnSecondaryText,
+		handleSecondaryButtonClick,
+	} = floatingContext?.floatInfo || {};
+	const [inputVal, setInputVal] = useState<string>(() => {
+		if (btnText && btnText.toLowerCase() === "rename")
+			return placeholder || "";
+		else return "";
+	});
 	const colorScheme = useColorScheme();
 	return (
 		<View
@@ -67,6 +77,20 @@ const FloatingDialogBox = () => {
 					>
 						<Text style={styles.buttonText}>{btnText}</Text>
 					</Pressable>
+					{btnSecondaryText && (
+						<Pressable
+							style={styles.button}
+							onPress={() => {
+								if (handleSecondaryButtonClick) {
+									handleSecondaryButtonClick();
+								}
+							}}
+						>
+							<Text style={styles.buttonText}>
+								{btnSecondaryText}
+							</Text>
+						</Pressable>
+					)}
 					<Pressable
 						style={styles.button}
 						onPress={() =>
@@ -125,7 +149,7 @@ const styles = StyleSheet.create({
 		overflow: "hidden",
 	},
 	button: {
-		width: "50%",
+		flexGrow: 1,
 		backgroundColor: COLORS.secondary,
 		padding: SIZES.small,
 		borderRadius: SIZES.large,

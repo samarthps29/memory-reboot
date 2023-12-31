@@ -1,11 +1,6 @@
-import {
-	AVPlaybackStatusError,
-	AVPlaybackStatusSuccess,
-	Audio,
-	InterruptionModeAndroid,
-} from "expo-av";
+import { AVPlaybackStatusError, AVPlaybackStatusSuccess, Audio } from "expo-av";
 import { createContext, useEffect, useState } from "react";
-import { queueType, songItemType } from "./types";
+import { queueType } from "./types";
 
 export const AudioContext = createContext<{
 	sound: Audio.Sound | null;
@@ -13,10 +8,13 @@ export const AudioContext = createContext<{
 	songInfo: Record<string, string>;
 	userQueue: queueType | null;
 	globalQueue: queueType | null;
-	shuffle: boolean;
 	skip: boolean;
 	audioFinish: boolean;
 	toggleQueue: boolean;
+	songDuration: number;
+	songPosition: number;
+	setSongDuration: React.Dispatch<React.SetStateAction<number>>;
+	setSongPosition: React.Dispatch<React.SetStateAction<number>>;
 	setToggleQueue: React.Dispatch<React.SetStateAction<boolean>>;
 	setUserQueue: React.Dispatch<React.SetStateAction<queueType | null>>;
 	setGlobalQueue: React.Dispatch<React.SetStateAction<queueType | null>>;
@@ -24,7 +22,6 @@ export const AudioContext = createContext<{
 	setSongInfo: React.Dispatch<React.SetStateAction<Record<string, string>>>;
 	setStatus: React.Dispatch<React.SetStateAction<string>>;
 	setSoundUri: React.Dispatch<React.SetStateAction<string>>;
-	setShuffle: React.Dispatch<React.SetStateAction<boolean>>;
 	setSkip: React.Dispatch<React.SetStateAction<boolean>>;
 } | null>(null);
 
@@ -37,15 +34,20 @@ export const AudioContextProvider = ({ children }: React.PropsWithChildren) => {
 	const [audioFinish, setAudioFinish] = useState<boolean>(false);
 	const [userQueue, setUserQueue] = useState<queueType | null>(null);
 	const [globalQueue, setGlobalQueue] = useState<queueType | null>(null);
-	const [shuffle, setShuffle] = useState<boolean>(false);
 	const [toggleQueue, setToggleQueue] = useState<boolean>(false);
 	const [skip, setSkip] = useState<boolean>(false);
+	const [songDuration, setSongDuration] = useState<number>(0);
+	const [songPosition, setSongPosition] = useState<number>(0);
 
 	const handlePlaybackStatusUpdate = (
 		status: AVPlaybackStatusSuccess | AVPlaybackStatusError
 	) => {
-		if (status.isLoaded && status.didJustFinish) {
-			setAudioFinish(true);
+		if (status.isLoaded) {
+			setSongDuration(status.durationMillis || 0);
+			setSongPosition(status.positionMillis);
+			if (status.didJustFinish) {
+				setAudioFinish(true);
+			}
 		}
 	};
 
@@ -105,13 +107,14 @@ export const AudioContextProvider = ({ children }: React.PropsWithChildren) => {
 						...prev,
 						sid: nextSong.sid,
 						sname: nextSong.sname,
+						thumbnail: nextSong.thumbnail,
 					};
 				});
 				setSoundUri(nextSong.itemUri);
 			} else {
 				setStatus("paused");
 				setSongInfo((prev) => {
-					return { ...prev, sid: "", sname: "" };
+					return { ...prev, sid: "", sname: "", thumbnail: "" };
 				});
 			}
 		}
@@ -161,6 +164,7 @@ export const AudioContextProvider = ({ children }: React.PropsWithChildren) => {
 						...prev,
 						sid: newSong?.sid,
 						sname: newSong?.sname,
+						thumbnail: newSong?.thumbnail,
 					};
 				});
 				setSoundUri(newSong?.itemUri);
@@ -170,9 +174,7 @@ export const AudioContextProvider = ({ children }: React.PropsWithChildren) => {
 	}, [skip, globalQueue]);
 
 	useEffect(() => {
-		requestAudioMode()
-			.then(() => console.log("audio mode success"))
-			.catch(() => console.log("audio mode failed"));
+		requestAudioMode();
 	}, []);
 
 	return (
@@ -183,8 +185,11 @@ export const AudioContextProvider = ({ children }: React.PropsWithChildren) => {
 				status,
 				userQueue,
 				globalQueue,
-				shuffle,
 				skip,
+				songDuration,
+				songPosition,
+				setSongDuration,
+				setSongPosition,
 				toggleQueue,
 				audioFinish,
 				setUserQueue,
@@ -193,7 +198,6 @@ export const AudioContextProvider = ({ children }: React.PropsWithChildren) => {
 				setSongInfo,
 				setStatus,
 				setSoundUri,
-				setShuffle,
 				setToggleQueue,
 				setSkip,
 			}}

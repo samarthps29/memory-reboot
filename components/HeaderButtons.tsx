@@ -1,5 +1,10 @@
 import { SetStateAction, useContext } from "react";
-import { Pressable, StyleSheet, useColorScheme } from "react-native";
+import {
+	Pressable,
+	StyleSheet,
+	useColorScheme,
+	TouchableWithoutFeedback,
+} from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import "react-native-get-random-values";
 import { v4 as uuidv4 } from "uuid";
@@ -16,8 +21,8 @@ const HeaderButtons = ({
 	source,
 }: {
 	optionsArr: { pname: string; pid: string }[];
-	selectedHeaderButton?: string;
-	setSelectedHeaderButton?: React.Dispatch<SetStateAction<string>>;
+	selectedHeaderButton: string;
+	setSelectedHeaderButton: React.Dispatch<SetStateAction<string>>;
 	source: string;
 }) => {
 	const switchContext = useContext(SwitchPageContext);
@@ -65,7 +70,6 @@ const HeaderButtons = ({
 									placeholder: "Enter Playlist Name",
 									btnText: "Create",
 									handleButtonClick: (title: string) => {
-										// console.log(uuidv4());
 										storageContext?.setPlaylistData(
 											(prev) => {
 												return [
@@ -132,11 +136,94 @@ const HeaderButtons = ({
 							]}
 							key={item.pid}
 						>
-							<Pressable
-								// TODO: fix this
+							<TouchableWithoutFeedback
+								delayLongPress={2500}
 								onPress={() =>
-									setSelectedHeaderButton!(item.pid)
+									setSelectedHeaderButton(item.pid)
 								}
+								onLongPress={() => {
+									floatingContext?.setFloatInfo(() => {
+										return {
+											title: "Edit Playlist",
+											placeholder: item.pname,
+											btnText: "Rename",
+											handleButtonClick: (
+												title: string
+											) => {
+												storageContext?.setPlaylistData(
+													(prev) => {
+														return prev.map(
+															(pitem) => {
+																if (
+																	item.pid ===
+																	pitem.pid
+																) {
+																	return {
+																		pname: title,
+																		pid: pitem.pid,
+																	};
+																} else
+																	return pitem;
+															}
+														);
+													}
+												);
+												storageContext?.setSongDataUpdate(
+													true
+												);
+												floatingContext?.setFloatDialogToggle(
+													false
+												);
+											},
+											btnSecondaryText: "Delete",
+											handleSecondaryButtonClick: () => {
+												const playlistID = item.pid;
+												// removed playlist
+												storageContext?.setPlaylistData(
+													(prev) =>
+														prev.filter(
+															(pitem) =>
+																pitem.pid !==
+																playlistID
+														)
+												);
+												// removed playlist references
+												storageContext?.setSongData(
+													(prev) => {
+														return prev.map(
+															(sitem) => {
+																if (
+																	sitem.playlists.includes(
+																		playlistID
+																	)
+																) {
+																	sitem.playlists.filter(
+																		(
+																			spitem
+																		) =>
+																			spitem !==
+																			playlistID
+																	);
+																}
+																return sitem;
+															}
+														);
+													}
+												);
+												setSelectedHeaderButton("0");
+												storageContext?.setSongDataUpdate(
+													true
+												);
+												floatingContext?.setFloatDialogToggle(
+													false
+												);
+											},
+										};
+									});
+									floatingContext?.setFloatDialogToggle(
+										(prev) => !prev
+									);
+								}}
 							>
 								<Text
 									style={[
@@ -153,7 +240,7 @@ const HeaderButtons = ({
 								>
 									{item.pname}
 								</Text>
-							</Pressable>
+							</TouchableWithoutFeedback>
 						</View>
 					);
 				})}

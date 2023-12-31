@@ -94,7 +94,7 @@ const FloatingMenu = ({
 				)}
 				{renderPlaylists &&
 					storageContext?.playlistData.map((item) => {
-						if (item.pname !== "all")
+						if (item.pid !== "0")
 							return (
 								<MenuOption
 									key={item.pid}

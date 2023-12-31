@@ -1,6 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import { useContext, useState } from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, useColorScheme } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import AudioPlayer from "../components/AudioPlayer";
 import PrimaryHeader from "../components/PrimaryHeader";
@@ -9,7 +9,7 @@ import SongList from "../components/SongList";
 import { View } from "../components/Themed";
 import VideoList from "../components/VideoList";
 import { defaultVideoData } from "../constants/VideoData";
-import { SIZES } from "../constants/theme";
+import { COLORS, SIZES } from "../constants/theme";
 import { SwitchPageContext } from "../utils/SwitchPageContext";
 import { videoItemType } from "../utils/types";
 import FloatingDialogBox from "../components/FloatingDialogBox";
@@ -24,11 +24,18 @@ const index = () => {
 	const switchContext = useContext(SwitchPageContext);
 	const floatingContext = useContext(FloatingContext);
 	const [isLoading, setIsLoading] = useState(false);
+	const colorScheme = useColorScheme();
 	return (
 		<SafeAreaView style={styles.screenContainer}>
 			{floatingContext?.floatDialogToggle && <FloatingDialogBox />}
 			<View style={styles.mainContainer}>
-				<StatusBar />
+				<StatusBar
+					backgroundColor={
+						colorScheme === "light"
+							? COLORS.whitePrimary
+							: COLORS.darkPrimary
+					}
+				/>
 				{!switchContext?.switchPage ? (
 					<>
 						<PrimaryHeader
