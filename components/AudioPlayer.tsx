@@ -1,13 +1,9 @@
-import { useContext, useEffect, useState } from "react";
-import {
-	Image,
-	Pressable,
-	StyleSheet,
-	useColorScheme,
-	StatusBar,
-} from "react-native";
+import Slider from "@react-native-community/slider";
+import { useCallback, useContext, useEffect, useState } from "react";
+import { Pressable, StyleSheet, useColorScheme } from "react-native";
 import { COLORS, FONT, SIZES } from "../constants/theme";
 import { AudioContext } from "../utils/AudioContext";
+import { convertToTime } from "../utils/global";
 import {
 	BackButton,
 	ForwardButton,
@@ -17,8 +13,7 @@ import {
 } from "./AudioControlButtons";
 import { reducedTitle } from "./SongItem";
 import { Text, View } from "./Themed";
-import Slider from "@react-native-community/slider";
-import { convertToTime } from "../utils/global";
+import { queueType } from "../utils/types";
 
 const AudioPlayer = () => {
 	// TODO: KeyboardAvoidingView from react-native
@@ -27,42 +22,58 @@ const AudioPlayer = () => {
 	const colorScheme = useColorScheme();
 	const [fullScreen, setFullScreen] = useState(false);
 
-	const handleBackOnce = () => {
-		audioContext?.sound?.playFromPositionAsync(0);
+	const decideQueue = useCallback(() => {
+		if (
+			audioContext?.userQueue !== undefined &&
+			audioContext.userQueue !== null &&
+			audioContext.userQueue.queue.length > 0 &&
+			audioContext.userQueue.currentIndex !== -1
+		)
+			return "userqueue";
+		else if (
+			audioContext?.globalQueue !== undefined &&
+			audioContext.globalQueue !== null &&
+			audioContext.globalQueue.queue.length > 0 &&
+			audioContext.globalQueue.currentIndex !== -1
+		)
+			return "globalqueue";
+		else return "";
+	}, [audioContext?.userQueue, audioContext?.globalQueue]);
+
+	const handleBackOnce = async () => {
+		await audioContext?.sound?.playFromPositionAsync(0);
+	};
+
+	const updateIndexBack = (queue: queueType) => {
+		if (queue.currentIndex === -1) return queue.queue.length - 1;
+		else if (queue.currentIndex === 0) return 0;
+		else return queue.currentIndex - 1;
 	};
 
 	const handleBackTwice = () => {
 		// check which queue is currently is use then appropriately go back a track
-		audioContext?.setGlobalQueue((prev) => {
-			if (prev === null) return null;
-			return {
-				...prev,
-				currentIndex:
-					prev.currentIndex === -1
-						? prev.queue.length - 1
-						: prev.currentIndex === 0
-						? 0
-						: prev.currentIndex - 1,
-			};
-		});
+		if (audioContext?.queueRN === "") return;
+		audioContext?.queueRN === "globalqueue"
+			? audioContext?.setGlobalQueue((prev) => {
+					if (prev === null) return null;
+					const updatedIndex = updateIndexBack(prev);
+					return {
+						...prev,
+						currentIndex: updatedIndex,
+					};
+			  })
+			: audioContext?.setUserQueue((prev) => {
+					if (prev === null) return null;
+					return {
+						...prev,
+						currentIndex: updateIndexBack(prev),
+					};
+			  });
 		audioContext?.setSkip(true);
 	};
-
-	const handleForward = () => {
-		// check which queue is currently is use then appropriately go back a track
-		audioContext?.setGlobalQueue((prev) => {
-			if (prev === null) return null;
-			return {
-				...prev,
-				currentIndex:
-					prev.currentIndex === -1
-						? 0
-						: prev.currentIndex + 1 === prev.queue.length
-						? prev.currentIndex
-						: prev.currentIndex + 1,
-			};
-		});
-		audioContext?.setSkip(true);
+	// if it does not work try converting it to a usecallback function
+	const handleForward = async () => {
+		await audioContext?.sound?.setPositionAsync(audioContext.songDuration);
 	};
 
 	useEffect(() => {

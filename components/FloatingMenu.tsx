@@ -11,14 +11,15 @@ import { COLORS, SIZES } from "../constants/theme";
 import { StorageContext } from "../utils/StorageContext";
 import { View } from "./Themed";
 import { AudioContext } from "../utils/AudioContext";
+import { songItemType } from "../utils/types";
 
 const Divider = () => <View style={styles.divider} />;
 
 const FloatingMenu = ({
-	sid,
+	song,
 	currPlaylist,
 }: {
-	sid: string;
+	song: songItemType;
 	currPlaylist: string;
 }) => {
 	const [renderPlaylists, setRenderPlaylists] = useState(false);
@@ -33,7 +34,7 @@ const FloatingMenu = ({
 					size={20}
 					color={
 						colorScheme === "light" ||
-						sid === audioContext?.songInfo["sid"]
+						song.sid === audioContext?.songInfo["sid"]
 							? "black"
 							: COLORS.whiteSecondary
 					}
@@ -54,9 +55,25 @@ const FloatingMenu = ({
 								setRenderPlaylists(true);
 								return false;
 							}}
-							text="Add to playlist"
+							text="Add to Playlist"
 							customStyles={{
 								optionWrapper: {},
+							}}
+						/>
+						<Divider />
+						<MenuOption
+							text="Add to Queue"
+							onSelect={() => {
+								audioContext?.setUserQueue((prev) => {
+									if (prev === null)
+										return {
+											queue: [song],
+											currentIndex: 0,
+										};
+									prev.queue.push(song);
+									prev.currentIndex = prev.queue.length - 1;
+									return prev;
+								});
 							}}
 						/>
 						{currPlaylist !== "0" && (
@@ -66,7 +83,7 @@ const FloatingMenu = ({
 									onSelect={() => {
 										storageContext?.setSongData((prev) => {
 											return prev.map((item) => {
-												if (item.sid === sid) {
+												if (item.sid === song.sid) {
 													const filtered =
 														item.playlists.filter(
 															(pitem) =>
@@ -102,7 +119,7 @@ const FloatingMenu = ({
 									onSelect={() => {
 										storageContext.setSongData((prev) => {
 											return prev.map((song) => {
-												if (song.sid === sid) {
+												if (song.sid === song.sid) {
 													song.playlists.push(
 														item.pid
 													);

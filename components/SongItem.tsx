@@ -36,7 +36,9 @@ const SongItem = ({
 						thumbnail: song.thumbnail,
 					};
 				});
-				audioContext?.setSoundUri(song.itemUri);
+				audioContext?.setSoundUri((prev) => {
+					return { uri: song.itemUri, switch: !prev.switch };
+				});
 			}}
 		>
 			<View
@@ -104,7 +106,7 @@ const SongItem = ({
 							}}
 						>
 							<FloatingMenu
-								sid={song.sid}
+								song={song}
 								currPlaylist={selectedPlaylist}
 							/>
 						</View>

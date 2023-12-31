@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { Pressable, StyleSheet, useColorScheme } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import { COLORS, FONT, SIZES } from "../constants/theme";
@@ -20,8 +20,9 @@ const SongList = ({
 	const audioContext = useContext(AudioContext);
 	// local song data
 	const [songData, setSongData] = useState<songItemType[]>([]);
-	const [showQueue, setShowQueue] = useState<boolean>(false);
+	// const [showQueue, setShowQueue] = useState<boolean>(false);
 	const colorScheme = useColorScheme();
+	const [showQueueData, setShowQueueData] = useState<string>("");
 
 	useEffect(() => {
 		setSongData(() => {
@@ -39,9 +40,23 @@ const SongList = ({
 		});
 	}, [storageContext?.songData, searchTerm, selectedHeaderButton]);
 
-	// useEffect(() => {
-	// 	console.log(songData);
-	// }, [songData]);
+	const decideQueue = useCallback(() => {
+		if (
+			audioContext?.userQueue !== undefined &&
+			audioContext.userQueue !== null &&
+			audioContext.userQueue.queue.length > 0 &&
+			audioContext.userQueue.currentIndex !== -1
+		)
+			return "userqueue";
+		else if (
+			audioContext?.globalQueue !== undefined &&
+			audioContext.globalQueue !== null &&
+			audioContext.globalQueue.queue.length > 0 &&
+			audioContext.globalQueue.currentIndex !== -1
+		)
+			return "globalqueue";
+		else return "";
+	}, [audioContext?.userQueue, audioContext?.globalQueue]);
 
 	return (
 		<View style={styles.container}>
@@ -55,10 +70,89 @@ const SongList = ({
 				>
 					<Pressable
 						onPress={() => {
-							audioContext?.setGlobalQueue({
-								currentIndex: 0,
-								queue: songData,
-							});
+							setShowQueueData("");
+						}}
+					>
+						<Text
+							style={[
+								styles.buttonText,
+								{
+									color:
+										colorScheme === "light"
+											? "black"
+											: COLORS.whitePrimary,
+								},
+							]}
+						>
+							{storageContext?.playlistData
+								.filter(
+									(pitem) =>
+										pitem.pid === selectedHeaderButton
+								)
+								.map(
+									(matchingPlaylist) => matchingPlaylist.pname
+								)[0] || "All"}
+						</Text>
+					</Pressable>
+					{audioContext?.globalQueue && (
+						<Pressable
+							onPress={() => {
+								setShowQueueData("global");
+							}}
+						>
+							<Text
+								style={[
+									styles.buttonText,
+									{
+										color:
+											colorScheme === "light"
+												? "black"
+												: COLORS.whitePrimary,
+									},
+								]}
+							>
+								GQueue
+							</Text>
+						</Pressable>
+					)}
+					{audioContext?.userQueue && (
+						<Pressable
+							onPress={() => {
+								setShowQueueData("user");
+							}}
+						>
+							<Text
+								style={[
+									styles.buttonText,
+									{
+										color:
+											colorScheme === "light"
+												? "black"
+												: COLORS.whitePrimary,
+									},
+								]}
+							>
+								UQueue
+							</Text>
+						</Pressable>
+					)}
+				</View>
+				<View
+					style={{
+						backgroundColor: "transparent",
+						flexDirection: "row",
+						gap: 12,
+					}}
+				>
+					<Pressable
+						onPress={() => {
+							const res = decideQueue();
+							if (res === "" || res === "globalqueue") {
+								audioContext?.setGlobalQueue({
+									currentIndex: 0,
+									queue: songData,
+								});
+							}
 							audioContext?.setToggleQueue(true);
 						}}
 					>
@@ -77,12 +171,14 @@ const SongList = ({
 						</Text>
 					</Pressable>
 					<Pressable
-						disabled={
-							audioContext?.globalQueue?.queue === undefined ||
-							audioContext?.globalQueue?.queue.length === 0
-						}
 						onPress={() => {
-							setShowQueue((prev) => !prev);
+							let temp = [...songData];
+							temp = durstenfeldShuffle(temp);
+							audioContext?.setGlobalQueue({
+								currentIndex: 0,
+								queue: temp,
+							});
+							audioContext?.setToggleQueue(true);
 						}}
 					>
 						<Text
@@ -96,39 +192,20 @@ const SongList = ({
 								},
 							]}
 						>
-							{showQueue ? "Back" : "Queue"}
+							Shuffle
 						</Text>
 					</Pressable>
 				</View>
-				<Pressable
-					onPress={() => {
-						let temp = [...songData];
-						temp = durstenfeldShuffle(temp);
-						audioContext?.setGlobalQueue({
-							currentIndex: 0,
-							queue: temp,
-						});
-						audioContext?.setToggleQueue(true);
-					}}
-				>
-					<Text
-						style={[
-							styles.buttonText,
-							{
-								color:
-									colorScheme === "light"
-										? "black"
-										: COLORS.whitePrimary,
-							},
-						]}
-					>
-						Shuffle
-					</Text>
-				</Pressable>
 			</View>
 			<FlatList
 				showsVerticalScrollIndicator={false}
-				data={showQueue ? audioContext?.globalQueue?.queue : songData}
+				data={
+					showQueueData === "global"
+						? audioContext?.globalQueue?.queue
+						: showQueueData === "user"
+						? audioContext?.userQueue?.queue
+						: songData
+				}
 				renderItem={({ item }) => (
 					<SongItem
 						song={item}
