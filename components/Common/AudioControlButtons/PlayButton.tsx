@@ -7,9 +7,11 @@ import { AudioContext } from "../../../utils/Contexts/AudioContext";
 const PlayButton = ({
 	size = 24,
 	fill = false,
+	handlePress,
 }: {
 	size?: number;
 	fill?: boolean;
+	handlePress: () => void;
 }) => {
 	const audioContext = useContext(AudioContext);
 	const colorScheme = useColorScheme();
@@ -17,12 +19,7 @@ const PlayButton = ({
 	return (
 		<Pressable
 			disabled={audioContext?.sound === null}
-			onPress={() => {
-				audioContext?.setStatus((prev) => {
-					if (prev === "paused") return "playing";
-					else return "paused";
-				});
-			}}
+			onPress={handlePress}
 		>
 			{audioContext?.status === "paused" ? (
 				<Ionicons
@@ -36,6 +33,7 @@ const PlayButton = ({
 				/>
 			) : (
 				<Ionicons
+					style={{ left: 1 }}
 					name={fill ? "pause" : "pause-outline"}
 					size={size}
 					color={

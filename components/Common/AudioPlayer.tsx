@@ -1,8 +1,11 @@
 import Slider from "@react-native-community/slider";
 import { useContext, useEffect, useState } from "react";
-import { Pressable, StyleSheet, Vibration, useColorScheme } from "react-native";
+import { StyleSheet, useColorScheme } from "react-native";
+import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import { COLORS, FONT, SIZES } from "../../constants/theme";
 import { AudioContext } from "../../utils/Contexts/AudioContext";
+import { NotificationContext } from "../../utils/Contexts/NotificationContext";
+import { SwitchPageContext } from "../../utils/Contexts/SwitchPageContext";
 import { queueType } from "../../utils/TypeDeclarations";
 import { convertToTime } from "../../utils/global";
 import { reducedTitle } from "../Primary/SongItem";
@@ -14,25 +17,36 @@ import {
 	RefreshButton,
 } from "./AudioControlButtons";
 import { Text, View } from "./Themed";
-import { TouchableWithoutFeedback } from "react-native-gesture-handler";
-import { SwitchPageContext } from "../../utils/Contexts/SwitchPageContext";
 
 const AudioPlayer = () => {
 	// TODO: KeyboardAvoidingView from react-native
 	const audioContext = useContext(AudioContext);
 	const [backClickCount, setBackClickCount] = useState<number | null>(null);
 	const colorScheme = useColorScheme();
-	const [fullScreen, setFullScreen] = useState(false);
+	const [expanded, setExpanded] = useState(false);
 	const switchContext = useContext(SwitchPageContext);
-
-	const handleBackOnce = async () => {
-		await audioContext?.sound?.playFromPositionAsync(0);
-	};
+	const notificationContext = useContext(NotificationContext);
 
 	const updateIndexBack = (queue: queueType) => {
 		if (queue.currentIndex === -1) return queue.queue.length - 1;
 		else if (queue.currentIndex === 0) return 0;
 		else return queue.currentIndex - 1;
+	};
+
+	// if it does not work try converting it to a usecallback function
+	const handleForward = async () => {
+		await audioContext?.sound?.setPositionAsync(audioContext.songDuration);
+	};
+
+	const handlePlayPause = () => {
+		audioContext?.setStatus((prev) => {
+			if (prev === "paused") return "playing";
+			else return "paused";
+		});
+	};
+
+	const handleBackOnce = async () => {
+		await audioContext?.sound?.playFromPositionAsync(0);
 	};
 
 	const handleBackTwice = () => {
@@ -56,9 +70,12 @@ const AudioPlayer = () => {
 			  });
 		audioContext?.setSkip(true);
 	};
-	// if it does not work try converting it to a usecallback function
-	const handleForward = async () => {
-		await audioContext?.sound?.setPositionAsync(audioContext.songDuration);
+
+	const handleBack = () => {
+		setBackClickCount((prev) => {
+			if (prev === null) return 0;
+			else return (prev + 1) % 2;
+		});
 	};
 
 	useEffect(() => {
@@ -66,6 +83,18 @@ const AudioPlayer = () => {
 			handleBackOnce();
 		} else if (backClickCount === 1) handleBackTwice();
 	}, [backClickCount]);
+
+	useEffect(() => {
+		const action = notificationContext?.remoteAction?.action;
+		if (action === undefined || action === null || action === "") return;
+		if (action === "playButton") {
+			handlePlayPause();
+		} else if (action === "prevButton") {
+			handleBack();
+		} else if (action === "nextButton") {
+			handleForward();
+		}
+	}, [notificationContext?.remoteAction]);
 
 	return (
 		<View
@@ -77,10 +106,10 @@ const AudioPlayer = () => {
 						colorScheme === "light"
 							? COLORS.whiteSecondary
 							: "#262626",
-					flexDirection: fullScreen ? "column" : "row",
-					paddingVertical: fullScreen ? SIZES.medium : SIZES.small,
-					borderTopRightRadius: fullScreen ? SIZES.medium : 0,
-					borderTopLeftRadius: fullScreen ? SIZES.medium : 0,
+					flexDirection: expanded ? "column" : "row",
+					paddingVertical: expanded ? SIZES.medium : SIZES.small,
+					borderTopRightRadius: expanded ? SIZES.medium : 0,
+					borderTopLeftRadius: expanded ? SIZES.medium : 0,
 				},
 			]}
 		>
@@ -88,9 +117,9 @@ const AudioPlayer = () => {
 				style={[
 					styles.songTitleContainer,
 					{
-						alignItems: fullScreen ? "center" : "flex-start",
-						width: fullScreen ? "95%" : "60%",
-						marginBottom: fullScreen ? 14 : 0,
+						alignItems: expanded ? "center" : "flex-start",
+						width: expanded ? "95%" : "60%",
+						marginBottom: expanded ? 14 : 0,
 					},
 				]}
 			>
@@ -101,7 +130,7 @@ const AudioPlayer = () => {
 						switchContext?.setSwitchPage((prev) => !prev);
 					}}
 					onPress={() => {
-						setFullScreen((prev) => !prev);
+						setExpanded((prev) => !prev);
 					}}
 				>
 					<Text
@@ -112,16 +141,16 @@ const AudioPlayer = () => {
 									colorScheme === "light"
 										? "black"
 										: COLORS.whitePrimary,
-								textAlign: fullScreen ? "center" : "left",
-								fontSize: fullScreen ? 18 : 16,
+								textAlign: expanded ? "center" : "left",
+								fontSize: expanded ? 18 : 16,
 							},
 						]}
-						numberOfLines={fullScreen ? 2 : 1}
+						numberOfLines={expanded ? 2 : 1}
 					>
 						{audioContext?.songInfo["sname"] === undefined ||
 						audioContext.songInfo["sname"] === ""
 							? "Play Something"
-							: fullScreen
+							: expanded
 							? reducedTitle(
 									audioContext?.songInfo["sname"] || "",
 									60
@@ -137,36 +166,32 @@ const AudioPlayer = () => {
 				style={[
 					styles.buttonContainer,
 					{
-						width: fullScreen ? "95%" : "40%",
+						width: expanded ? "95%" : "40%",
 						alignItems: "center",
-						justifyContent: fullScreen ? "center" : "flex-end",
-						marginBottom: fullScreen ? SIZES.large : 0,
+						justifyContent: expanded ? "center" : "flex-end",
+						marginBottom: expanded ? SIZES.large : 0,
 					},
 				]}
 			>
-				{!fullScreen && <RefreshButton />}
-				{!fullScreen && <LoopButton />}
+				{!expanded && <RefreshButton />}
+				{!expanded && <LoopButton />}
 				<BackButton
-					handlePress={() => {
-						setBackClickCount((prev) => {
-							if (prev === null) return 0;
-							else return (prev + 1) % 2;
-						});
-					}}
-					size={fullScreen ? 28 : 24}
-					fill={fullScreen ? true : false}
+					handlePress={handleBack}
+					size={expanded ? 28 : 24}
+					fill={expanded ? true : false}
 				/>
 				<PlayButton
-					size={fullScreen ? 28 : 24}
-					fill={fullScreen ? true : false}
+					size={expanded ? 28 : 24}
+					fill={expanded ? true : false}
+					handlePress={handlePlayPause}
 				/>
 				<ForwardButton
 					handlePress={handleForward}
-					size={fullScreen ? 28 : 24}
-					fill={fullScreen ? true : false}
+					size={expanded ? 28 : 24}
+					fill={expanded ? true : false}
 				/>
 			</View>
-			{fullScreen && (
+			{expanded && (
 				<View
 					style={{
 						width: "100%",

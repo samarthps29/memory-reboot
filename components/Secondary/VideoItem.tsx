@@ -1,7 +1,13 @@
 import dayjs from "dayjs";
 import { StorageAccessFramework as SAF } from "expo-file-system";
 import { useContext } from "react";
-import { Image, Pressable, StyleSheet, useColorScheme } from "react-native";
+import {
+	Image,
+	Linking,
+	Pressable,
+	StyleSheet,
+	useColorScheme,
+} from "react-native";
 import { COLORS, FONT, SIZES } from "../../constants/theme";
 import {
 	StorageContext,
@@ -164,19 +170,25 @@ const VideoItem = ({ video }: { video: videoItemType }) => {
 						marginTop: 6,
 					}}
 				>
-					<Text
-						style={[
-							styles.videoTitle,
-							{
-								color:
-									colorScheme === "light"
-										? "black"
-										: COLORS.whitePrimary,
-							},
-						]}
+					<Pressable
+						onPress={() => {
+							Linking.openURL(ytTemplate(video.id.videoId));
+						}}
 					>
-						{filter(video.snippet.title)}
-					</Text>
+						<Text
+							style={[
+								styles.videoTitle,
+								{
+									color:
+										colorScheme === "light"
+											? "black"
+											: COLORS.whitePrimary,
+								},
+							]}
+						>
+							{filter(video.snippet.title)}
+						</Text>
+					</Pressable>
 				</View>
 				<View
 					style={{

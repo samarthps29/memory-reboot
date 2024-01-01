@@ -1,6 +1,13 @@
 import { AVPlaybackStatusError, AVPlaybackStatusSuccess, Audio } from "expo-av";
-import { createContext, useCallback, useEffect, useState } from "react";
+import {
+	createContext,
+	useCallback,
+	useContext,
+	useEffect,
+	useState,
+} from "react";
 import { queueType } from "../TypeDeclarations";
+import { NotificationContext } from "./NotificationContext";
 
 export const AudioContext = createContext<{
 	sound: Audio.Sound | null;
@@ -37,6 +44,7 @@ export const AudioContext = createContext<{
 } | null>(null);
 
 export const AudioContextProvider = ({ children }: React.PropsWithChildren) => {
+	const notificationContext = useContext(NotificationContext);
 	// implement types for songInfo and maybe merge songInfo and soundUri
 	const [songInfo, setSongInfo] = useState<Record<string, string>>({});
 	const [soundUri, setSoundUri] = useState<{ uri: string; switch: boolean }>({
@@ -214,7 +222,7 @@ export const AudioContextProvider = ({ children }: React.PropsWithChildren) => {
 			staysActiveInBackground: true,
 			interruptionModeAndroid: 2,
 			shouldDuckAndroid: false,
-			playThroughEarpieceAndroid: true,
+			playThroughEarpieceAndroid: false,
 			// allowsRecordingIOS: true,
 			// interruptionModeIOS: Audio.INTERRUPTION_MODE_IOS_DO_NOT_MIX,
 			// playsInSilentModeIOS: true,
@@ -302,6 +310,17 @@ export const AudioContextProvider = ({ children }: React.PropsWithChildren) => {
 	useEffect(() => {
 		requestAudioMode();
 	}, []);
+
+	const handleNotification = async () => {
+		await notificationContext?.dismissPushNotification();
+		await notificationContext?.schedulePushNotification(songInfo["sname"]);
+	};
+
+	useEffect(() => {
+		if (songInfo["sname"] !== undefined) {
+			handleNotification();
+		}
+	}, [songInfo]);
 
 	return (
 		<AudioContext.Provider
