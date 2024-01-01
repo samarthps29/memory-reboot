@@ -35,7 +35,7 @@ const configureNotificationCategory = async () => {
 			options: { opensAppToForeground: false },
 		},
 		{
-			buttonTitle: "Play",
+			buttonTitle: "Play | Pause",
 			identifier: "playButton",
 			options: { opensAppToForeground: false },
 		},
