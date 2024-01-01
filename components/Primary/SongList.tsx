@@ -1,13 +1,13 @@
 import { useCallback, useContext, useEffect, useState } from "react";
 import { Pressable, StyleSheet, useColorScheme } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
-import { COLORS, FONT, SIZES } from "../constants/theme";
-import { StorageContext } from "../utils/Contexts/StorageContext";
-import { songItemType } from "../utils/TypeDeclarations";
+import { COLORS, FONT, SIZES } from "../../constants/theme";
+import { StorageContext } from "../../utils/Contexts/StorageContext";
+import { songItemType } from "../../utils/TypeDeclarations";
 import SongItem from "./SongItem";
-import { Text, View } from "./Themed";
-import { AudioContext } from "../utils/Contexts/AudioContext";
-import { durstenfeldShuffle } from "../utils/global";
+import { Text, View } from "../Common/Themed";
+import { AudioContext } from "../../utils/Contexts/AudioContext";
+import { durstenfeldShuffle } from "../../utils/global";
 
 const SongList = ({
 	searchTerm,
@@ -20,9 +20,7 @@ const SongList = ({
 	const audioContext = useContext(AudioContext);
 	// local song data
 	const [songData, setSongData] = useState<songItemType[]>([]);
-	// const [showQueue, setShowQueue] = useState<boolean>(false);
 	const colorScheme = useColorScheme();
-	// const [showQueueData, setShowQueueData] = useState<string>("");
 
 	useEffect(() => {
 		setSongData(() => {

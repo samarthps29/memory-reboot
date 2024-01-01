@@ -1,10 +1,10 @@
 import { SetStateAction, useContext } from "react";
 import { StyleSheet } from "react-native";
-import { COLORS, FONT, SIZES } from "../constants/theme";
-import { StorageContext } from "../utils/Contexts/StorageContext";
-import HeaderButtons from "./HeaderButtons";
-import SearchBar from "./SearchBar";
-import { View } from "./Themed";
+import { COLORS, FONT, SIZES } from "../../constants/theme";
+import { StorageContext } from "../../utils/Contexts/StorageContext";
+import HeaderButtons from "../Common/HeaderButtons";
+import SearchBar from "../Common/SearchBar";
+import { View } from "../Common/Themed";
 
 const PrimaryHeader = ({
 	searchTerm,
@@ -17,7 +17,6 @@ const PrimaryHeader = ({
 	selectedHeaderButton: string;
 	setSelectedHeaderButton: React.Dispatch<SetStateAction<string>>;
 }) => {
-	// const [selectedOption, setSelectedOption] = useState(0);
 	const storageContext = useContext(StorageContext);
 	return (
 		<View style={styles.container}>

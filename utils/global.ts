@@ -21,6 +21,5 @@ export const convertToTime = (milliseconds: number) => {
 	const minutes = Math.floor(timeInSeconds / 60);
 	const seconds = timeInSeconds - minutes * 60;
 
-	// Return as a formatted string
 	return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
 };

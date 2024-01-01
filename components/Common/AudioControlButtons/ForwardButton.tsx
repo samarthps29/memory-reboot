@@ -1,10 +1,10 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useContext } from "react";
 import { Pressable, useColorScheme } from "react-native";
-import { COLORS } from "../../constants/theme";
-import { AudioContext } from "../../utils/Contexts/AudioContext";
+import { COLORS } from "../../../constants/theme";
+import { AudioContext } from "../../../utils/Contexts/AudioContext";
 
-const BackButton = ({
+const ForwardButton = ({
 	handlePress,
 	size = 24,
 }: {
@@ -16,14 +16,15 @@ const BackButton = ({
 
 	return (
 		<Pressable
-			disabled={
-				audioContext?.globalQueue?.queue === undefined ||
-				audioContext.globalQueue.currentIndex === 0
-			}
 			onPress={handlePress}
+			disabled={
+				audioContext?.decideQueue() === "" &&
+				(audioContext.songInfo["loop"] !== "yes" ||
+					audioContext.sound === null)
+			}
 		>
 			<Ionicons
-				name="play-skip-back-outline"
+				name="play-skip-forward-outline"
 				size={size}
 				color={
 					colorScheme === "light" ? "black" : COLORS.whiteSecondary
@@ -33,4 +34,4 @@ const BackButton = ({
 	);
 };
 
-export default BackButton;
+export default ForwardButton;

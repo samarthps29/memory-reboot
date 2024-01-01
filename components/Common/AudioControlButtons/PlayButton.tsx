@@ -1,8 +1,8 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useContext } from "react";
 import { Pressable, useColorScheme } from "react-native";
-import { COLORS } from "../../constants/theme";
-import { AudioContext } from "../../utils/Contexts/AudioContext";
+import { COLORS } from "../../../constants/theme";
+import { AudioContext } from "../../../utils/Contexts/AudioContext";
 
 const PlayButton = ({ size = 24 }: { size?: number }) => {
 	const audioContext = useContext(AudioContext);

@@ -124,15 +124,19 @@ export const StorageContextProvider = ({
 	};
 
 	const saveData = async () => {
-		await AsyncStorage.setItem("songData", JSON.stringify(songData));
-		await AsyncStorage.setItem(
+		const songTask = AsyncStorage.setItem(
+			"songData",
+			JSON.stringify(songData)
+		);
+		const vidStatusTask = AsyncStorage.setItem(
 			"vidStatusDict",
 			JSON.stringify(vidStatusDict)
 		);
-		await AsyncStorage.setItem(
+		const playlistTask = AsyncStorage.setItem(
 			"playlistData",
 			JSON.stringify(playlistData)
 		);
+		await Promise.all([songTask, vidStatusTask, playlistTask]);
 		setSaveToggle(false);
 	};
 

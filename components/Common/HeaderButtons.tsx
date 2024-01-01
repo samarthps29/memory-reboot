@@ -8,10 +8,10 @@ import {
 import { ScrollView } from "react-native-gesture-handler";
 import "react-native-get-random-values";
 import { v4 as uuidv4 } from "uuid";
-import { COLORS, FONT, SIZES } from "../constants/theme";
-import { FloatingContext } from "../utils/Contexts/FloatingContext";
-import { StorageContext } from "../utils/Contexts/StorageContext";
-import { SwitchPageContext } from "../utils/Contexts/SwitchPageContext";
+import { COLORS, FONT, SIZES } from "../../constants/theme";
+import { FloatingContext } from "../../utils/Contexts/FloatingContext";
+import { StorageContext } from "../../utils/Contexts/StorageContext";
+import { SwitchPageContext } from "../../utils/Contexts/SwitchPageContext";
 import { Text, View } from "./Themed";
 
 const HeaderButtons = ({

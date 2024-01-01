@@ -2,14 +2,14 @@ import dayjs from "dayjs";
 import { StorageAccessFramework as SAF } from "expo-file-system";
 import { useContext } from "react";
 import { Image, Pressable, StyleSheet, useColorScheme } from "react-native";
-import { COLORS, FONT, SIZES } from "../constants/theme";
+import { COLORS, FONT, SIZES } from "../../constants/theme";
 import {
 	StorageContext,
 	checkSubstring,
-} from "../utils/Contexts/StorageContext";
-import { filter, ytTemplate } from "../utils/global";
-import { songItemType, videoItemType } from "../utils/TypeDeclarations";
-import { Text, View } from "./Themed";
+} from "../../utils/Contexts/StorageContext";
+import { filter, ytTemplate } from "../../utils/global";
+import { songItemType, videoItemType } from "../../utils/TypeDeclarations";
+import { Text, View } from "../Common/Themed";
 
 const VideoItem = ({ video }: { video: videoItemType }) => {
 	const colorScheme = useColorScheme();

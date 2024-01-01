@@ -1,10 +1,10 @@
 import { SetStateAction, useContext, useState } from "react";
 import { StyleSheet } from "react-native";
-import { getYTdata } from "../utils/api/ytdata";
-import { videoItemType } from "../utils/TypeDeclarations";
-import HeaderButtons from "./HeaderButtons";
-import SearchBar from "./SearchBar";
-import { View } from "./Themed";
+import { getYTdata } from "../../utils/api/ytdata";
+import { videoItemType } from "../../utils/TypeDeclarations";
+import HeaderButtons from "../Common/HeaderButtons";
+import SearchBar from "../Common/SearchBar";
+import { View } from "../Common/Themed";
 
 const options = [
 	{ pid: "0", pname: "Search" },

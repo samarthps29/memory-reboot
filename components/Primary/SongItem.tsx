@@ -1,11 +1,11 @@
 import { useContext } from "react";
 import { Image, Pressable, StyleSheet, useColorScheme } from "react-native";
-import { COLORS, FONT, SIZES } from "../constants/theme";
-import { AudioContext } from "../utils/Contexts/AudioContext";
-import { filter } from "../utils/global";
-import { songItemType } from "../utils/TypeDeclarations";
-import FloatingMenu from "./FloatingMenu";
-import { Text, View } from "./Themed";
+import { COLORS, FONT, SIZES } from "../../constants/theme";
+import { AudioContext } from "../../utils/Contexts/AudioContext";
+import { filter } from "../../utils/global";
+import { songItemType } from "../../utils/TypeDeclarations";
+import FloatingMenu from "../Common/FloatingMenu";
+import { Text, View } from "../Common/Themed";
 
 export const reducedTitle = (str: string, reductionParam: number = 40) => {
 	const filteredString = filter(str);

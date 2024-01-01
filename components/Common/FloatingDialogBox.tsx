@@ -1,8 +1,8 @@
 import { useContext, useState } from "react";
 import { Pressable, StatusBar, StyleSheet, useColorScheme } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
-import { COLORS, FONT, SIZES } from "../constants/theme";
-import { FloatingContext } from "../utils/Contexts/FloatingContext";
+import { COLORS, FONT, SIZES } from "../../constants/theme";
+import { FloatingContext } from "../../utils/Contexts/FloatingContext";
 import { Text, View } from "./Themed";
 
 const FloatingDialogBox = () => {

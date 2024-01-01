@@ -1,9 +1,11 @@
 import Slider from "@react-native-community/slider";
-import { useCallback, useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Pressable, StyleSheet, useColorScheme } from "react-native";
-import { COLORS, FONT, SIZES } from "../constants/theme";
-import { AudioContext } from "../utils/Contexts/AudioContext";
-import { convertToTime } from "../utils/global";
+import { COLORS, FONT, SIZES } from "../../constants/theme";
+import { AudioContext } from "../../utils/Contexts/AudioContext";
+import { queueType } from "../../utils/TypeDeclarations";
+import { convertToTime } from "../../utils/global";
+import { reducedTitle } from "../Primary/SongItem";
 import {
 	BackButton,
 	ForwardButton,
@@ -11,9 +13,7 @@ import {
 	PlayButton,
 	RefreshButton,
 } from "./AudioControlButtons";
-import { reducedTitle } from "./SongItem";
 import { Text, View } from "./Themed";
-import { queueType } from "../utils/TypeDeclarations";
 
 const AudioPlayer = () => {
 	// TODO: KeyboardAvoidingView from react-native
@@ -78,10 +78,6 @@ const AudioPlayer = () => {
 					paddingVertical: fullScreen ? SIZES.medium : SIZES.small,
 					borderTopRightRadius: fullScreen ? SIZES.medium : 0,
 					borderTopLeftRadius: fullScreen ? SIZES.medium : 0,
-					// backgroundImage: fullScreen
-					// 	? audioContext?.songInfo["thumbnail"]
-					// 	: undefined,
-					// paddingBottom: fullScreen ? SIZES.large : SIZES.small,
 				},
 			]}
 		>
@@ -96,10 +92,6 @@ const AudioPlayer = () => {
 				]}
 			>
 				<Pressable
-					// disabled={
-					// 	audioContext?.songInfo["sname"] === undefined ||
-					// 	audioContext.songInfo["sname"] === ""
-					// }
 					onPress={() => {
 						setFullScreen((prev) => !prev);
 					}}
@@ -250,7 +242,6 @@ const styles = StyleSheet.create({
 	},
 	songText: {
 		fontFamily: FONT.medium,
-		// fontSize: 16,
 	},
 	buttonContainer: {
 		backgroundColor: "transparent",

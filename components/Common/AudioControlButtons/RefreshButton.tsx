@@ -1,7 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Pressable, useColorScheme } from "react-native";
-import { COLORS } from "../../constants/theme";
-import { StorageContext } from "../../utils/Contexts/StorageContext";
+import { COLORS } from "../../../constants/theme";
+import { StorageContext } from "../../../utils/Contexts/StorageContext";
 import { useContext } from "react";
 
 const RefreshButton = () => {
