@@ -9,7 +9,7 @@ import {
 } from "react-native-popup-menu";
 import { COLORS, SIZES } from "../../constants/theme";
 import { StorageContext } from "../../utils/Contexts/StorageContext";
-import { View } from "./Themed";
+import { Text, View } from "./Themed";
 import { AudioContext } from "../../utils/Contexts/AudioContext";
 import { songItemType } from "../../utils/TypeDeclarations";
 
@@ -45,160 +45,203 @@ const FloatingMenu = ({
 			<MenuOptions
 				customStyles={{
 					optionsContainer: {
-						padding: SIZES.gap,
-						borderRadius: SIZES.small,
+						backgroundColor: "transparent",
+						borderWidth: 0,
+						elevation: 0,
+					},
+					optionsWrapper: {
+						elevation: 0,
+						backgroundColor: "transparent",
+						borderWidth: 0,
 					},
 				}}
 			>
-				{!renderPlaylists && (
-					<>
-						<MenuOption
-							onSelect={() => {
-								setRenderPlaylists(true);
-								return false;
-							}}
-							text="Add to Playlist"
-							customStyles={{
-								optionWrapper: {},
-							}}
-						/>
-						<Divider />
-						<MenuOption
-							text="Add to Queue"
-							onSelect={() => {
-								audioContext?.setUserQueue((prev) => {
-									if (prev === null)
-										return {
-											queue: [song],
-											currentIndex: 0,
-										};
-									prev.queue.push(song);
-									if (prev.currentIndex === -1)
-										prev.currentIndex =
-											prev.queue.length - 1;
-									return prev;
-								});
-							}}
-						/>
-						{audioContext?.showQueue !== "" && (
-							<>
-								<Divider />
-								<MenuOption
-									text="Remove from Queue"
-									onSelect={() => {
-										const selectedQueue =
-											audioContext?.showQueue;
-										if (
-											selectedQueue === "globalqueue" &&
-											audioContext?.globalQueue
-										) {
-											if (
-												index >
-												audioContext.globalQueue
-													.currentIndex
-											) {
-												// remove song from global queue
-												audioContext?.setGlobalQueue(
-													(prev) => {
-														if (prev === null)
-															return null;
-														prev.queue =
-															prev.queue.filter(
-																(_, qindex) =>
-																	qindex !==
-																	index
-															);
-														return prev;
-													}
-												);
-											}
-										} else if (
-											selectedQueue === "userqueue" &&
-											audioContext?.userQueue
-										) {
-											if (
-												index >
-												audioContext?.userQueue
-													?.currentIndex
-											) {
-												// remove song from user queue
-												audioContext.setUserQueue(
-													(prev) => {
-														if (prev === null)
-															return null;
-														prev.queue =
-															prev.queue.filter(
-																(_, qindex) =>
-																	qindex !==
-																	index
-															);
-														return prev;
-													}
-												);
-											}
-										}
-									}}
-								/>
-							</>
-						)}
-						{currPlaylist !== "0" && (
-							<>
-								<Divider />
-								<MenuOption
-									onSelect={() => {
-										storageContext?.setSongData((prev) => {
-											return prev.map((item) => {
-												if (item.sid === song.sid) {
-													const filtered =
-														item.playlists.filter(
-															(pitem) =>
-																pitem !==
-																currPlaylist
-														);
+				<View
+					style={{
+						flex: 1,
+						width: "90%",
+						borderRadius: SIZES.small,
+						overflow: "hidden",
+						marginTop: 28,
+					}}
+				>
+					{!renderPlaylists && (
+						<>
+							<MenuOption
+								onSelect={() => {
+									setRenderPlaylists(true);
+									return false;
+								}}
+								text="Add to Playlist"
+								customStyles={{
+									optionWrapper: styles.menuOption,
+								}}
+							/>
 
-													return {
-														...item,
-														playlists: filtered,
-													};
-												} else return item;
-											});
-										});
-										storageContext?.setSaveToggle(true);
-									}}
-									text="Remove from playlist"
-									customStyles={{
-										optionWrapper: {},
-									}}
-								/>
-							</>
-						)}
-					</>
-				)}
-				{renderPlaylists &&
-					storageContext?.playlistData.map((item) => {
-						if (item.pid !== "0")
-							return (
-								<MenuOption
-									key={item.pid}
-									text={item.pname}
-									onSelect={() => {
-										storageContext.setSongData((prev) => {
-											return prev.map((song) => {
-												if (song.sid === song.sid) {
-													song.playlists.push(
-														item.pid
+							<Divider />
+							<MenuOption
+								text="Add to Queue"
+								customStyles={{
+									optionWrapper: styles.menuOption,
+								}}
+								onSelect={() => {
+									audioContext?.setUserQueue((prev) => {
+										if (prev === null)
+											return {
+												queue: [song],
+												currentIndex: 0,
+											};
+										prev.queue.push(song);
+										if (prev.currentIndex === -1)
+											prev.currentIndex =
+												prev.queue.length - 1;
+										return prev;
+									});
+								}}
+							/>
+							{audioContext?.showQueue !== "" && (
+								<>
+									<Divider />
+									<MenuOption
+										text="Remove from Queue"
+										customStyles={{
+											optionWrapper: styles.menuOption,
+										}}
+										onSelect={() => {
+											const selectedQueue =
+												audioContext?.showQueue;
+											if (
+												selectedQueue ===
+													"globalqueue" &&
+												audioContext?.globalQueue
+											) {
+												if (
+													index >
+													audioContext.globalQueue
+														.currentIndex
+												) {
+													// remove song from global queue
+													audioContext?.setGlobalQueue(
+														(prev) => {
+															if (prev === null)
+																return null;
+															prev.queue =
+																prev.queue.filter(
+																	(
+																		_,
+																		qindex
+																	) =>
+																		qindex !==
+																		index
+																);
+															return prev;
+														}
 													);
+												}
+											} else if (
+												selectedQueue === "userqueue" &&
+												audioContext?.userQueue
+											) {
+												if (
+													index >
+													audioContext?.userQueue
+														?.currentIndex
+												) {
+													// remove song from user queue
+													audioContext.setUserQueue(
+														(prev) => {
+															if (prev === null)
+																return null;
+															prev.queue =
+																prev.queue.filter(
+																	(
+																		_,
+																		qindex
+																	) =>
+																		qindex !==
+																		index
+																);
+															return prev;
+														}
+													);
+												}
+											}
+										}}
+									/>
+								</>
+							)}
+							{currPlaylist !== "0" && (
+								<>
+									<Divider />
+									<MenuOption
+										customStyles={{
+											optionWrapper: styles.menuOption,
+										}}
+										onSelect={() => {
+											storageContext?.setSongData(
+												(prev) => {
+													return prev.map((item) => {
+														if (
+															item.sid ===
+															song.sid
+														) {
+															const filtered =
+																item.playlists.filter(
+																	(pitem) =>
+																		pitem !==
+																		currPlaylist
+																);
 
-													return song;
-												} else return song;
-											});
-										});
-										storageContext.setSaveToggle(true);
-										setRenderPlaylists(false);
-									}}
-								/>
-							);
-					})}
+															return {
+																...item,
+																playlists:
+																	filtered,
+															};
+														} else return item;
+													});
+												}
+											);
+											storageContext?.setSaveToggle(true);
+										}}
+										text="Remove from playlist"
+									/>
+								</>
+							)}
+						</>
+					)}
+					{renderPlaylists &&
+						storageContext?.playlistData.map((item) => {
+							if (item.pid !== "0")
+								return (
+									<MenuOption
+										customStyles={{
+											optionWrapper: styles.menuOption,
+										}}
+										key={item.pid}
+										text={item.pname}
+										onSelect={() => {
+											storageContext.setSongData(
+												(prev) => {
+													return prev.map((ssong) => {
+														if (
+															song.sid ===
+															ssong.sid
+														) {
+															ssong.playlists.push(
+																item.pid
+															);
+														}
+														return ssong;
+													});
+												}
+											);
+											storageContext.setSaveToggle(true);
+											setRenderPlaylists(false);
+										}}
+									/>
+								);
+						})}
+				</View>
 			</MenuOptions>
 		</Menu>
 	);
@@ -213,5 +256,11 @@ const styles = StyleSheet.create({
 	divider: {
 		height: StyleSheet.hairlineWidth,
 		backgroundColor: "#7F8487",
+	},
+	menuOption: {
+		paddingVertical: 6,
+		paddingHorizontal: SIZES.small,
+		backgroundColor: COLORS.whitePrimary,
+		overflow: "scroll",
 	},
 });

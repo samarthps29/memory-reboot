@@ -14,7 +14,6 @@ const SecondaryScreen = ({
 	const [videoData, setVideoData] =
 		useState<videoItemType[]>(defaultVideoData);
 	const [isLoading, setIsLoading] = useState(false);
-
 	return (
 		<>
 			<SecondaryHeader
@@ -23,6 +22,7 @@ const SecondaryScreen = ({
 				setSelectedHeaderButton={setSelectedHeaderButton}
 				setIsLoading={setIsLoading}
 			/>
+
 			<VideoList videoData={videoData} isLoading={isLoading} />
 		</>
 	);

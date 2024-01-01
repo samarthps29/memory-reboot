@@ -21,8 +21,18 @@ const index = () => {
 	return (
 		<SafeAreaView style={styles.screenContainer}>
 			{floatingContext?.floatDialogToggle && <FloatingDialogBox />}
-			<View style={styles.mainContainer}>
+			<View
+				style={[
+					styles.mainContainer,
+					{
+						paddingTop: switchContext?.showHeader
+							? SIZES.medium
+							: 0,
+					},
+				]}
+			>
 				<StatusBar
+					hidden
 					backgroundColor={
 						colorScheme === "light"
 							? COLORS.whitePrimary

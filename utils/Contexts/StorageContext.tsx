@@ -5,11 +5,13 @@ import { songItemType } from "../TypeDeclarations";
 import { Alert } from "react-native";
 
 export const StorageContext = createContext<{
+	apiKey: string | null;
 	songData: songItemType[];
 	setSongData: React.Dispatch<React.SetStateAction<songItemType[]>>;
 	directoryUri: string;
 	setDirectoryUri: React.Dispatch<SetStateAction<string>>;
 	fileUri: string;
+	setApiKey: React.Dispatch<SetStateAction<string | null>>;
 	setFileUri: React.Dispatch<SetStateAction<string>>;
 	setSaveToggle: React.Dispatch<SetStateAction<boolean>>;
 	setShouldRefresh: React.Dispatch<SetStateAction<boolean>>;
@@ -39,6 +41,7 @@ export const checkSubstring = (substring: string, stringArr: string[]) => {
 export const StorageContextProvider = ({
 	children,
 }: React.PropsWithChildren) => {
+	const [apiKey, setApiKey] = useState<string | null>(null);
 	const [songData, setSongData] = useState<songItemType[]>([]);
 	const [directoryUri, setDirectoryUri] = useState<string>("");
 	const [fileUri, setFileUri] = useState<string>("");
@@ -75,8 +78,7 @@ export const StorageContextProvider = ({
 
 	const refreshSongs = async () => {
 		const files = await SAF.readDirectoryAsync(directoryUri);
-		// console.log(files);
-		// reduce calculation for setSongData and setVidStatusDict
+		// TODO: reduce calculation for setSongData and setVidStatusDict
 		setSongData((prev) => {
 			return prev.map((item) => {
 				const uri = checkSubstring(item.sid, files);
@@ -99,6 +101,9 @@ export const StorageContextProvider = ({
 	};
 
 	const fetchData = () => {
+		AsyncStorage.getItem("apiKey").then((res) => {
+			if (res !== null) setApiKey(JSON.parse(res));
+		});
 		AsyncStorage.getItem("songData").then(async (res) => {
 			if (res !== null) {
 				setSongData(JSON.parse(res));
@@ -111,7 +116,6 @@ export const StorageContextProvider = ({
 		});
 		AsyncStorage.getItem("playlistData").then(async (res) => {
 			if (res !== null) {
-				// console.log(res);
 				setPlaylistData(JSON.parse(res));
 			} else {
 				const newPlaylistData = [{ pid: "0", pname: "all songs" }];
@@ -124,6 +128,7 @@ export const StorageContextProvider = ({
 	};
 
 	const saveData = async () => {
+		const apiTask = AsyncStorage.setItem("apiKey", JSON.stringify(apiKey));
 		const songTask = AsyncStorage.setItem(
 			"songData",
 			JSON.stringify(songData)
@@ -136,7 +141,7 @@ export const StorageContextProvider = ({
 			"playlistData",
 			JSON.stringify(playlistData)
 		);
-		await Promise.all([songTask, vidStatusTask, playlistTask]);
+		await Promise.all([apiTask, songTask, vidStatusTask, playlistTask]);
 		setSaveToggle(false);
 	};
 
@@ -149,7 +154,14 @@ export const StorageContextProvider = ({
 		if (saveToggle && directoryUri !== "") {
 			saveData();
 		}
-	}, [saveToggle, songData, vidStatusDict, playlistData, directoryUri]);
+	}, [
+		saveToggle,
+		songData,
+		vidStatusDict,
+		playlistData,
+		apiKey,
+		directoryUri,
+	]);
 
 	useEffect(() => {
 		if (shouldRefresh && directoryUri !== "") {
@@ -161,9 +173,11 @@ export const StorageContextProvider = ({
 	return (
 		<StorageContext.Provider
 			value={{
+				apiKey,
 				songData,
 				directoryUri,
 				fileUri,
+				setApiKey,
 				setSongData,
 				setDirectoryUri,
 				setFileUri,

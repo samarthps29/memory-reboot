@@ -124,6 +124,20 @@ export const AudioContextProvider = ({ children }: React.PropsWithChildren) => {
 		} else return queue.currentIndex + 1;
 	};
 
+	const removeSong = async () => {
+		// if something does not work try remove this line
+		// or try to call it synchronously
+		if (sound) await sound.unloadAsync();
+		setSound(null);
+		setStatus("paused");
+		setAudioFinish(false);
+		setSongDuration(0);
+		setSongPosition(0);
+		setSongInfo((prev) => {
+			return { ...prev, sid: "", sname: "", thumbnail: "" };
+		});
+	};
+
 	const handleQueueChange = (automaticNextInQueue?: boolean) => {
 		if (
 			userQueue &&
@@ -190,13 +204,7 @@ export const AudioContextProvider = ({ children }: React.PropsWithChildren) => {
 				setAudioFinish(false);
 			}
 		} else {
-			setStatus("paused");
-			setAudioFinish(false);
-			setSongDuration(0);
-			setSongPosition(0);
-			setSongInfo((prev) => {
-				return { ...prev, sid: "", sname: "", thumbnail: "" };
-			});
+			removeSong();
 		}
 		if (toggleQueue) setToggleQueue(false);
 	};
@@ -228,13 +236,7 @@ export const AudioContextProvider = ({ children }: React.PropsWithChildren) => {
 				const queueRNLocal = decideQueue();
 				// console.log("audio finish", queueRN, queueRNLocal);
 				if (queueRNLocal === "") {
-					setStatus("paused");
-					setAudioFinish(false);
-					setSongDuration(0);
-					setSongPosition(0);
-					setSongInfo((prev) => {
-						return { ...prev, sid: "", sname: "", thumbnail: "" };
-					});
+					removeSong();
 					return;
 				}
 				if (queueRNLocal === queueRN) {
@@ -258,13 +260,7 @@ export const AudioContextProvider = ({ children }: React.PropsWithChildren) => {
 					handleQueueChange();
 				}
 			} else {
-				setStatus("paused");
-				setAudioFinish(false);
-				setSongDuration(0);
-				setSongPosition(0);
-				setSongInfo((prev) => {
-					return { ...prev, sid: "", sname: "", thumbnail: "" };
-				});
+				removeSong();
 			}
 		} else if (
 			toggleQueue ||

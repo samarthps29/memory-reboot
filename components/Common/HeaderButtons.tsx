@@ -4,6 +4,7 @@ import {
 	StyleSheet,
 	useColorScheme,
 	TouchableWithoutFeedback,
+	Vibration,
 } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import "react-native-get-random-values";
@@ -39,10 +40,15 @@ const HeaderButtons = ({
 				gap: 6,
 			}}
 		>
-			<Pressable
-				onPress={() => {
-					switchContext?.setSwitchPage((prev) => !prev);
+			<TouchableWithoutFeedback
+				delayLongPress={250}
+				onLongPress={() => {
+					Vibration.vibrate(100);
+					switchContext?.setShowHeader(false);
 				}}
+				// onPress={() => {
+				// 	switchContext?.setSwitchPage((prev) => !prev);
+				// }}
 			>
 				<View
 					style={[
@@ -52,7 +58,7 @@ const HeaderButtons = ({
 				>
 					<Text style={styles.userText}>cdz</Text>
 				</View>
-			</Pressable>
+			</TouchableWithoutFeedback>
 			{source === "primary" && (
 				<View
 					style={[
@@ -140,11 +146,12 @@ const HeaderButtons = ({
 							key={item.pid}
 						>
 							<TouchableWithoutFeedback
-								delayLongPress={1000}
+								delayLongPress={500}
 								onPress={() =>
 									setSelectedHeaderButton(item.pid)
 								}
 								onLongPress={() => {
+									Vibration.vibrate(100);
 									floatingContext?.setFloatInfo(() => {
 										return {
 											title: "Edit Playlist",

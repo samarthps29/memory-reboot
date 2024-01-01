@@ -1,6 +1,6 @@
 import Slider from "@react-native-community/slider";
 import { useContext, useEffect, useState } from "react";
-import { Pressable, StyleSheet, useColorScheme } from "react-native";
+import { Pressable, StyleSheet, Vibration, useColorScheme } from "react-native";
 import { COLORS, FONT, SIZES } from "../../constants/theme";
 import { AudioContext } from "../../utils/Contexts/AudioContext";
 import { queueType } from "../../utils/TypeDeclarations";
@@ -14,6 +14,8 @@ import {
 	RefreshButton,
 } from "./AudioControlButtons";
 import { Text, View } from "./Themed";
+import { TouchableWithoutFeedback } from "react-native-gesture-handler";
+import { SwitchPageContext } from "../../utils/Contexts/SwitchPageContext";
 
 const AudioPlayer = () => {
 	// TODO: KeyboardAvoidingView from react-native
@@ -21,6 +23,7 @@ const AudioPlayer = () => {
 	const [backClickCount, setBackClickCount] = useState<number | null>(null);
 	const colorScheme = useColorScheme();
 	const [fullScreen, setFullScreen] = useState(false);
+	const switchContext = useContext(SwitchPageContext);
 
 	const handleBackOnce = async () => {
 		await audioContext?.sound?.playFromPositionAsync(0);
@@ -91,7 +94,12 @@ const AudioPlayer = () => {
 					},
 				]}
 			>
-				<Pressable
+				<TouchableWithoutFeedback
+					delayLongPress={250}
+					onLongPress={() => {
+						Vibration.vibrate(100);
+						switchContext?.setSwitchPage((prev) => !prev);
+					}}
 					onPress={() => {
 						setFullScreen((prev) => !prev);
 					}}
@@ -123,7 +131,7 @@ const AudioPlayer = () => {
 									25
 							  )}
 					</Text>
-				</Pressable>
+				</TouchableWithoutFeedback>
 			</View>
 			<View
 				style={[

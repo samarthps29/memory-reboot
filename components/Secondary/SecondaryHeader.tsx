@@ -5,6 +5,8 @@ import { videoItemType } from "../../utils/TypeDeclarations";
 import HeaderButtons from "../Common/HeaderButtons";
 import SearchBar from "../Common/SearchBar";
 import { View } from "../Common/Themed";
+import { SwitchPageContext } from "../../utils/Contexts/SwitchPageContext";
+import { StorageContext } from "../../utils/Contexts/StorageContext";
 
 const options = [
 	{ pid: "0", pname: "Search" },
@@ -24,15 +26,17 @@ const SecondaryHeader = ({
 	setIsLoading: React.Dispatch<SetStateAction<boolean>>;
 }) => {
 	const [searchTerm, setSearchTerm] = useState("");
+	const switchContext = useContext(SwitchPageContext);
+	const storageContext = useContext(StorageContext);
 
 	const handleSearch = () => {
 		setIsLoading(true);
-		getYTdata(searchTerm)
+		getYTdata(searchTerm, storageContext?.apiKey || "")
 			.then((res) => {
 				setVideoData(res.data.items);
 			})
-			.catch(() => {
-				console.log("error");
+			.catch((err) => {
+				console.log("Error in api call", err);
 			})
 			.finally(() => {
 				setIsLoading(false);
@@ -40,16 +44,19 @@ const SecondaryHeader = ({
 	};
 	return (
 		<View style={styles.container}>
-			<HeaderButtons
-				optionsArr={options}
-				selectedHeaderButton={selectedHeaderButton}
-				setSelectedHeaderButton={setSelectedHeaderButton}
-				source="secondary"
-			/>
+			{switchContext?.showHeader && (
+				<HeaderButtons
+					optionsArr={options}
+					selectedHeaderButton={selectedHeaderButton}
+					setSelectedHeaderButton={setSelectedHeaderButton}
+					source="secondary"
+				/>
+			)}
 			<SearchBar
 				searchTerm={searchTerm}
 				setSearchTerm={setSearchTerm}
 				handleSearch={handleSearch}
+				source="secondary"
 			/>
 		</View>
 	);

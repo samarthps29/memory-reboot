@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import PrimaryHeader from "./PrimaryHeader";
 import SongList from "./SongList";
+import { SwitchPageContext } from "../../utils/Contexts/SwitchPageContext";
 
 const PrimaryScreen = ({
 	selectedHeaderButton,
@@ -10,14 +11,17 @@ const PrimaryScreen = ({
 	setSelectedHeaderButton: React.Dispatch<React.SetStateAction<string>>;
 }) => {
 	const [searchTerm, setSearchTerm] = useState("");
+	const switchContext = useContext(SwitchPageContext);
 	return (
 		<>
-			<PrimaryHeader
-				searchTerm={searchTerm}
-				setSearchTerm={setSearchTerm}
-				selectedHeaderButton={selectedHeaderButton}
-				setSelectedHeaderButton={setSelectedHeaderButton}
-			/>
+			{switchContext?.showHeader && (
+				<PrimaryHeader
+					searchTerm={searchTerm}
+					setSearchTerm={setSearchTerm}
+					selectedHeaderButton={selectedHeaderButton}
+					setSelectedHeaderButton={setSelectedHeaderButton}
+				/>
+			)}
 			<SongList
 				searchTerm={searchTerm}
 				selectedHeaderButton={selectedHeaderButton}

@@ -27,7 +27,7 @@ const FloatingDialogBox = () => {
 				styles.container,
 				{
 					backgroundColor:
-						colorScheme === "light" ? "#00000080" : "#ffffff20",
+						colorScheme === "light" ? "#00000080" : "#ffffff10",
 				},
 			]}
 		>

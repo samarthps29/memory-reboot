@@ -17,12 +17,13 @@ const BackButton = ({
 	return (
 		<Pressable
 			disabled={
-				audioContext?.queueRN === ""
-					? audioContext.sound === null ||
-					  audioContext.songInfo["loop"] !== "yes"
+				(audioContext?.sound === null ||
+					audioContext?.songInfo["loop"] !== "yes") &&
+				(audioContext?.queueRN === ""
+					? true
 					: audioContext?.queueRN === "globalqueue"
 					? audioContext.globalQueue?.currentIndex === 0
-					: audioContext?.userQueue?.currentIndex === 0
+					: audioContext?.userQueue?.currentIndex === 0)
 			}
 			onPress={handlePress}
 		>

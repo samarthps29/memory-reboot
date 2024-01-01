@@ -30,6 +30,7 @@ const PrimaryHeader = ({
 				searchTerm={searchTerm}
 				setSearchTerm={setSearchTerm}
 				handleSearch={() => {}}
+				source="secondary"
 			/>
 		</View>
 	);

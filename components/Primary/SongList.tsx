@@ -8,6 +8,7 @@ import SongItem from "./SongItem";
 import { Text, View } from "../Common/Themed";
 import { AudioContext } from "../../utils/Contexts/AudioContext";
 import { durstenfeldShuffle } from "../../utils/global";
+import { SwitchPageContext } from "../../utils/Contexts/SwitchPageContext";
 
 const SongList = ({
 	searchTerm,
@@ -18,6 +19,7 @@ const SongList = ({
 }) => {
 	const storageContext = useContext(StorageContext);
 	const audioContext = useContext(AudioContext);
+	const switchContext = useContext(SwitchPageContext);
 	// local song data
 	const [songData, setSongData] = useState<songItemType[]>([]);
 	const colorScheme = useColorScheme();
@@ -66,6 +68,31 @@ const SongList = ({
 						gap: 12,
 					}}
 				>
+					{!switchContext?.showHeader && (
+						<Pressable
+							onPress={() => {
+								switchContext?.setShowHeader(true);
+							}}
+						>
+							<Text
+								style={[
+									styles.buttonText,
+									{
+										color:
+											colorScheme === "light"
+												? audioContext?.showQueue === ""
+													? "black"
+													: COLORS.darkSecondary
+												: audioContext?.showQueue === ""
+												? COLORS.whitePrimary
+												: COLORS.whiteTertiary,
+									},
+								]}
+							>
+								cdz
+							</Text>
+						</Pressable>
+					)}
 					<Pressable
 						onPress={() => {
 							audioContext?.setShowQueue("");
