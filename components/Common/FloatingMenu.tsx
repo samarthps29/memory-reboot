@@ -67,18 +67,21 @@ const FloatingMenu = ({
 				>
 					{!renderPlaylists && (
 						<>
-							<MenuOption
-								onSelect={() => {
-									setRenderPlaylists(true);
-									return false;
-								}}
-								text="Add to Playlist"
-								customStyles={{
-									optionWrapper: styles.menuOption,
-								}}
-							/>
+							{storageContext?.playlistData &&
+								storageContext?.playlistData?.length > 1 && (
+									<MenuOption
+										onSelect={() => {
+											setRenderPlaylists(true);
+											return false;
+										}}
+										text="Add to Playlist"
+										customStyles={{
+											optionWrapper: styles.menuOption,
+										}}
+									/>
+								)}
 
-							<Divider />
+							{/* <Divider /> */}
 							<MenuOption
 								text="Add to Queue"
 								customStyles={{
@@ -101,7 +104,7 @@ const FloatingMenu = ({
 							/>
 							{audioContext?.showQueue !== "" && (
 								<>
-									<Divider />
+									{/* <Divider /> */}
 									<MenuOption
 										text="Remove from Queue"
 										customStyles={{
@@ -172,7 +175,7 @@ const FloatingMenu = ({
 							)}
 							{currPlaylist !== "0" && (
 								<>
-									<Divider />
+									{/* <Divider /> */}
 									<MenuOption
 										customStyles={{
 											optionWrapper: styles.menuOption,
@@ -258,7 +261,7 @@ const styles = StyleSheet.create({
 		backgroundColor: "#7F8487",
 	},
 	menuOption: {
-		paddingVertical: 6,
+		paddingVertical: 10,
 		paddingHorizontal: SIZES.small,
 		backgroundColor: COLORS.whitePrimary,
 		overflow: "scroll",

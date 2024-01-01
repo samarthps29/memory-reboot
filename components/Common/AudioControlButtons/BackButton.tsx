@@ -7,9 +7,11 @@ import { AudioContext } from "../../../utils/Contexts/AudioContext";
 const BackButton = ({
 	handlePress,
 	size = 24,
+	fill = false,
 }: {
 	handlePress: () => void;
 	size?: number;
+	fill?: boolean;
 }) => {
 	const audioContext = useContext(AudioContext);
 	const colorScheme = useColorScheme();
@@ -28,7 +30,7 @@ const BackButton = ({
 			onPress={handlePress}
 		>
 			<Ionicons
-				name="play-skip-back-outline"
+				name={fill ? "play-skip-back" : "play-skip-back-outline"}
 				size={size}
 				color={
 					colorScheme === "light" ? "black" : COLORS.whiteSecondary

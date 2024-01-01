@@ -7,9 +7,11 @@ import { AudioContext } from "../../../utils/Contexts/AudioContext";
 const ForwardButton = ({
 	handlePress,
 	size = 24,
+	fill = false,
 }: {
 	handlePress: () => void;
 	size?: number;
+	fill?: boolean;
 }) => {
 	const audioContext = useContext(AudioContext);
 	const colorScheme = useColorScheme();
@@ -24,7 +26,7 @@ const ForwardButton = ({
 			}
 		>
 			<Ionicons
-				name="play-skip-forward-outline"
+				name={fill ? "play-skip-forward" : "play-skip-forward-outline"}
 				size={size}
 				color={
 					colorScheme === "light" ? "black" : COLORS.whiteSecondary

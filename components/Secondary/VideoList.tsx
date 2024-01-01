@@ -5,7 +5,10 @@ import {
 	StyleSheet,
 	useColorScheme,
 } from "react-native";
-import { FlatList } from "react-native-gesture-handler";
+import {
+	FlatList,
+	TouchableWithoutFeedback,
+} from "react-native-gesture-handler";
 import { COLORS, FONT, SIZES } from "../../constants/theme";
 import { videoItemType } from "../../utils/TypeDeclarations";
 import { View, Text } from "../Common/Themed";
@@ -56,7 +59,8 @@ const VideoList = ({
 							}}
 						>
 							{!switchContext?.showHeader && (
-								<Pressable
+								<TouchableWithoutFeedback
+									// delayLongPress={250}
 									onPress={() => {
 										switchContext?.setShowHeader(true);
 									}}
@@ -74,7 +78,7 @@ const VideoList = ({
 									>
 										cdz
 									</Text>
-								</Pressable>
+								</TouchableWithoutFeedback>
 							)}
 						</View>
 						<View
@@ -142,7 +146,7 @@ const VideoList = ({
 											color:
 												colorScheme === "light"
 													? "black"
-													: COLORS.whitePrimary,
+													: COLORS.whiteSecondary,
 										},
 									]}
 								>

@@ -27,7 +27,7 @@ const FloatingDialogBox = () => {
 				styles.container,
 				{
 					backgroundColor:
-						colorScheme === "light" ? "#00000080" : "#ffffff10",
+						colorScheme === "light" ? "#00000080" : "#f0ffff10",
 				},
 			]}
 		>
@@ -136,12 +136,13 @@ const styles = StyleSheet.create({
 		width: "80%",
 		marginBottom: SIZES.xxSmall,
 		backgroundColor: "transparent",
+		paddingLeft: 2,
 	},
 	inputContainer: {
 		width: "80%",
 		padding: SIZES.small,
 		borderRadius: SIZES.medium,
-		marginBottom: SIZES.medium,
+		marginBottom: SIZES.small,
 		fontFamily: FONT.regular,
 	},
 	buttonContainer: {

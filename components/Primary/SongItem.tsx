@@ -173,11 +173,11 @@ const styles = StyleSheet.create({
 	songTitle: {
 		width: "70%",
 		fontFamily: FONT.medium,
-		fontSize: 17,
+		fontSize: 16,
 	},
 	artistTitle: {
 		fontFamily: FONT.regular,
-		fontSize: 15,
+		fontSize: 14,
 	},
 	durationTitle: {
 		fontFamily: FONT.regular,

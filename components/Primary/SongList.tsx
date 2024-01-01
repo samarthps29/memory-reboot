@@ -1,6 +1,9 @@
 import { useCallback, useContext, useEffect, useState } from "react";
 import { Pressable, StyleSheet, useColorScheme } from "react-native";
-import { FlatList } from "react-native-gesture-handler";
+import {
+	FlatList,
+	TouchableWithoutFeedback,
+} from "react-native-gesture-handler";
 import { COLORS, FONT, SIZES } from "../../constants/theme";
 import { StorageContext } from "../../utils/Contexts/StorageContext";
 import { songItemType } from "../../utils/TypeDeclarations";
@@ -69,7 +72,8 @@ const SongList = ({
 					}}
 				>
 					{!switchContext?.showHeader && (
-						<Pressable
+						<TouchableWithoutFeedback
+							// delayLongPress={250}
 							onPress={() => {
 								switchContext?.setShowHeader(true);
 							}}
@@ -91,7 +95,7 @@ const SongList = ({
 							>
 								cdz
 							</Text>
-						</Pressable>
+						</TouchableWithoutFeedback>
 					)}
 					<Pressable
 						onPress={() => {
@@ -123,7 +127,7 @@ const SongList = ({
 								)[0] || "All"}
 						</Text>
 					</Pressable>
-					{/* {audioContext?.globalQueue && (
+					{audioContext?.globalQueue && (
 						<Pressable
 							onPress={() => {
 								audioContext?.setShowQueue("globalqueue");
@@ -149,7 +153,7 @@ const SongList = ({
 								System
 							</Text>
 						</Pressable>
-					)} */}
+					)}
 					{audioContext?.userQueue && (
 						<Pressable
 							onPress={() => {
@@ -182,7 +186,7 @@ const SongList = ({
 					style={{
 						backgroundColor: "transparent",
 						flexDirection: "row",
-						gap: 12,
+						gap: 8,
 					}}
 				>
 					<Pressable
@@ -204,11 +208,11 @@ const SongList = ({
 									color:
 										colorScheme === "light"
 											? "black"
-											: COLORS.whitePrimary,
+											: COLORS.whiteSecondary,
 								},
 							]}
 						>
-							Play All
+							Play
 						</Text>
 					</Pressable>
 					<Pressable
@@ -229,7 +233,7 @@ const SongList = ({
 									color:
 										colorScheme === "light"
 											? "black"
-											: COLORS.whitePrimary,
+											: COLORS.whiteSecondary,
 								},
 							]}
 						>

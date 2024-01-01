@@ -41,9 +41,9 @@ const HeaderButtons = ({
 			}}
 		>
 			<TouchableWithoutFeedback
-				delayLongPress={250}
-				onLongPress={() => {
-					Vibration.vibrate(100);
+				// delayLongPress={250}
+				onPress={() => {
+					// Vibration.vibrate(100);
 					switchContext?.setShowHeader(false);
 				}}
 				// onPress={() => {
@@ -146,12 +146,12 @@ const HeaderButtons = ({
 							key={item.pid}
 						>
 							<TouchableWithoutFeedback
-								delayLongPress={500}
+								delayLongPress={250}
 								onPress={() =>
 									setSelectedHeaderButton(item.pid)
 								}
 								onLongPress={() => {
-									Vibration.vibrate(100);
+									// Vibration.vibrate(100);
 									floatingContext?.setFloatInfo(() => {
 										return {
 											title: "Edit Playlist",

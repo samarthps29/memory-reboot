@@ -95,9 +95,9 @@ const AudioPlayer = () => {
 				]}
 			>
 				<TouchableWithoutFeedback
-					delayLongPress={250}
+					delayLongPress={300}
 					onLongPress={() => {
-						Vibration.vibrate(100);
+						// Vibration.vibrate(100);
 						switchContext?.setSwitchPage((prev) => !prev);
 					}}
 					onPress={() => {
@@ -154,11 +154,16 @@ const AudioPlayer = () => {
 						});
 					}}
 					size={fullScreen ? 28 : 24}
+					fill={fullScreen ? true : false}
 				/>
-				<PlayButton size={fullScreen ? 28 : 24} />
+				<PlayButton
+					size={fullScreen ? 28 : 24}
+					fill={fullScreen ? true : false}
+				/>
 				<ForwardButton
 					handlePress={handleForward}
 					size={fullScreen ? 28 : 24}
+					fill={fullScreen ? true : false}
 				/>
 			</View>
 			{fullScreen && (

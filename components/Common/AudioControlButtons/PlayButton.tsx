@@ -4,7 +4,13 @@ import { Pressable, useColorScheme } from "react-native";
 import { COLORS } from "../../../constants/theme";
 import { AudioContext } from "../../../utils/Contexts/AudioContext";
 
-const PlayButton = ({ size = 24 }: { size?: number }) => {
+const PlayButton = ({
+	size = 24,
+	fill = false,
+}: {
+	size?: number;
+	fill?: boolean;
+}) => {
 	const audioContext = useContext(AudioContext);
 	const colorScheme = useColorScheme();
 
@@ -20,7 +26,7 @@ const PlayButton = ({ size = 24 }: { size?: number }) => {
 		>
 			{audioContext?.status === "paused" ? (
 				<Ionicons
-					name="play-outline"
+					name={fill ? "play" : "play-outline"}
 					size={size}
 					color={
 						colorScheme === "light"
@@ -30,7 +36,7 @@ const PlayButton = ({ size = 24 }: { size?: number }) => {
 				/>
 			) : (
 				<Ionicons
-					name="pause-outline"
+					name={fill ? "pause" : "pause-outline"}
 					size={size}
 					color={
 						colorScheme === "light"
