@@ -7,7 +7,7 @@ import {
 	StorageContext,
 	checkSubstring,
 } from "../utils/Contexts/StorageContext";
-import { directoryUri, filter, ytTemplate } from "../utils/global";
+import { filter, ytTemplate } from "../utils/global";
 import { songItemType, videoItemType } from "../utils/TypeDeclarations";
 import { Text, View } from "./Themed";
 
@@ -15,46 +15,53 @@ const VideoItem = ({ video }: { video: videoItemType }) => {
 	const colorScheme = useColorScheme();
 	const storageContext = useContext(StorageContext);
 	const handleDownload = async () => {
-		// this song object goes into async storage
-		const songObj: songItemType = {
-			sid: video.id.videoId,
-			sname: video.snippet.title,
-			aname: video.snippet.channelTitle,
-			// high quality thumbnail or medium quality?
-			thumbnail: video.snippet.thumbnails.high.url,
-			itemUri: "",
-			duration: "",
-			downloaded: false,
-			downloadedAt: dayjs(),
-			playlists: [],
-		};
-		storageContext?.setSongData((prev) => {
-			return [...prev, songObj];
-		});
-		storageContext?.setSongDataUpdate(true);
-		storageContext?.setVidStatusDict((prev) => {
-			return { ...prev, [video.id.videoId]: "pending" };
-		});
+		if (
+			storageContext?.directoryUri &&
+			storageContext.directoryUri.trim() !== ""
+		) {
+			// this song object goes into async storage
+			const songObj: songItemType = {
+				sid: video.id.videoId,
+				sname: video.snippet.title,
+				aname: video.snippet.channelTitle,
+				// high quality thumbnail or medium quality?
+				thumbnail: video.snippet.thumbnails.high.url,
+				itemUri: "",
+				duration: "",
+				downloaded: false,
+				downloadedAt: dayjs(),
+				playlists: [],
+			};
+			storageContext?.setSongData((prev) => {
+				return [...prev, songObj];
+			});
+			storageContext?.setSaveToggle(true);
+			storageContext?.setVidStatusDict((prev) => {
+				return { ...prev, [video.id.videoId]: "pending" };
+			});
 
-		// write the url to data.txt
-		const files = await SAF.readDirectoryAsync(directoryUri);
-		const dataFileUri = checkSubstring("data.txt", files);
-		if (dataFileUri !== null) {
-			const content = await SAF.readAsStringAsync(dataFileUri);
-			await SAF.writeAsStringAsync(
-				dataFileUri,
-				content + ytTemplate(video.id.videoId) + ";"
+			// write the url to data.txt
+			const files = await SAF.readDirectoryAsync(
+				storageContext?.directoryUri
 			);
-		} else {
-			const file = await SAF.createFileAsync(
-				directoryUri,
-				"data.txt",
-				"text/plain"
-			);
-			await SAF.writeAsStringAsync(
-				file,
-				ytTemplate(video.id.videoId) + ";"
-			);
+			const dataFileUri = checkSubstring("data.txt", files);
+			if (dataFileUri !== null) {
+				const content = await SAF.readAsStringAsync(dataFileUri);
+				await SAF.writeAsStringAsync(
+					dataFileUri,
+					content + ytTemplate(video.id.videoId) + ";"
+				);
+			} else {
+				const file = await SAF.createFileAsync(
+					storageContext?.directoryUri,
+					"data.txt",
+					"text/plain"
+				);
+				await SAF.writeAsStringAsync(
+					file,
+					ytTemplate(video.id.videoId) + ";"
+				);
+			}
 		}
 	};
 

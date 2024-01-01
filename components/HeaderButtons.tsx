@@ -84,7 +84,7 @@ const HeaderButtons = ({
 												];
 											}
 										);
-										storageContext?.setSongDataUpdate(true);
+										storageContext?.setSaveToggle(true);
 										floatingContext?.setFloatDialogToggle(
 											false
 										);
@@ -171,7 +171,7 @@ const HeaderButtons = ({
 														);
 													}
 												);
-												storageContext?.setSongDataUpdate(
+												storageContext?.setSaveToggle(
 													true
 												);
 												floatingContext?.setFloatDialogToggle(
@@ -214,7 +214,7 @@ const HeaderButtons = ({
 													}
 												);
 												setSelectedHeaderButton("0");
-												storageContext?.setSongDataUpdate(
+												storageContext?.setSaveToggle(
 													true
 												);
 												floatingContext?.setFloatDialogToggle(

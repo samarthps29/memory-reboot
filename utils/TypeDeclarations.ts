@@ -36,3 +36,12 @@ export type queueType = {
 	queue: songItemType[];
 	currentIndex: number;
 };
+
+export type floatingDialogType = {
+	title: string;
+	placeholder: string;
+	btnText: string;
+	btnSecondaryText?: string;
+	handleButtonClick: (str: string) => void;
+	handleSecondaryButtonClick?: () => void;
+};

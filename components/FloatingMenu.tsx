@@ -163,7 +163,7 @@ const FloatingMenu = ({
 												} else return item;
 											});
 										});
-										storageContext?.setSongDataUpdate(true);
+										storageContext?.setSaveToggle(true);
 									}}
 									text="Remove from playlist"
 									customStyles={{
@@ -193,7 +193,7 @@ const FloatingMenu = ({
 												} else return song;
 											});
 										});
-										storageContext.setSongDataUpdate(true);
+										storageContext.setSaveToggle(true);
 										setRenderPlaylists(false);
 									}}
 								/>

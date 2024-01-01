@@ -2,6 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StorageAccessFramework as SAF } from "expo-file-system";
 import { SetStateAction, createContext, useEffect, useState } from "react";
 import { songItemType } from "../TypeDeclarations";
+import { Alert } from "react-native";
 
 export const StorageContext = createContext<{
 	songData: songItemType[];
@@ -10,7 +11,7 @@ export const StorageContext = createContext<{
 	setDirectoryUri: React.Dispatch<SetStateAction<string>>;
 	fileUri: string;
 	setFileUri: React.Dispatch<SetStateAction<string>>;
-	setSongDataUpdate: React.Dispatch<SetStateAction<boolean>>;
+	setSaveToggle: React.Dispatch<SetStateAction<boolean>>;
 	setShouldRefresh: React.Dispatch<SetStateAction<boolean>>;
 	vidStatusDict: Record<string, string>;
 	setVidStatusDict: React.Dispatch<SetStateAction<Record<string, string>>>;
@@ -41,7 +42,7 @@ export const StorageContextProvider = ({
 	const [songData, setSongData] = useState<songItemType[]>([]);
 	const [directoryUri, setDirectoryUri] = useState<string>("");
 	const [fileUri, setFileUri] = useState<string>("");
-	const [songDataUpdate, setSongDataUpdate] = useState<boolean>(false);
+	const [saveToggle, setSaveToggle] = useState<boolean>(false);
 	const [shouldRefresh, setShouldRefresh] = useState<boolean>(false);
 	const [vidStatusDict, setVidStatusDict] = useState<Record<string, string>>(
 		{}
@@ -57,7 +58,12 @@ export const StorageContextProvider = ({
 		// console.log(directoryUriStored);
 		if (directoryUriStored === null || directoryUriStored.trim() === "") {
 			const permissions = await SAF.requestDirectoryPermissionsAsync();
-			if (!permissions.granted) return;
+			if (!permissions.granted) {
+				Alert.alert(
+					"Directory Permission not granted. Clear cache and try again."
+				);
+				return;
+			}
 			const { directoryUri: uri } = permissions;
 			// console.log(uri);
 			setDirectoryUri(uri);
@@ -127,7 +133,7 @@ export const StorageContextProvider = ({
 			"playlistData",
 			JSON.stringify(playlistData)
 		);
-		setSongDataUpdate(false);
+		setSaveToggle(false);
 	};
 
 	useEffect(() => {
@@ -136,15 +142,15 @@ export const StorageContextProvider = ({
 	}, []);
 
 	useEffect(() => {
-		if (songDataUpdate && directoryUri !== "") {
+		if (saveToggle && directoryUri !== "") {
 			saveData();
 		}
-	}, [songDataUpdate, songData, vidStatusDict, playlistData, directoryUri]);
+	}, [saveToggle, songData, vidStatusDict, playlistData, directoryUri]);
 
 	useEffect(() => {
 		if (shouldRefresh && directoryUri !== "") {
 			refreshSongs();
-			setSongDataUpdate(true);
+			setSaveToggle(true);
 		}
 	}, [shouldRefresh, songData, vidStatusDict, playlistData, directoryUri]);
 
@@ -157,7 +163,7 @@ export const StorageContextProvider = ({
 				setSongData,
 				setDirectoryUri,
 				setFileUri,
-				setSongDataUpdate,
+				setSaveToggle,
 				setShouldRefresh,
 				vidStatusDict,
 				setVidStatusDict,
