@@ -3,9 +3,12 @@ import { StorageAccessFramework as SAF } from "expo-file-system";
 import { useContext } from "react";
 import { Image, Pressable, StyleSheet, useColorScheme } from "react-native";
 import { COLORS, FONT, SIZES } from "../constants/theme";
-import { StorageContext, checkSubstring } from "../utils/StorageContext";
-import { directoryUri, fileUri, filter, ytTemplate } from "../utils/global";
-import { songItemType, videoItemType } from "../utils/types";
+import {
+	StorageContext,
+	checkSubstring,
+} from "../utils/Contexts/StorageContext";
+import { directoryUri, filter, ytTemplate } from "../utils/global";
+import { songItemType, videoItemType } from "../utils/TypeDeclarations";
 import { Text, View } from "./Themed";
 
 const VideoItem = ({ video }: { video: videoItemType }) => {
@@ -17,6 +20,7 @@ const VideoItem = ({ video }: { video: videoItemType }) => {
 			sid: video.id.videoId,
 			sname: video.snippet.title,
 			aname: video.snippet.channelTitle,
+			// high quality thumbnail or medium quality?
 			thumbnail: video.snippet.thumbnails.high.url,
 			itemUri: "",
 			duration: "",

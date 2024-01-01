@@ -1,8 +1,7 @@
-import { useContext, useEffect } from "react";
 import { ActivityIndicator, StyleSheet, useColorScheme } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import { COLORS, SIZES } from "../constants/theme";
-import { videoItemType } from "../utils/types";
+import { videoItemType } from "../utils/TypeDeclarations";
 import { View } from "./Themed";
 import VideoItem from "./VideoItem";
 

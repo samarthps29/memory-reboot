@@ -1,9 +1,9 @@
 import { useContext } from "react";
 import { Image, Pressable, StyleSheet, useColorScheme } from "react-native";
 import { COLORS, FONT, SIZES } from "../constants/theme";
-import { AudioContext } from "../utils/AudioContext";
+import { AudioContext } from "../utils/Contexts/AudioContext";
 import { filter } from "../utils/global";
-import { songItemType } from "../utils/types";
+import { songItemType } from "../utils/TypeDeclarations";
 import FloatingMenu from "./FloatingMenu";
 import { Text, View } from "./Themed";
 

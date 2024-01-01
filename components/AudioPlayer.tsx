@@ -2,7 +2,7 @@ import Slider from "@react-native-community/slider";
 import { useCallback, useContext, useEffect, useState } from "react";
 import { Pressable, StyleSheet, useColorScheme } from "react-native";
 import { COLORS, FONT, SIZES } from "../constants/theme";
-import { AudioContext } from "../utils/AudioContext";
+import { AudioContext } from "../utils/Contexts/AudioContext";
 import { convertToTime } from "../utils/global";
 import {
 	BackButton,
@@ -13,7 +13,7 @@ import {
 } from "./AudioControlButtons";
 import { reducedTitle } from "./SongItem";
 import { Text, View } from "./Themed";
-import { queueType } from "../utils/types";
+import { queueType } from "../utils/TypeDeclarations";
 
 const AudioPlayer = () => {
 	// TODO: KeyboardAvoidingView from react-native
@@ -21,24 +21,6 @@ const AudioPlayer = () => {
 	const [backClickCount, setBackClickCount] = useState<number | null>(null);
 	const colorScheme = useColorScheme();
 	const [fullScreen, setFullScreen] = useState(false);
-
-	const decideQueue = useCallback(() => {
-		if (
-			audioContext?.userQueue !== undefined &&
-			audioContext.userQueue !== null &&
-			audioContext.userQueue.queue.length > 0 &&
-			audioContext.userQueue.currentIndex !== -1
-		)
-			return "userqueue";
-		else if (
-			audioContext?.globalQueue !== undefined &&
-			audioContext.globalQueue !== null &&
-			audioContext.globalQueue.queue.length > 0 &&
-			audioContext.globalQueue.currentIndex !== -1
-		)
-			return "globalqueue";
-		else return "";
-	}, [audioContext?.userQueue, audioContext?.globalQueue]);
 
 	const handleBackOnce = async () => {
 		await audioContext?.sound?.playFromPositionAsync(0);

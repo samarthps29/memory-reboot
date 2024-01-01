@@ -1,7 +1,7 @@
 import { SetStateAction, useContext } from "react";
 import { StyleSheet } from "react-native";
 import { COLORS, FONT, SIZES } from "../constants/theme";
-import { StorageContext } from "../utils/StorageContext";
+import { StorageContext } from "../utils/Contexts/StorageContext";
 import HeaderButtons from "./HeaderButtons";
 import SearchBar from "./SearchBar";
 import { View } from "./Themed";

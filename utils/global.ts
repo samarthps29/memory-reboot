@@ -1,11 +1,4 @@
-import dayjs from "dayjs";
 import he from "he";
-
-export const directoryUri =
-	"content://com.android.externalstorage.documents/tree/primary%3ADownload%2FSongs";
-
-export const fileUri =
-	"content://com.android.externalstorage.documents/tree/primary%3ADownload%2FSongs/document/primary%3ADownload%2FSongs";
 
 export const filter = (str: string) => {
 	return he.decode(str).replace(/#(?:\w+)/g, "");
@@ -24,8 +17,9 @@ export const durstenfeldShuffle = (arr: any[]) => {
 };
 
 export const convertToTime = (milliseconds: number) => {
-	const minutes = Math.floor(milliseconds / 60000);
-	const seconds = Math.floor((milliseconds % 60000) / 1000);
+	const timeInSeconds = Math.floor(milliseconds / 1000);
+	const minutes = Math.floor(timeInSeconds / 60);
+	const seconds = timeInSeconds - minutes * 60;
 
 	// Return as a formatted string
 	return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;

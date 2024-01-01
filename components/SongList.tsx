@@ -2,11 +2,11 @@ import { useCallback, useContext, useEffect, useState } from "react";
 import { Pressable, StyleSheet, useColorScheme } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import { COLORS, FONT, SIZES } from "../constants/theme";
-import { StorageContext } from "../utils/StorageContext";
-import { songItemType } from "../utils/types";
+import { StorageContext } from "../utils/Contexts/StorageContext";
+import { songItemType } from "../utils/TypeDeclarations";
 import SongItem from "./SongItem";
 import { Text, View } from "./Themed";
-import { AudioContext } from "../utils/AudioContext";
+import { AudioContext } from "../utils/Contexts/AudioContext";
 import { durstenfeldShuffle } from "../utils/global";
 
 const SongList = ({
@@ -98,7 +98,7 @@ const SongList = ({
 								)[0] || "All"}
 						</Text>
 					</Pressable>
-					{audioContext?.globalQueue && (
+					{/* {audioContext?.globalQueue && (
 						<Pressable
 							onPress={() => {
 								audioContext?.setShowQueue("globalqueue");
@@ -121,10 +121,10 @@ const SongList = ({
 									},
 								]}
 							>
-								GQueue
+								System
 							</Text>
 						</Pressable>
-					)}
+					)} */}
 					{audioContext?.userQueue && (
 						<Pressable
 							onPress={() => {
@@ -148,7 +148,7 @@ const SongList = ({
 									},
 								]}
 							>
-								UQueue
+								Queue
 							</Text>
 						</Pressable>
 					)}

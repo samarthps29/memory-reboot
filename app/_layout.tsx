@@ -8,10 +8,10 @@ import { useFonts } from "expo-font";
 import { SplashScreen, Stack } from "expo-router";
 import { useEffect } from "react";
 import { useColorScheme } from "react-native";
-import { SwitchPageContextProvider } from "../utils/SwitchPageContext";
-import { AudioContextProvider } from "../utils/AudioContext";
-import { StorageContextProvider } from "../utils/StorageContext";
-import { FloatingContextProvider } from "../utils/FloatingContext";
+import { SwitchPageContextProvider } from "../utils/Contexts/SwitchPageContext";
+import { AudioContextProvider } from "../utils/Contexts/AudioContext";
+import { StorageContextProvider } from "../utils/Contexts/StorageContext";
+import { FloatingContextProvider } from "../utils/Contexts/FloatingContext";
 import { MenuProvider } from "react-native-popup-menu";
 
 export {

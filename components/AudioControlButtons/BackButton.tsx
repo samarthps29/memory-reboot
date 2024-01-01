@@ -2,7 +2,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useContext } from "react";
 import { Pressable, useColorScheme } from "react-native";
 import { COLORS } from "../../constants/theme";
-import { AudioContext } from "../../utils/AudioContext";
+import { AudioContext } from "../../utils/Contexts/AudioContext";
 
 const BackButton = ({
 	handlePress,

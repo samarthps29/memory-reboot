@@ -1,7 +1,5 @@
-use async handler
 implement concurrency using await promise.all([tasks])
 implement more strict type safety on types record<string, string>
 songInfo["loop"] === "yes" this should only accept yes/no
 what are these test ("it renders correctly") ????
 make sure nothing remains in memory after its been used
-somewhere globalqueue, somewhere global change this

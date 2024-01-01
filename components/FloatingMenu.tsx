@@ -8,10 +8,10 @@ import {
 	MenuTrigger,
 } from "react-native-popup-menu";
 import { COLORS, SIZES } from "../constants/theme";
-import { StorageContext } from "../utils/StorageContext";
+import { StorageContext } from "../utils/Contexts/StorageContext";
 import { View } from "./Themed";
-import { AudioContext } from "../utils/AudioContext";
-import { songItemType } from "../utils/types";
+import { AudioContext } from "../utils/Contexts/AudioContext";
+import { songItemType } from "../utils/TypeDeclarations";
 
 const Divider = () => <View style={styles.divider} />;
 

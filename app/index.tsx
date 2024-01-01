@@ -10,10 +10,10 @@ import { View } from "../components/Themed";
 import VideoList from "../components/VideoList";
 import { defaultVideoData } from "../constants/VideoData";
 import { COLORS, SIZES } from "../constants/theme";
-import { SwitchPageContext } from "../utils/SwitchPageContext";
-import { videoItemType } from "../utils/types";
+import { SwitchPageContext } from "../utils/Contexts/SwitchPageContext";
+import { videoItemType } from "../utils/TypeDeclarations";
 import FloatingDialogBox from "../components/FloatingDialogBox";
-import { FloatingContext } from "../utils/FloatingContext";
+import { FloatingContext } from "../utils/Contexts/FloatingContext";
 
 const index = () => {
 	const [videoData, setVideoData] =

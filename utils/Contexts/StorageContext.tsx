@@ -1,8 +1,7 @@
-import { SetStateAction, createContext, useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StorageAccessFramework as SAF } from "expo-file-system";
-import { songItemType } from "./types";
-import { ytTemplate } from "./global";
+import { SetStateAction, createContext, useEffect, useState } from "react";
+import { songItemType } from "../TypeDeclarations";
 
 export const StorageContext = createContext<{
 	songData: songItemType[];

@@ -1,7 +1,7 @@
 import { SetStateAction, useContext, useState } from "react";
 import { StyleSheet } from "react-native";
 import { getYTdata } from "../utils/api/ytdata";
-import { videoItemType } from "../utils/types";
+import { videoItemType } from "../utils/TypeDeclarations";
 import HeaderButtons from "./HeaderButtons";
 import SearchBar from "./SearchBar";
 import { View } from "./Themed";

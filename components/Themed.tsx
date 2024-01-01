@@ -33,21 +33,9 @@ export function useThemeColor(
 	}
 }
 
-// TODO: ask gpt how does this work
-export function Text(props: TextProps & { swap?: boolean }) {
-	const {
-		style,
-		lightColor,
-		darkColor,
-		swap: swapProp = false,
-		...otherProps
-	} = props;
-	const color = useThemeColor({ light: lightColor, dark: darkColor }, "text");
-	if (swapProp) {
-		return <DefaultText style={[{ color }, style]} {...otherProps} />;
-	} else {
-		return <DefaultText style={[style]} {...otherProps} />;
-	}
+export function Text(props: TextProps) {
+	const { style, lightColor, darkColor, ...otherProps } = props;
+	return <DefaultText style={[style]} {...otherProps} />;
 }
 
 export function View(props: ViewProps) {

@@ -1,4 +1,4 @@
-import { videoItemType } from "../utils/types";
+import { videoItemType } from "../utils/TypeDeclarations";
 
 export const defaultVideoData: videoItemType[] = [
 	{

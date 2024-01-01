@@ -1,6 +1,6 @@
 import { AVPlaybackStatusError, AVPlaybackStatusSuccess, Audio } from "expo-av";
 import { createContext, useCallback, useEffect, useState } from "react";
-import { queueType } from "./types";
+import { queueType } from "../TypeDeclarations";
 
 export const AudioContext = createContext<{
 	sound: Audio.Sound | null;
