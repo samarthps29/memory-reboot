@@ -8,7 +8,7 @@ const COLORS = {
 
 	whitePrimary: "#fff",
 	whiteSecondary: "#dadada",
-	whiteTertiary: "#",
+	whiteTertiary: "#c5c5c5",
 
 	darkPrimary: "#121212",
 	darkSecondary: "#2a2a2a",

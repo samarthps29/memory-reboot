@@ -1,13 +1,11 @@
-import { Ionicons } from "@expo/vector-icons";
 import { useContext } from "react";
 import { Image, Pressable, StyleSheet, useColorScheme } from "react-native";
 import { COLORS, FONT, SIZES } from "../constants/theme";
 import { AudioContext } from "../utils/AudioContext";
 import { filter } from "../utils/global";
 import { songItemType } from "../utils/types";
-import { Text, View } from "./Themed";
-import { FloatingContext } from "../utils/FloatingContext";
 import FloatingMenu from "./FloatingMenu";
+import { Text, View } from "./Themed";
 
 export const reducedTitle = (str: string, reductionParam: number = 40) => {
 	const filteredString = filter(str);
@@ -19,15 +17,29 @@ export const reducedTitle = (str: string, reductionParam: number = 40) => {
 const SongItem = ({
 	song,
 	selectedPlaylist,
+	index,
 }: {
 	song: songItemType;
 	selectedPlaylist: string;
+	index: number;
 }) => {
 	const audioContext = useContext(AudioContext);
 	const colorScheme = useColorScheme();
 	return (
 		<Pressable
 			onPress={() => {
+				const selectedQueue = audioContext?.showQueue;
+				if (selectedQueue === "globalqueue") {
+					audioContext?.setGlobalQueue((prev) => {
+						if (prev === null) return null;
+						return { ...prev, currentIndex: index };
+					});
+				} else if (selectedQueue === "userqueue") {
+					audioContext?.setUserQueue((prev) => {
+						if (prev === null) return null;
+						return { ...prev, currentIndex: index };
+					});
+				}
 				audioContext?.setSongInfo((prev) => {
 					return {
 						...prev,
@@ -108,6 +120,7 @@ const SongItem = ({
 							<FloatingMenu
 								song={song}
 								currPlaylist={selectedPlaylist}
+								index={index}
 							/>
 						</View>
 					</View>

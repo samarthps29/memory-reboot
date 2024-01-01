@@ -13,9 +13,11 @@ export const AudioContext = createContext<{
 	toggleQueue: boolean;
 	songDuration: number;
 	songPosition: number;
-	showQueue: boolean;
-	queueRN: string;
-	setShowQueue: React.Dispatch<React.SetStateAction<boolean>>;
+	showQueue: "globalqueue" | "userqueue" | "";
+	queueRN: "globalqueue" | "userqueue" | "";
+	setShowQueue: React.Dispatch<
+		React.SetStateAction<"globalqueue" | "userqueue" | "">
+	>;
 	setSongDuration: React.Dispatch<React.SetStateAction<number>>;
 	setSongPosition: React.Dispatch<React.SetStateAction<number>>;
 	setToggleQueue: React.Dispatch<React.SetStateAction<boolean>>;
@@ -28,13 +30,14 @@ export const AudioContext = createContext<{
 		React.SetStateAction<{ uri: string; switch: boolean }>
 	>;
 	setSkip: React.Dispatch<React.SetStateAction<boolean>>;
-	setQueueRN: React.Dispatch<React.SetStateAction<string>>;
+	setQueueRN: React.Dispatch<
+		React.SetStateAction<"globalqueue" | "userqueue" | "">
+	>;
 	decideQueue: () => "" | "userqueue" | "globalqueue";
 } | null>(null);
 
 export const AudioContextProvider = ({ children }: React.PropsWithChildren) => {
 	// implement types for songInfo and maybe merge songInfo and soundUri
-
 	const [songInfo, setSongInfo] = useState<Record<string, string>>({});
 	const [soundUri, setSoundUri] = useState<{ uri: string; switch: boolean }>({
 		uri: "",
@@ -49,7 +52,9 @@ export const AudioContextProvider = ({ children }: React.PropsWithChildren) => {
 	const [skip, setSkip] = useState<boolean>(false);
 	const [songDuration, setSongDuration] = useState<number>(0);
 	const [songPosition, setSongPosition] = useState<number>(0);
-	const [showQueue, setShowQueue] = useState<boolean>(false);
+	const [showQueue, setShowQueue] = useState<
+		"globalqueue" | "userqueue" | ""
+	>("");
 
 	const decideQueue = useCallback(() => {
 		if (
@@ -69,7 +74,9 @@ export const AudioContextProvider = ({ children }: React.PropsWithChildren) => {
 		else return "";
 	}, [userQueue, globalQueue]);
 
-	const [queueRN, setQueueRN] = useState(decideQueue());
+	const [queueRN, setQueueRN] = useState<"globalqueue" | "userqueue" | "">(
+		decideQueue()
+	);
 
 	const handlePlaybackStatusUpdate = (
 		status: AVPlaybackStatusSuccess | AVPlaybackStatusError
@@ -185,6 +192,8 @@ export const AudioContextProvider = ({ children }: React.PropsWithChildren) => {
 		} else {
 			setStatus("paused");
 			setAudioFinish(false);
+			setSongDuration(0);
+			setSongPosition(0);
 			setSongInfo((prev) => {
 				return { ...prev, sid: "", sname: "", thumbnail: "" };
 			});
@@ -218,7 +227,16 @@ export const AudioContextProvider = ({ children }: React.PropsWithChildren) => {
 			else if (globalQueue !== null || userQueue !== null) {
 				const queueRNLocal = decideQueue();
 				// console.log("audio finish", queueRN, queueRNLocal);
-				if (queueRNLocal === "") return;
+				if (queueRNLocal === "") {
+					setStatus("paused");
+					setAudioFinish(false);
+					setSongDuration(0);
+					setSongPosition(0);
+					setSongInfo((prev) => {
+						return { ...prev, sid: "", sname: "", thumbnail: "" };
+					});
+					return;
+				}
 				if (queueRNLocal === queueRN) {
 					// continue normally
 					handleQueueChange(true);
@@ -239,6 +257,14 @@ export const AudioContextProvider = ({ children }: React.PropsWithChildren) => {
 					setQueueRN(queueRNLocal);
 					handleQueueChange();
 				}
+			} else {
+				setStatus("paused");
+				setAudioFinish(false);
+				setSongDuration(0);
+				setSongPosition(0);
+				setSongInfo((prev) => {
+					return { ...prev, sid: "", sname: "", thumbnail: "" };
+				});
 			}
 		} else if (
 			toggleQueue ||

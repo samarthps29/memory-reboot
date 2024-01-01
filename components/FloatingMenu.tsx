@@ -18,9 +18,11 @@ const Divider = () => <View style={styles.divider} />;
 const FloatingMenu = ({
 	song,
 	currPlaylist,
+	index,
 }: {
 	song: songItemType;
 	currPlaylist: string;
+	index: number;
 }) => {
 	const [renderPlaylists, setRenderPlaylists] = useState(false);
 	const storageContext = useContext(StorageContext);
@@ -71,11 +73,74 @@ const FloatingMenu = ({
 											currentIndex: 0,
 										};
 									prev.queue.push(song);
-									prev.currentIndex = prev.queue.length - 1;
+									if (prev.currentIndex === -1)
+										prev.currentIndex =
+											prev.queue.length - 1;
 									return prev;
 								});
 							}}
 						/>
+						{audioContext?.showQueue !== "" && (
+							<>
+								<Divider />
+								<MenuOption
+									text="Remove from Queue"
+									onSelect={() => {
+										const selectedQueue =
+											audioContext?.showQueue;
+										if (
+											selectedQueue === "globalqueue" &&
+											audioContext?.globalQueue
+										) {
+											if (
+												index >
+												audioContext.globalQueue
+													.currentIndex
+											) {
+												// remove song from global queue
+												audioContext?.setGlobalQueue(
+													(prev) => {
+														if (prev === null)
+															return null;
+														prev.queue =
+															prev.queue.filter(
+																(_, qindex) =>
+																	qindex !==
+																	index
+															);
+														return prev;
+													}
+												);
+											}
+										} else if (
+											selectedQueue === "userqueue" &&
+											audioContext?.userQueue
+										) {
+											if (
+												index >
+												audioContext?.userQueue
+													?.currentIndex
+											) {
+												// remove song from user queue
+												audioContext.setUserQueue(
+													(prev) => {
+														if (prev === null)
+															return null;
+														prev.queue =
+															prev.queue.filter(
+																(_, qindex) =>
+																	qindex !==
+																	index
+															);
+														return prev;
+													}
+												);
+											}
+										}
+									}}
+								/>
+							</>
+						)}
 						{currPlaylist !== "0" && (
 							<>
 								<Divider />

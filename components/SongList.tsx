@@ -22,7 +22,7 @@ const SongList = ({
 	const [songData, setSongData] = useState<songItemType[]>([]);
 	// const [showQueue, setShowQueue] = useState<boolean>(false);
 	const colorScheme = useColorScheme();
-	const [showQueueData, setShowQueueData] = useState<string>("");
+	// const [showQueueData, setShowQueueData] = useState<string>("");
 
 	useEffect(() => {
 		setSongData(() => {
@@ -70,7 +70,7 @@ const SongList = ({
 				>
 					<Pressable
 						onPress={() => {
-							setShowQueueData("");
+							audioContext?.setShowQueue("");
 						}}
 					>
 						<Text
@@ -79,8 +79,12 @@ const SongList = ({
 								{
 									color:
 										colorScheme === "light"
-											? "black"
-											: COLORS.whitePrimary,
+											? audioContext?.showQueue === ""
+												? "black"
+												: COLORS.darkSecondary
+											: audioContext?.showQueue === ""
+											? COLORS.whitePrimary
+											: COLORS.whiteTertiary,
 								},
 							]}
 						>
@@ -97,7 +101,7 @@ const SongList = ({
 					{audioContext?.globalQueue && (
 						<Pressable
 							onPress={() => {
-								setShowQueueData("global");
+								audioContext?.setShowQueue("globalqueue");
 							}}
 						>
 							<Text
@@ -106,8 +110,14 @@ const SongList = ({
 									{
 										color:
 											colorScheme === "light"
-												? "black"
-												: COLORS.whitePrimary,
+												? audioContext?.showQueue ===
+												  "globalqueue"
+													? "black"
+													: COLORS.darkSecondary
+												: audioContext?.showQueue ===
+												  "globalqueue"
+												? COLORS.whitePrimary
+												: COLORS.whiteTertiary,
 									},
 								]}
 							>
@@ -118,7 +128,7 @@ const SongList = ({
 					{audioContext?.userQueue && (
 						<Pressable
 							onPress={() => {
-								setShowQueueData("user");
+								audioContext?.setShowQueue("userqueue");
 							}}
 						>
 							<Text
@@ -127,8 +137,14 @@ const SongList = ({
 									{
 										color:
 											colorScheme === "light"
-												? "black"
-												: COLORS.whitePrimary,
+												? audioContext?.showQueue ===
+												  "userqueue"
+													? "black"
+													: COLORS.darkSecondary
+												: audioContext?.showQueue ===
+												  "userqueue"
+												? COLORS.whitePrimary
+												: COLORS.whiteTertiary,
 									},
 								]}
 							>
@@ -200,14 +216,15 @@ const SongList = ({
 			<FlatList
 				showsVerticalScrollIndicator={false}
 				data={
-					showQueueData === "global"
+					audioContext?.showQueue === "globalqueue"
 						? audioContext?.globalQueue?.queue
-						: showQueueData === "user"
+						: audioContext?.showQueue === "userqueue"
 						? audioContext?.userQueue?.queue
 						: songData
 				}
-				renderItem={({ item }) => (
+				renderItem={({ item, index }) => (
 					<SongItem
+						index={index}
 						song={item}
 						selectedPlaylist={selectedHeaderButton}
 					/>
