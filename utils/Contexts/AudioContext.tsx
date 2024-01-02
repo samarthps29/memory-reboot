@@ -148,6 +148,7 @@ export const AudioContextProvider = ({ children }: React.PropsWithChildren) => {
 		setSongInfo((prev) => {
 			return { ...prev, sid: "", sname: "", thumbnail: "" };
 		});
+		await notificationContext?.dismissPushNotification();
 	};
 
 	const handleQueueChange = (automaticNextInQueue?: boolean) => {
@@ -239,7 +240,7 @@ export const AudioContextProvider = ({ children }: React.PropsWithChildren) => {
 	}, [status, sound]);
 
 	useEffect(() => {
-		if (songInfo["sname"] !== undefined) {
+		if (songInfo["sname"] !== undefined && songInfo["sname"] !== "") {
 			handleNotification();
 		}
 	}, [songInfo]);

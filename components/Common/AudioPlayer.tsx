@@ -271,7 +271,7 @@ export default AudioPlayer;
 const styles = StyleSheet.create({
 	container: {
 		position: "absolute",
-		paddingHorizontal: SIZES.small,
+		paddingHorizontal: 14,
 		alignItems: "center",
 		bottom: 0,
 	},
