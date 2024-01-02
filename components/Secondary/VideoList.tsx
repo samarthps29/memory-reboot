@@ -72,7 +72,7 @@ const VideoList = ({
 												color:
 													colorScheme === "light"
 														? "black"
-														: COLORS.whitePrimary,
+														: COLORS.whiteSecondary,
 											},
 										]}
 									>

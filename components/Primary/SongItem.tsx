@@ -2,17 +2,10 @@ import { useContext } from "react";
 import { Image, Pressable, StyleSheet, useColorScheme } from "react-native";
 import { COLORS, FONT, SIZES } from "../../constants/theme";
 import { AudioContext } from "../../utils/Contexts/AudioContext";
-import { filter } from "../../utils/global";
 import { songItemType } from "../../utils/TypeDeclarations";
+import { reducedTitle } from "../../utils/global";
 import FloatingMenu from "../Common/FloatingMenu";
 import { Text, View } from "../Common/Themed";
-
-export const reducedTitle = (str: string, reductionParam: number = 40) => {
-	const filteredString = filter(str);
-	if (filteredString.length > reductionParam) {
-		return filteredString.slice(0, reductionParam) + "...";
-	} else return filteredString;
-};
 
 const SongItem = ({
 	song,

@@ -32,11 +32,6 @@ export type videoItemType = {
 	};
 };
 
-export type queueType = {
-	queue: songItemType[];
-	currentIndex: number;
-};
-
 export type floatingDialogType = {
 	title: string;
 	placeholder: string;
@@ -44,4 +39,11 @@ export type floatingDialogType = {
 	btnSecondaryText?: string;
 	handleButtonClick: (str: string) => void;
 	handleSecondaryButtonClick?: () => void;
+};
+
+export type queueNameType = "globalqueue" | "userqueue" | "";
+
+export type queueType = {
+	queue: songItemType[];
+	currentIndex: number;
 };

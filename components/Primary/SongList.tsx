@@ -84,12 +84,8 @@ const SongList = ({
 									{
 										color:
 											colorScheme === "light"
-												? audioContext?.showQueue === ""
-													? "black"
-													: COLORS.darkSecondary
-												: audioContext?.showQueue === ""
-												? COLORS.whitePrimary
-												: COLORS.whiteTertiary,
+												? "black"
+												: COLORS.whiteSecondary,
 									},
 								]}
 							>

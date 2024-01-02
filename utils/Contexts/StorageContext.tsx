@@ -14,7 +14,7 @@ export const StorageContext = createContext<{
 	setApiKey: React.Dispatch<SetStateAction<string | null>>;
 	setFileUri: React.Dispatch<SetStateAction<string>>;
 	setSaveToggle: React.Dispatch<SetStateAction<boolean>>;
-	setShouldRefresh: React.Dispatch<SetStateAction<boolean>>;
+	setRefreshToggle: React.Dispatch<SetStateAction<boolean>>;
 	vidStatusDict: Record<string, string>;
 	setVidStatusDict: React.Dispatch<SetStateAction<Record<string, string>>>;
 	playlistData: {
@@ -46,7 +46,7 @@ export const StorageContextProvider = ({
 	const [directoryUri, setDirectoryUri] = useState<string>("");
 	const [fileUri, setFileUri] = useState<string>("");
 	const [saveToggle, setSaveToggle] = useState<boolean>(false);
-	const [shouldRefresh, setShouldRefresh] = useState<boolean>(false);
+	const [refreshToggle, setRefreshToggle] = useState<boolean>(false);
 	const [vidStatusDict, setVidStatusDict] = useState<Record<string, string>>(
 		{}
 	);
@@ -54,11 +54,8 @@ export const StorageContextProvider = ({
 		{ pid: string; pname: string }[]
 	>([{ pid: "0", pname: "all songs" }]);
 
-	// TODO: rename songdateupdate to savetoggle and shouldrefresh to refreshtoggle
-
 	const checkDirectoryAccess = async () => {
 		const directoryUriStored = await AsyncStorage.getItem("directoryUri");
-		// console.log(directoryUriStored);
 		if (directoryUriStored === null || directoryUriStored.trim() === "") {
 			const permissions = await SAF.requestDirectoryPermissionsAsync();
 			if (!permissions.granted) {
@@ -68,36 +65,11 @@ export const StorageContextProvider = ({
 				return;
 			}
 			const { directoryUri: uri } = permissions;
-			// console.log(uri);
 			setDirectoryUri(uri);
 			await AsyncStorage.setItem("directoryUri", uri);
 		} else {
 			setDirectoryUri(directoryUriStored);
 		}
-	};
-
-	const refreshSongs = async () => {
-		const files = await SAF.readDirectoryAsync(directoryUri);
-		// TODO: reduce calculation for setSongData and setVidStatusDict
-		setSongData((prev) => {
-			return prev.map((item) => {
-				const uri = checkSubstring(item.sid, files);
-				if (uri !== null) {
-					return { ...item, downloaded: true, itemUri: uri };
-				} else return item;
-			});
-		});
-		setVidStatusDict((prev) => {
-			let dict = prev;
-			songData.forEach((item) => {
-				const uri = checkSubstring(item.sid, files);
-				if (uri !== null) {
-					dict[item.sid] = "downloaded";
-				}
-			});
-			return dict;
-		});
-		setShouldRefresh(false);
 	};
 
 	const fetchData = () => {
@@ -125,6 +97,39 @@ export const StorageContextProvider = ({
 				);
 			}
 		});
+	};
+
+	const refreshSongs = async () => {
+		const files = await SAF.readDirectoryAsync(directoryUri);
+		let isPulled: Record<string, string> = {};
+		songData.forEach((item) => {
+			const uri = checkSubstring(item.sid, files);
+			if (uri !== null) {
+				isPulled[item.sid] = uri;
+			} else isPulled[item.sid] = "";
+		});
+
+		setSongData((prev) => {
+			return prev.map((item) => {
+				if (isPulled[item.sid] !== "") {
+					return {
+						...item,
+						downloaded: true,
+						itemUri: isPulled[item.sid],
+					};
+				} else return item;
+			});
+		});
+		setVidStatusDict((prev) => {
+			let dict = prev;
+			songData.forEach((item) => {
+				if (isPulled[item.sid] !== "") {
+					dict[item.sid] = "downloaded";
+				}
+			});
+			return dict;
+		});
+		setRefreshToggle(false);
 	};
 
 	const saveData = async () => {
@@ -164,11 +169,11 @@ export const StorageContextProvider = ({
 	]);
 
 	useEffect(() => {
-		if (shouldRefresh && directoryUri !== "") {
+		if (refreshToggle && directoryUri !== "") {
 			refreshSongs();
 			setSaveToggle(true);
 		}
-	}, [shouldRefresh, songData, vidStatusDict, playlistData, directoryUri]);
+	}, [refreshToggle, songData, vidStatusDict, playlistData, directoryUri]);
 
 	return (
 		<StorageContext.Provider
@@ -182,7 +187,7 @@ export const StorageContextProvider = ({
 				setDirectoryUri,
 				setFileUri,
 				setSaveToggle,
-				setShouldRefresh,
+				setRefreshToggle,
 				vidStatusDict,
 				setVidStatusDict,
 				playlistData,

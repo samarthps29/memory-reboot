@@ -11,7 +11,7 @@ const RefreshButton = () => {
 	return (
 		<Pressable
 			onPress={() => {
-				storageContext?.setShouldRefresh(true);
+				storageContext?.setRefreshToggle(true);
 			}}
 		>
 			<Ionicons

@@ -78,7 +78,7 @@ const VideoItem = ({ video }: { video: videoItemType }) => {
 		else return "Downloaded";
 	};
 
-	const checkAge = (date: dayjs.Dayjs) => {
+	const checkVideoAge = (date: dayjs.Dayjs) => {
 		const currDate = dayjs();
 		const dDiff = currDate.diff(date, "days");
 		const mDiff = currDate.diff(date, "months");
@@ -138,7 +138,7 @@ const VideoItem = ({ video }: { video: videoItemType }) => {
 									: COLORS.whiteSecondary,
 						}}
 					>
-						{checkAge(dayjs(video.snippet.publishedAt))}
+						{checkVideoAge(dayjs(video.snippet.publishedAt))}
 					</Text>
 					<Pressable
 						onPress={handleDownload}

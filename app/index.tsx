@@ -32,7 +32,6 @@ const index = () => {
 				]}
 			>
 				<StatusBar
-					// hidden
 					backgroundColor={
 						colorScheme === "light"
 							? COLORS.whitePrimary

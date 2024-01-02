@@ -8,7 +8,7 @@ import { NotificationContext } from "../../utils/Contexts/NotificationContext";
 import { SwitchPageContext } from "../../utils/Contexts/SwitchPageContext";
 import { queueType } from "../../utils/TypeDeclarations";
 import { convertToTime } from "../../utils/global";
-import { reducedTitle } from "../Primary/SongItem";
+import { reducedTitle } from "../../utils/global";
 import {
 	BackButton,
 	ForwardButton,
@@ -225,6 +225,7 @@ const AudioPlayer = () => {
 						thumbTintColor={
 							colorScheme === "light" ? "black" : "white"
 						}
+						step={1000}
 					/>
 					<View
 						style={{

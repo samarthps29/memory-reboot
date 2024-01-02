@@ -11,21 +11,38 @@ Notifications.setNotificationHandler({
 	}),
 });
 
-const schedulePushNotification = async (title: string) => {
-	await Notifications.scheduleNotificationAsync({
-		content: {
-			title: title,
-			categoryIdentifier: "trackControl",
-			sticky: true,
-			priority: "MAX",
-		},
-		trigger: null,
-	});
-};
+async function registerForPushNotificationsAsync() {
+	let token;
 
-const dismissPushNotification = async () => {
-	await Notifications.dismissAllNotificationsAsync();
-};
+	if (Platform.OS === "android") {
+		await Notifications.setNotificationChannelAsync("default", {
+			name: "default",
+			importance: Notifications.AndroidImportance.MAX,
+			vibrationPattern: [0, 250, 250, 250],
+			lightColor: "#FF231F7C",
+			audioAttributes: {
+				contentType: 2,
+				usage: 1,
+			},
+		});
+	}
+
+	if (Device.isDevice) {
+		const { status: existingStatus } =
+			await Notifications.getPermissionsAsync();
+		let finalStatus = existingStatus;
+		if (existingStatus !== "granted") {
+			const { status } = await Notifications.requestPermissionsAsync();
+			finalStatus = status;
+		}
+		if (finalStatus !== "granted") {
+			alert("Failed to get push token for push notification!");
+			return;
+		}
+		token = (await Notifications.getDevicePushTokenAsync()).data;
+	}
+	return token;
+}
 
 const configureNotificationCategory = async () => {
 	Notifications.setNotificationCategoryAsync("trackControl", [
@@ -47,44 +64,29 @@ const configureNotificationCategory = async () => {
 	]);
 };
 
-async function registerForPushNotificationsAsync() {
-	let token;
+const schedulePushNotification = async (title: string) => {
+	await Notifications.scheduleNotificationAsync({
+		content: {
+			title: title,
+			categoryIdentifier: "trackControl",
+			sticky: true,
+			priority: "MAX",
+		},
+		trigger: null,
+	});
+};
 
-	if (Platform.OS === "android") {
-		await Notifications.setNotificationChannelAsync("default", {
-			name: "default",
-			importance: Notifications.AndroidImportance.MAX,
-			vibrationPattern: [0, 250, 250, 250],
-			lightColor: "#FF231F7C",
-			audioAttributes: {
-				contentType: 2,
-				usage: 1,
-			},
-		});
-	}
-
-	if (Device.isDevice) {
-		const { status: existingStatus } =
-			await Notifications.getPermissionsAsync();
-		let finalStatus = existingStatus;
-		// console.log("exisiting stat", existingStatus);
-		if (existingStatus !== "granted") {
-			const { status } = await Notifications.requestPermissionsAsync();
-			finalStatus = status;
-		}
-		if (finalStatus !== "granted") {
-			alert("Failed to get push token for push notification!");
-			return;
-		}
-		token = (await Notifications.getDevicePushTokenAsync()).data;
-		// console.log(token);
-	}
-	return token;
-}
+const dismissPushNotification = async () => {
+	await Notifications.dismissAllNotificationsAsync();
+};
 
 const initialize = async () => {
 	await registerForPushNotificationsAsync();
 	await configureNotificationCategory();
+};
+
+const finalize = async () => {
+	await dismissPushNotification();
 };
 
 export const NotificationContext = createContext<{
@@ -100,9 +102,7 @@ export const NotificationProvider = ({ children }: React.PropsWithChildren) => {
 	} | null>(null);
 	useEffect(() => {
 		const notificationListener =
-			Notifications.addNotificationReceivedListener((notification) => {
-				// console.log(notification);
-			});
+			Notifications.addNotificationReceivedListener(() => {});
 		const responseListener =
 			Notifications.addNotificationResponseReceivedListener(
 				(notification) => {
@@ -118,6 +118,7 @@ export const NotificationProvider = ({ children }: React.PropsWithChildren) => {
 		return () => {
 			notificationListener.remove();
 			responseListener.remove();
+			finalize();
 		};
 	}, []);
 
