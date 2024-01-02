@@ -12,8 +12,7 @@ Notifications.setNotificationHandler({
 });
 
 async function registerForPushNotificationsAsync() {
-	let token;
-
+	// let token;
 	if (Platform.OS === "android") {
 		await Notifications.setNotificationChannelAsync("default", {
 			name: "default",
@@ -39,27 +38,37 @@ async function registerForPushNotificationsAsync() {
 			alert("Failed to get push token for push notification!");
 			return;
 		}
-		token = (await Notifications.getDevicePushTokenAsync()).data;
+		// token = (await Notifications.getDevicePushTokenAsync()).data;
 	}
-	return token;
+	// return token;
 }
 
+// TODO: do not remove the notification even when the user clicks on the notification
 const configureNotificationCategory = async () => {
 	Notifications.setNotificationCategoryAsync("trackControl", [
 		{
 			buttonTitle: "Prev",
 			identifier: "prevButton",
-			options: { opensAppToForeground: false },
+			options: {
+				opensAppToForeground: false,
+				isAuthenticationRequired: false,
+			},
 		},
 		{
 			buttonTitle: "Play | Pause",
 			identifier: "playButton",
-			options: { opensAppToForeground: false },
+			options: {
+				opensAppToForeground: false,
+				isAuthenticationRequired: false,
+			},
 		},
 		{
 			buttonTitle: "Next",
 			identifier: "nextButton",
-			options: { opensAppToForeground: false },
+			options: {
+				opensAppToForeground: false,
+				isAuthenticationRequired: false,
+			},
 		},
 	]);
 };
@@ -71,6 +80,8 @@ const schedulePushNotification = async (title: string) => {
 			categoryIdentifier: "trackControl",
 			sticky: true,
 			priority: "MAX",
+			sound: false,
+			vibrate: undefined,
 		},
 		trigger: null,
 	});

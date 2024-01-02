@@ -8,6 +8,7 @@ import {
 } from "react";
 import { queueNameType, queueType } from "../TypeDeclarations";
 import { NotificationContext } from "./NotificationContext";
+import { filter } from "../global";
 
 export const AudioContext = createContext<{
 	sound: Audio.Sound | null;
@@ -224,7 +225,9 @@ export const AudioContextProvider = ({ children }: React.PropsWithChildren) => {
 
 	const handleNotification = async () => {
 		await notificationContext?.dismissPushNotification();
-		await notificationContext?.schedulePushNotification(songInfo["sname"]);
+		await notificationContext?.schedulePushNotification(
+			filter(songInfo["sname"])
+		);
 	};
 
 	useEffect(() => {
