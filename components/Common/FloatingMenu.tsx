@@ -72,6 +72,7 @@ const FloatingMenu = ({
 									colorScheme === "light"
 										? COLORS.whiteSecondary
 										: COLORS.darkSecondary,
+								marginBottom: 2,
 							},
 						],
 					}}
@@ -88,12 +89,20 @@ const FloatingMenu = ({
 									colorScheme === "light"
 										? "black"
 										: COLORS.whitePrimary,
+								fontFamily: FONT.bold,
 							},
 						]}
 					>
 						{reducedTitle(song.sname, 100)}
 					</Text>
 				</MenuOption>
+				<View
+					style={{
+						height: 1,
+						backgroundColor: COLORS.darkTertiary,
+						marginBottom: 4,
+					}}
+				/>
 				{!renderPlaylists && (
 					<>
 						{storageContext?.playlistData &&
@@ -393,7 +402,7 @@ const styles = StyleSheet.create({
 		backgroundColor: "transparent",
 	},
 	menuOption: {
-		paddingVertical: 13,
+		paddingVertical: 12,
 		paddingHorizontal: SIZES.xSmall,
 		backgroundColor: COLORS.darkSecondary,
 		overflow: "scroll",
