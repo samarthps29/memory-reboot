@@ -188,6 +188,7 @@ const HeaderButtons = ({
 											btnSecondaryText: "Delete",
 											handleSecondaryButtonClick: () => {
 												const playlistID = item.pid;
+												if (playlistID === "0") return;
 												// removed playlist
 												storageContext?.setPlaylistData(
 													(prev) =>

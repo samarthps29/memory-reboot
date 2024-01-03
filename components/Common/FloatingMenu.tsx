@@ -8,10 +8,10 @@ import {
 	MenuTrigger,
 } from "react-native-popup-menu";
 import { COLORS, SIZES } from "../../constants/theme";
-import { StorageContext } from "../../utils/Contexts/StorageContext";
-import { Text, View } from "./Themed";
 import { AudioContext } from "../../utils/Contexts/AudioContext";
+import { StorageContext } from "../../utils/Contexts/StorageContext";
 import { songItemType } from "../../utils/TypeDeclarations";
+import { View } from "./Themed";
 
 const Divider = () => <View style={styles.divider} />;
 
@@ -177,6 +177,7 @@ const FloatingMenu = ({
 								<>
 									{/* <Divider /> */}
 									<MenuOption
+										text="Remove from Playlist"
 										customStyles={{
 											optionWrapper: styles.menuOption,
 										}}
@@ -206,7 +207,6 @@ const FloatingMenu = ({
 											);
 											storageContext?.setSaveToggle(true);
 										}}
-										text="Remove from playlist"
 									/>
 								</>
 							)}
