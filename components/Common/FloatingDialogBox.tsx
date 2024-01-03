@@ -27,7 +27,7 @@ const FloatingDialogBox = () => {
 				styles.container,
 				{
 					backgroundColor:
-						colorScheme === "light" ? "#00000080" : "#f0ffff10",
+						colorScheme === "light" ? "#00000080" : "#52505350",
 				},
 			]}
 		>
@@ -62,12 +62,21 @@ const FloatingDialogBox = () => {
 					onChangeText={(text) => {
 						setInputVal!(text);
 					}}
+					placeholderTextColor={
+						colorScheme === "light"
+							? COLORS.gray
+							: COLORS.whiteSecondary
+					}
 					style={[
 						styles.inputContainer,
 						{
 							backgroundColor:
 								colorScheme === "light"
 									? COLORS.whiteSecondary
+									: COLORS.darkSecondary,
+							color:
+								colorScheme === "light"
+									? "black"
 									: COLORS.whitePrimary,
 						},
 					]}

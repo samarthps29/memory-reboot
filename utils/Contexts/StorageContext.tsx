@@ -156,7 +156,8 @@ export const StorageContextProvider = ({
 		const fileUri = checkSubstring("exportedData.txt", files);
 		if (fileUri !== null) {
 			Alert.alert(
-				"There is already a exportedData.txt file. Delete it and try again."
+				"Warning",
+				"File 'exportedData.txt' already exists. Remove it and try again."
 			);
 		} else {
 			const exportedDataFileUri = await SAF.createFileAsync(
