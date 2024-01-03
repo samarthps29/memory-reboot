@@ -32,6 +32,8 @@ export type videoItemType = {
 	};
 };
 
+export type playlistItemType = { pid: string; pname: string };
+
 export type floatingDialogType = {
 	title: string;
 	placeholder: string;

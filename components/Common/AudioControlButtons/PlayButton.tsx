@@ -33,7 +33,6 @@ const PlayButton = ({
 				/>
 			) : (
 				<Ionicons
-					style={{ left: 1 }}
 					name={fill ? "pause" : "pause-outline"}
 					size={size}
 					color={

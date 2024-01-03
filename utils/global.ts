@@ -30,3 +30,5 @@ export const convertToTime = (milliseconds: number) => {
 
 	return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
 };
+
+export const delimiter = "###END###";

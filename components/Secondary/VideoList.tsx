@@ -80,6 +80,44 @@ const VideoList = ({
 									</Text>
 								</TouchableWithoutFeedback>
 							)}
+							<Pressable
+								onPress={() => {
+									storageContext?.importData();
+								}}
+							>
+								<Text
+									style={[
+										styles.buttonText,
+										{
+											color:
+												colorScheme === "light"
+													? "black"
+													: COLORS.whiteSecondary,
+										},
+									]}
+								>
+									Import
+								</Text>
+							</Pressable>
+							<Pressable
+								onPress={() => {
+									storageContext?.exportData();
+								}}
+							>
+								<Text
+									style={[
+										styles.buttonText,
+										{
+											color:
+												colorScheme === "light"
+													? "black"
+													: COLORS.whiteSecondary,
+										},
+									]}
+								>
+									Export
+								</Text>
+							</Pressable>
 						</View>
 						<View
 							style={{

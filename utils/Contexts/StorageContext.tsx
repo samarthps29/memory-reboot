@@ -1,8 +1,9 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StorageAccessFramework as SAF } from "expo-file-system";
 import { SetStateAction, createContext, useEffect, useState } from "react";
-import { songItemType } from "../TypeDeclarations";
 import { Alert } from "react-native";
+import { playlistItemType, songItemType } from "../TypeDeclarations";
+import { delimiter } from "../global";
 
 export const StorageContext = createContext<{
 	apiKey: string | null;
@@ -21,14 +22,9 @@ export const StorageContext = createContext<{
 		pid: string;
 		pname: string;
 	}[];
-	setPlaylistData: React.Dispatch<
-		SetStateAction<
-			{
-				pid: string;
-				pname: string;
-			}[]
-		>
-	>;
+	setPlaylistData: React.Dispatch<SetStateAction<playlistItemType[]>>;
+	exportData: () => Promise<void>;
+	importData: () => Promise<void>;
 } | null>(null);
 
 export const checkSubstring = (substring: string, stringArr: string[]) => {
@@ -50,9 +46,9 @@ export const StorageContextProvider = ({
 	const [vidStatusDict, setVidStatusDict] = useState<Record<string, string>>(
 		{}
 	);
-	const [playlistData, setPlaylistData] = useState<
-		{ pid: string; pname: string }[]
-	>([{ pid: "0", pname: "all songs" }]);
+	const [playlistData, setPlaylistData] = useState<playlistItemType[]>([
+		{ pid: "0", pname: "all songs" },
+	]);
 
 	const checkDirectoryAccess = async () => {
 		const directoryUriStored = await AsyncStorage.getItem("directoryUri");
@@ -132,6 +128,11 @@ export const StorageContextProvider = ({
 		setRefreshToggle(false);
 	};
 
+	const handleRefresh = async () => {
+		await refreshSongs();
+		setSaveToggle(true);
+	};
+
 	const saveData = async () => {
 		const apiTask = AsyncStorage.setItem("apiKey", JSON.stringify(apiKey));
 		const songTask = AsyncStorage.setItem(
@@ -148,6 +149,76 @@ export const StorageContextProvider = ({
 		);
 		await Promise.all([apiTask, songTask, vidStatusTask, playlistTask]);
 		setSaveToggle(false);
+	};
+
+	const exportData = async () => {
+		const files = await SAF.readDirectoryAsync(directoryUri);
+		const fileUri = checkSubstring("exportedData.txt", files);
+		if (fileUri !== null) {
+			Alert.alert(
+				"There is already a exportedData.txt file. Delete it and try again."
+			);
+		} else {
+			const exportedDataFileUri = await SAF.createFileAsync(
+				directoryUri,
+				"exportedData.txt",
+				"text/plain"
+			);
+			SAF.writeAsStringAsync(
+				exportedDataFileUri,
+				JSON.stringify(
+					songData.map((item) => ({
+						...item,
+						downloaded: false,
+						itemUri: "",
+					}))
+				) +
+					delimiter +
+					JSON.stringify(playlistData) +
+					delimiter +
+					JSON.stringify(vidStatusDict)
+			)
+				.then(() => {
+					Alert.alert("Data exported successfully.");
+				})
+				.catch(() => {
+					Alert.alert("Could not export data.");
+				});
+		}
+	};
+
+	const handleImportData = async (dataArr: any[]) => {
+		setSongData(dataArr[0]);
+		setPlaylistData(dataArr[1]);
+		setVidStatusDict(dataArr[2]);
+		setSaveToggle(true);
+	};
+
+	const importData = async () => {
+		const files = await SAF.readDirectoryAsync(directoryUri);
+		const fileUri = checkSubstring("exportedData.txt", files);
+		if (fileUri !== null) {
+			const content = await SAF.readAsStringAsync(fileUri);
+			const data = content
+				.split(delimiter)
+				.map((item) => JSON.parse(item));
+			if (data.length !== 3) Alert.alert("Data format incorrect.");
+			else {
+				Alert.alert(
+					"Confirm",
+					"This action is irreversible and all your current songs and playlists will be replaced. Do you want to continue?",
+					[
+						{
+							text: "Yes",
+							onPress: () => {
+								handleImportData(data);
+							},
+						},
+						{ text: "No", onPress: () => {} },
+					]
+				);
+			}
+		}
 	};
 
 	useEffect(() => {
@@ -170,8 +241,7 @@ export const StorageContextProvider = ({
 
 	useEffect(() => {
 		if (refreshToggle && directoryUri !== "") {
-			refreshSongs();
-			setSaveToggle(true);
+			handleRefresh();
 		}
 	}, [refreshToggle, songData, vidStatusDict, playlistData, directoryUri]);
 
@@ -192,6 +262,8 @@ export const StorageContextProvider = ({
 				setVidStatusDict,
 				playlistData,
 				setPlaylistData,
+				exportData,
+				importData,
 			}}
 		>
 			{children}
