@@ -27,7 +27,11 @@ const LoopButton = () => {
 				name="sync-outline"
 				size={24}
 				color={
-					colorScheme === "light" ? "black" : COLORS.whiteSecondary
+					audioContext?.songInfo["loop"] === "yes"
+						? COLORS.primary
+						: colorScheme === "light"
+						? "black"
+						: COLORS.whiteSecondary
 				}
 			/>
 			{audioContext?.songInfo["loop"] === "yes" && (
@@ -35,10 +39,7 @@ const LoopButton = () => {
 					style={{
 						height: 3,
 						width: 3,
-						backgroundColor:
-							colorScheme === "light"
-								? "black"
-								: COLORS.whiteSecondary,
+						backgroundColor: COLORS.primary,
 						borderRadius: 100,
 						position: "absolute",
 						bottom: -3,

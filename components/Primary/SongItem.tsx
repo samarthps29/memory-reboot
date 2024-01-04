@@ -46,22 +46,7 @@ const SongItem = ({
 				});
 			}}
 		>
-			<View
-				style={[
-					{
-						backgroundColor:
-							audioContext?.songInfo["sid"] !== undefined &&
-							audioContext.songInfo["sid"] === song.sid
-								? colorScheme === "light"
-									? "#c8c3d8"
-									: "#afa3d8"
-								: colorScheme === "light"
-								? COLORS.whiteSecondary
-								: COLORS.darkSecondary,
-					},
-					styles.container,
-				]}
-			>
+			<View style={styles.container}>
 				<View style={styles.imageContainer}>
 					<Image
 						source={{ uri: song.thumbnail }}
@@ -87,27 +72,36 @@ const SongItem = ({
 							backgroundColor: "transparent",
 						}}
 					>
-						<Text
-							style={[
-								styles.songTitle,
-								{
-									color:
-										colorScheme === "light" ||
-										audioContext?.songInfo["sid"] ===
-											song.sid
-											? "black"
-											: COLORS.whitePrimary,
-								},
-							]}
-						>
-							{reducedTitle(song.sname)}
-						</Text>
 						<View
 							style={{
-								width: "30%",
+								width: "75%",
+								backgroundColor: "transparent",
+							}}
+						>
+							<Text
+								numberOfLines={1}
+								style={[
+									styles.songTitle,
+									{
+										color:
+											colorScheme === "light" ||
+											audioContext?.songInfo["sid"] ===
+												song.sid
+												? COLORS.primary
+												: COLORS.whitePrimary,
+									},
+								]}
+							>
+								{reducedTitle(song.sname, 120)}
+							</Text>
+						</View>
+
+						<View
+							style={{
+								width: "25%",
 								backgroundColor: "transparent",
 								paddingTop: 1,
-								paddingLeft: SIZES.small,
+								paddingLeft: 2,
 							}}
 						>
 							<FloatingMenu
@@ -130,11 +124,9 @@ const SongItem = ({
 								styles.artistTitle,
 								{
 									color:
-										colorScheme === "light" ||
-										audioContext?.songInfo["sid"] ===
-											song.sid
+										colorScheme === "light"
 											? "black"
-											: COLORS.whiteSecondary,
+											: COLORS.whiteTertiary,
 								},
 							]}
 						>
@@ -152,19 +144,21 @@ export default SongItem;
 const styles = StyleSheet.create({
 	container: {
 		width: "100%",
-		padding: SIZES.xSmall,
+		paddingHorizontal: SIZES.gap,
+		paddingVertical: SIZES.gap,
 		borderRadius: SIZES.medium,
 		flexDirection: "row",
+		backgroundColor: "transparent",
 	},
 	imageContainer: {
-		height: 60,
-		width: 60,
+		height: 55,
+		width: 55,
 		borderRadius: SIZES.small,
 		overflow: "hidden",
 		marginRight: SIZES.xSmall,
 	},
 	songTitle: {
-		width: "70%",
+		width: "96%",
 		fontFamily: FONT.medium,
 		fontSize: 16,
 	},

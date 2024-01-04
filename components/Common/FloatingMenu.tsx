@@ -36,8 +36,7 @@ const FloatingMenu = ({
 					name="reorder-four-outline"
 					size={20}
 					color={
-						colorScheme === "light" ||
-						song.sid === audioContext?.songInfo["sid"]
+						colorScheme === "light"
 							? "black"
 							: COLORS.whiteSecondary
 					}
@@ -86,14 +85,16 @@ const FloatingMenu = ({
 							styles.menuText,
 							{
 								color:
-									colorScheme === "light"
+									audioContext?.songInfo["sid"] === song.sid
+										? COLORS.primary
+										: colorScheme === "light"
 										? "black"
 										: COLORS.whitePrimary,
 								fontFamily: FONT.bold,
 							},
 						]}
 					>
-						{reducedTitle(song.sname, 100)}
+						{reducedTitle(song.sname, 120)}
 					</Text>
 				</MenuOption>
 				<View
