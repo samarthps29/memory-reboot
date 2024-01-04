@@ -46,7 +46,23 @@ const SongItem = ({
 				});
 			}}
 		>
-			<View style={styles.container}>
+			<View
+				style={[
+					styles.container,
+					{
+						backgroundColor:
+							colorScheme === "light"
+								? audioContext?.songInfo["sid"] === song.sid
+									? COLORS.tertiary
+									: COLORS.whiteSecondary
+								: "transparent",
+						paddingHorizontal:
+							colorScheme === "light" ? SIZES.xSmall : SIZES.gap,
+						paddingVertical:
+							colorScheme === "light" ? SIZES.xSmall : SIZES.gap,
+					},
+				]}
+			>
 				<View style={styles.imageContainer}>
 					<Image
 						source={{ uri: song.thumbnail }}
@@ -79,15 +95,18 @@ const SongItem = ({
 							}}
 						>
 							<Text
-								numberOfLines={1}
+								numberOfLines={colorScheme === "light" ? 2 : 1}
 								style={[
 									styles.songTitle,
 									{
 										color:
-											colorScheme === "light" ||
 											audioContext?.songInfo["sid"] ===
-												song.sid
-												? COLORS.primary
+											song.sid
+												? colorScheme === "light"
+													? "black"
+													: COLORS.primary
+												: colorScheme === "light"
+												? "black"
 												: COLORS.whitePrimary,
 									},
 								]}

@@ -153,11 +153,11 @@ const AudioPlayer = () => {
 							: expanded
 							? reducedTitle(
 									audioContext?.songInfo["sname"] || "",
-									60
+									120
 							  )
 							: reducedTitle(
 									audioContext?.songInfo["sname"] || "",
-									25
+									120
 							  )}
 					</Text>
 				</TouchableWithoutFeedback>

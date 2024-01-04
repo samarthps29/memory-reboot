@@ -34,7 +34,7 @@ const index = () => {
 				<StatusBar
 					backgroundColor={
 						colorScheme === "light"
-							? COLORS.whitePrimary
+							? COLORS.lightWhite
 							: COLORS.darkPrimary
 					}
 				/>

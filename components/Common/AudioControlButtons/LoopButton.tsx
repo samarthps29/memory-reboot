@@ -28,7 +28,9 @@ const LoopButton = () => {
 				size={24}
 				color={
 					audioContext?.songInfo["loop"] === "yes"
-						? COLORS.primary
+						? colorScheme === "light"
+							? "#56497d"
+							: COLORS.primary
 						: colorScheme === "light"
 						? "black"
 						: COLORS.whiteSecondary
@@ -39,7 +41,10 @@ const LoopButton = () => {
 					style={{
 						height: 3,
 						width: 3,
-						backgroundColor: COLORS.primary,
+						backgroundColor:
+							colorScheme === "light"
+								? "#56497d"
+								: COLORS.primary,
 						borderRadius: 100,
 						position: "absolute",
 						bottom: -3,

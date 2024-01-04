@@ -86,7 +86,9 @@ const FloatingMenu = ({
 							{
 								color:
 									audioContext?.songInfo["sid"] === song.sid
-										? COLORS.primary
+										? colorScheme === "light"
+											? "#56497d"
+											: COLORS.primary
 										: colorScheme === "light"
 										? "black"
 										: COLORS.whitePrimary,
