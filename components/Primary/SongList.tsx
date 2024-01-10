@@ -1,17 +1,15 @@
+import { FlashList } from "@shopify/flash-list";
 import { useCallback, useContext, useEffect, useState } from "react";
 import { Pressable, StyleSheet, useColorScheme } from "react-native";
-import {
-	FlatList,
-	TouchableWithoutFeedback,
-} from "react-native-gesture-handler";
+import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import { COLORS, FONT, SIZES } from "../../constants/theme";
-import { StorageContext } from "../../utils/Contexts/StorageContext";
-import { songItemType } from "../../utils/TypeDeclarations";
-import SongItem from "./SongItem";
-import { Text, View } from "../Common/Themed";
 import { AudioContext } from "../../utils/Contexts/AudioContext";
-import { durstenfeldShuffle } from "../../utils/global";
+import { StorageContext } from "../../utils/Contexts/StorageContext";
 import { SwitchPageContext } from "../../utils/Contexts/SwitchPageContext";
+import { songItemType } from "../../utils/TypeDeclarations";
+import { durstenfeldShuffle } from "../../utils/global";
+import { Text, View } from "../Common/Themed";
+import SongItem from "./SongItem";
 
 const SongList = ({
 	searchTerm,
@@ -26,6 +24,19 @@ const SongList = ({
 	// local song data
 	const [songData, setSongData] = useState<songItemType[]>([]);
 	const colorScheme = useColorScheme();
+
+	const SongListItem = useCallback(
+		({ item, index }: { item: songItemType; index: number }) => (
+			<SongItem
+				index={index}
+				song={item}
+				selectedPlaylist={selectedHeaderButton}
+			/>
+		),
+		[]
+	);
+
+	const ItemSeparator = useCallback(() => <View style={{ height: 4 }} />, []);
 
 	useEffect(() => {
 		setSongData(() => {
@@ -238,7 +249,10 @@ const SongList = ({
 					</Pressable>
 				</View>
 			</View>
-			<FlatList
+			<FlashList
+				// windowSize={15}
+				// initialNumToRender={10}
+				// maxToRenderPerBatch={20}
 				showsVerticalScrollIndicator={false}
 				data={
 					audioContext?.showQueue === "globalqueue"
@@ -247,14 +261,11 @@ const SongList = ({
 						? audioContext?.userQueue?.queue
 						: songData
 				}
-				renderItem={({ item, index }) => (
-					<SongItem
-						index={index}
-						song={item}
-						selectedPlaylist={selectedHeaderButton}
-					/>
-				)}
-				contentContainerStyle={{ rowGap: 6 }}
+				renderItem={SongListItem}
+				ItemSeparatorComponent={ItemSeparator}
+				// contentContainerStyle={styles.listItem}
+				// getItemLayout={getItemLayout}
+				estimatedItemSize={250}
 			/>
 		</View>
 	);

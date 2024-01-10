@@ -31,7 +31,7 @@ const VideoItem = ({ video }: { video: videoItemType }) => {
 				sname: video.snippet.title,
 				aname: video.snippet.channelTitle,
 				// high quality thumbnail or medium quality?
-				thumbnail: video.snippet.thumbnails.high.url,
+				thumbnail: video.snippet.thumbnails.medium.url,
 				itemUri: "",
 				duration: "",
 				downloaded: false,
