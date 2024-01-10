@@ -1,6 +1,12 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StorageAccessFramework as SAF } from "expo-file-system";
-import { SetStateAction, createContext, useEffect, useState } from "react";
+import {
+	SetStateAction,
+	createContext,
+	useCallback,
+	useEffect,
+	useState,
+} from "react";
 import { Alert } from "react-native";
 import { playlistItemType, songItemType } from "../TypeDeclarations";
 import { delimiter } from "../global";
@@ -165,6 +171,12 @@ export const StorageContextProvider = ({
 				"exportedData.txt",
 				"text/plain"
 			);
+			// create a new vidStatusDict with all status to be pending
+			let newVidStatusDict = vidStatusDict;
+			songData.forEach((item) => {
+				newVidStatusDict[item.sid] = "pending";
+			});
+
 			SAF.writeAsStringAsync(
 				exportedDataFileUri,
 				JSON.stringify(
@@ -172,12 +184,13 @@ export const StorageContextProvider = ({
 						...item,
 						downloaded: false,
 						itemUri: "",
+						playlists: [],
 					}))
 				) +
 					delimiter +
-					JSON.stringify(playlistData) +
+					JSON.stringify([]) +
 					delimiter +
-					JSON.stringify(vidStatusDict)
+					JSON.stringify(newVidStatusDict)
 			)
 				.then(() => {
 					Alert.alert("Data exported successfully.");
@@ -188,12 +201,44 @@ export const StorageContextProvider = ({
 		}
 	};
 
-	const handleImportData = async (dataArr: any[]) => {
-		setSongData(dataArr[0]);
-		setPlaylistData(dataArr[1]);
-		setVidStatusDict(dataArr[2]);
-		setSaveToggle(true);
-	};
+	const handleImportData = useCallback(
+		async (dataArr: any[]) => {
+			const newSongData: songItemType[] = dataArr[0];
+			const newPlaylistData: playlistItemType[] = dataArr[1];
+			const newVidStatusDict: Record<string, string> = dataArr[2];
+
+			let toInclude: Record<string, boolean> = {};
+			newSongData.forEach((item) => {
+				if (vidStatusDict[item.sid] === undefined)
+					toInclude[item.sid] = true;
+				else toInclude[item.sid] = false;
+			});
+
+			setSongData((prev) => {
+				return [
+					...prev,
+					...newSongData.filter((item) => toInclude[item.sid]),
+				];
+			});
+
+			setPlaylistData((prev) => {
+				// it is really unlikely that the uuid of two playlists will be the exact same
+				// so avoiding that check
+				return [...prev, ...newPlaylistData];
+			});
+
+			setVidStatusDict((prev) => {
+				newSongData.forEach((item) => {
+					if (!toInclude[item.sid]) {
+						delete newVidStatusDict[item.sid];
+					}
+				});
+				return { ...prev, ...newVidStatusDict };
+			});
+			setSaveToggle(true);
+		},
+		[vidStatusDict]
+	);
 
 	const importData = async () => {
 		const files = await SAF.readDirectoryAsync(directoryUri);
@@ -207,7 +252,7 @@ export const StorageContextProvider = ({
 			else {
 				Alert.alert(
 					"Confirm",
-					"This action is irreversible and all your current songs and playlists will be replaced. Do you want to continue?",
+					"This action will add new songs and playlist. Do you want to continue?",
 					[
 						{
 							text: "Yes",

@@ -1,4 +1,5 @@
 const COLORS = {
+	// change to lightAccent darkAccent
 	primary: "#25d062",
 	secondary: "#9ADE7B",
 	tertiary: "#afa3d8",
@@ -14,8 +15,6 @@ const COLORS = {
 
 	lightWhite: "#FAFAFC",
 	lightBg: "#fcf8e9",
-	lightText: "#000",
-	darkText: "",
 };
 
 const FONT = {
