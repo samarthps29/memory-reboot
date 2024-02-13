@@ -4,7 +4,6 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 import { COLORS, FONT, SIZES } from "../../constants/theme";
 import { AudioContext } from "../../utils/Contexts/AudioContext";
 import { NotificationContext } from "../../utils/Contexts/NotificationContext";
-import { SwitchPageContext } from "../../utils/Contexts/SwitchPageContext";
 import { queueType } from "../../utils/TypeDeclarations";
 import { convertToTime, reducedTitle } from "../../utils/global";
 import {
@@ -12,16 +11,13 @@ import {
 	ForwardButton,
 	LoopButton,
 	PlayButton,
-	RefreshButton,
 } from "./AudioControlButtons";
-// import { Text, View } from "./Themed";
 
 const AudioPlayer = () => {
 	// TODO: KeyboardAvoidingView from react-native
 	const audioContext = useContext(AudioContext);
 	const [backClickCount, setBackClickCount] = useState<number | null>(null);
 	const [expanded, setExpanded] = useState(false);
-	const switchContext = useContext(SwitchPageContext);
 	const notificationContext = useContext(NotificationContext);
 
 	const updateIndexBack = (queue: queueType) => {
@@ -155,7 +151,7 @@ const AudioPlayer = () => {
 						},
 					]}
 				>
-					{!expanded && <RefreshButton />}
+					{/* {!expanded && <RefreshButton />} */}
 					{!expanded && <LoopButton />}
 					<BackButton
 						handlePress={handleBack}
@@ -185,7 +181,7 @@ const AudioPlayer = () => {
 						<Slider
 							style={{
 								width: "98%",
-								height: 4,
+								height: 8,
 								marginBottom: SIZES.xxSmall,
 							}}
 							minimumValue={0}
@@ -258,7 +254,7 @@ const styles = StyleSheet.create({
 		backgroundColor: "transparent",
 		alignItems: "center",
 		flexDirection: "row",
-		gap: SIZES.gap,
+		gap: 6,
 	},
 	buttonText: {
 		fontFamily: FONT.regular,

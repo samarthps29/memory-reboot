@@ -32,7 +32,7 @@ const index = () => {
 							audioContext?.songInfo["sname"] !== undefined &&
 							audioContext.songInfo["sname"] !== ""
 								? SIZES.small + 96
-								: SIZES.small + 32, // TODO: change this dynamically
+								: SIZES.small + 36,
 					},
 				]}
 			>

@@ -36,7 +36,7 @@ const SecondaryHeader = ({
 				setVideoData(res.data.items);
 			})
 			.catch((err) => {
-				console.log("Error in api call", err);
+				console.log("Error in API Call", err);
 			})
 			.finally(() => {
 				setIsLoading(false);

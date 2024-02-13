@@ -1,4 +1,5 @@
-import { useContext } from "react";
+import { FlashList } from "@shopify/flash-list";
+import { useCallback, useContext } from "react";
 import {
 	ActivityIndicator,
 	Alert,
@@ -7,16 +8,12 @@ import {
 	Text,
 	View,
 } from "react-native";
-import {
-	FlatList,
-	TouchableWithoutFeedback,
-} from "react-native-gesture-handler";
+import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import { COLORS, FONT, SIZES } from "../../constants/theme";
 import { FloatingContext } from "../../utils/Contexts/FloatingContext";
 import { StorageContext } from "../../utils/Contexts/StorageContext";
 import { SwitchPageContext } from "../../utils/Contexts/SwitchPageContext";
 import { videoItemType } from "../../utils/TypeDeclarations";
-// import { Text, View } from "../Common/Themed";
 import VideoItem from "./VideoItem";
 
 const VideoList = ({
@@ -29,6 +26,10 @@ const VideoList = ({
 	const switchContext = useContext(SwitchPageContext);
 	const storageContext = useContext(StorageContext);
 	const floatingContext = useContext(FloatingContext);
+	const ItemSeparator = useCallback(
+		() => <View style={{ height: SIZES.small }} />,
+		[]
+	);
 	return (
 		<>
 			{isLoading ? (
@@ -145,12 +146,13 @@ const VideoList = ({
 						</View>
 					</View>
 
-					<FlatList
+					<FlashList
 						showsVerticalScrollIndicator={false}
 						data={videoData}
 						renderItem={({ item }) => <VideoItem video={item} />}
-						contentContainerStyle={{ rowGap: SIZES.small }}
+						ItemSeparatorComponent={ItemSeparator}
 						keyExtractor={(item) => item.id.videoId}
+						estimatedItemSize={400}
 					/>
 				</View>
 			)}

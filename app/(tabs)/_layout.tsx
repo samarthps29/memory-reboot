@@ -1,7 +1,6 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
 import { StyleSheet, Text } from "react-native";
-// import { Text } from "../../components/Common/Themed";
 import { COLORS, FONT, SIZES } from "../../constants/theme";
 
 export default function TabLayout() {
@@ -14,7 +13,7 @@ export default function TabLayout() {
 					borderTopWidth: 0,
 					shadowOpacity: 0,
 					elevation: 0,
-					backgroundColor: "black",
+					backgroundColor: "#0a0a0a",
 					position: "absolute",
 					height: 48,
 				},

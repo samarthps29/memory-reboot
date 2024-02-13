@@ -3,7 +3,6 @@ import { StyleSheet, View } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 import { COLORS, FONT, SIZES } from "../../constants/theme";
 import { StorageContext } from "../../utils/Contexts/StorageContext";
-// import { View } from "./Themed";
 
 const SearchBar = ({
 	searchTerm,

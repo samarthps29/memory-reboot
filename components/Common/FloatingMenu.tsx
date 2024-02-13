@@ -263,7 +263,7 @@ const FloatingMenu = ({
 						storageContext?.deleteSong(song.sid);
 					}}
 				>
-					<Text style={styles.menuText}>Delete</Text>
+					<Text style={styles.menuText}>Remove Permanently</Text>
 				</MenuOption>
 				<MenuOption
 					customStyles={{

@@ -1,10 +1,11 @@
 import { useContext } from "react";
-import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import { COLORS, FONT, SIZES } from "../../constants/theme";
 import { AudioContext } from "../../utils/Contexts/AudioContext";
 import { songItemType } from "../../utils/TypeDeclarations";
 import { reducedTitle } from "../../utils/global";
 import FloatingMenu from "../Common/FloatingMenu";
+import { Image } from "expo-image";
 
 const SongItem = ({
 	song,
@@ -47,6 +48,7 @@ const SongItem = ({
 			<View style={styles.container}>
 				<View style={styles.imageContainer}>
 					<Image
+						cachePolicy="disk"
 						source={{ uri: song.thumbnail }}
 						style={{
 							flex: 1,
