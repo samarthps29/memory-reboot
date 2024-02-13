@@ -9,9 +9,9 @@ export const ytTemplate = (str: string) => {
 };
 
 export const checkSubstring = (substring: string, stringArr: string[]) => {
-	stringArr.forEach((item) => {
-		if (item.includes(substring)) return item;
-	});
+	for (const idx in stringArr) {
+		if (stringArr[idx].includes(substring)) return stringArr[idx];
+	}
 
 	return null;
 };

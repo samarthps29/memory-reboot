@@ -11,7 +11,6 @@ import { COLORS, FONT, SIZES } from "../../constants/theme";
 import { AudioContext } from "../../utils/Contexts/AudioContext";
 import { StorageContext } from "../../utils/Contexts/StorageContext";
 import { songItemType } from "../../utils/TypeDeclarations";
-// import { View, Text } from "./Themed";
 import { renderers } from "react-native-popup-menu";
 import { reducedTitle } from "../../utils/global";
 const { SlideInMenu } = renderers;

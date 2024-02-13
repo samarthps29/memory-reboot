@@ -210,6 +210,7 @@ export const StorageContextProvider = ({
 	const exportData = async () => {
 		const files = await SAF.readDirectoryAsync(directoryUri);
 		const fileUri = checkSubstring("exportedData.txt", files);
+		console.log(fileUri);
 		if (fileUri !== null) {
 			Alert.alert(
 				"Warning",
