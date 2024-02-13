@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useContext, useState } from "react";
-import { StyleSheet, useColorScheme } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import {
 	Menu,
 	MenuOption,
@@ -11,7 +11,7 @@ import { COLORS, FONT, SIZES } from "../../constants/theme";
 import { AudioContext } from "../../utils/Contexts/AudioContext";
 import { StorageContext } from "../../utils/Contexts/StorageContext";
 import { songItemType } from "../../utils/TypeDeclarations";
-import { View, Text } from "./Themed";
+// import { View, Text } from "./Themed";
 import { renderers } from "react-native-popup-menu";
 import { reducedTitle } from "../../utils/global";
 const { SlideInMenu } = renderers;
@@ -28,27 +28,19 @@ const FloatingMenu = ({
 	const [renderPlaylists, setRenderPlaylists] = useState(false);
 	const storageContext = useContext(StorageContext);
 	const audioContext = useContext(AudioContext);
-	const colorScheme = useColorScheme();
 	return (
 		<Menu style={styles.container} renderer={SlideInMenu}>
 			<MenuTrigger>
 				<Ionicons
 					name="reorder-four-outline"
 					size={20}
-					color={
-						colorScheme === "light"
-							? "black"
-							: COLORS.whiteSecondary
-					}
+					color={COLORS.whiteSecondary}
 				/>
 			</MenuTrigger>
 			<MenuOptions
 				customStyles={{
 					optionsContainer: {
-						backgroundColor:
-							colorScheme === "light"
-								? COLORS.whiteSecondary
-								: COLORS.darkSecondary,
+						backgroundColor: COLORS.darkSecondary,
 						paddingHorizontal: 8,
 						paddingVertical: 8,
 						borderRadius: 0,
@@ -67,10 +59,7 @@ const FloatingMenu = ({
 						optionWrapper: [
 							styles.menuOption,
 							{
-								backgroundColor:
-									colorScheme === "light"
-										? COLORS.whiteSecondary
-										: COLORS.darkSecondary,
+								backgroundColor: COLORS.darkSecondary,
 								marginBottom: 2,
 							},
 						],
@@ -86,11 +75,7 @@ const FloatingMenu = ({
 							{
 								color:
 									audioContext?.songInfo["sid"] === song.sid
-										? colorScheme === "light"
-											? "#56497d"
-											: COLORS.primary
-										: colorScheme === "light"
-										? "black"
+										? COLORS.primary
 										: COLORS.whitePrimary,
 								fontFamily: FONT.bold,
 							},
@@ -116,28 +101,10 @@ const FloatingMenu = ({
 										return false;
 									}}
 									customStyles={{
-										optionWrapper: [
-											styles.menuOption,
-											{
-												backgroundColor:
-													colorScheme === "light"
-														? COLORS.whiteSecondary
-														: COLORS.darkSecondary,
-											},
-										],
+										optionWrapper: styles.menuOption,
 									}}
 								>
-									<Text
-										style={[
-											styles.menuText,
-											{
-												color:
-													colorScheme === "light"
-														? "black"
-														: COLORS.whitePrimary,
-											},
-										]}
-									>
+									<Text style={styles.menuText}>
 										Add to Playlist
 									</Text>
 								</MenuOption>
@@ -145,15 +112,7 @@ const FloatingMenu = ({
 
 						<MenuOption
 							customStyles={{
-								optionWrapper: [
-									styles.menuOption,
-									{
-										backgroundColor:
-											colorScheme === "light"
-												? COLORS.whiteSecondary
-												: COLORS.darkSecondary,
-									},
-								],
+								optionWrapper: styles.menuOption,
 							}}
 							onSelect={() => {
 								audioContext?.setUserQueue((prev) => {
@@ -170,32 +129,12 @@ const FloatingMenu = ({
 								});
 							}}
 						>
-							<Text
-								style={[
-									styles.menuText,
-									{
-										color:
-											colorScheme === "light"
-												? "black"
-												: COLORS.whitePrimary,
-									},
-								]}
-							>
-								Add to Queue
-							</Text>
+							<Text style={styles.menuText}>Add to Queue</Text>
 						</MenuOption>
 						{currPlaylist !== "0" && (
 							<MenuOption
 								customStyles={{
-									optionWrapper: [
-										styles.menuOption,
-										{
-											backgroundColor:
-												colorScheme === "light"
-													? COLORS.whiteSecondary
-													: COLORS.darkSecondary,
-										},
-									],
+									optionWrapper: styles.menuOption,
 								}}
 								onSelect={() => {
 									storageContext?.setSongData((prev) => {
@@ -218,17 +157,7 @@ const FloatingMenu = ({
 									storageContext?.setSaveToggle(true);
 								}}
 							>
-								<Text
-									style={[
-										styles.menuText,
-										{
-											color:
-												colorScheme === "light"
-													? "black"
-													: COLORS.whitePrimary,
-										},
-									]}
-								>
+								<Text style={styles.menuText}>
 									Remove from Playlist
 								</Text>
 							</MenuOption>
@@ -236,15 +165,7 @@ const FloatingMenu = ({
 						{audioContext?.showQueue !== "" && (
 							<MenuOption
 								customStyles={{
-									optionWrapper: [
-										styles.menuOption,
-										{
-											backgroundColor:
-												colorScheme === "light"
-													? COLORS.whiteSecondary
-													: COLORS.darkSecondary,
-										},
-									],
+									optionWrapper: styles.menuOption,
 								}}
 								onSelect={() => {
 									const selectedQueue =
@@ -298,17 +219,7 @@ const FloatingMenu = ({
 									}
 								}}
 							>
-								<Text
-									style={[
-										styles.menuText,
-										{
-											color:
-												colorScheme === "light"
-													? "black"
-													: COLORS.whitePrimary,
-										},
-									]}
-								>
+								<Text style={styles.menuText}>
 									Remove from Queue
 								</Text>
 							</MenuOption>
@@ -321,15 +232,7 @@ const FloatingMenu = ({
 							return (
 								<MenuOption
 									customStyles={{
-										optionWrapper: [
-											styles.menuOption,
-											{
-												backgroundColor:
-													colorScheme === "light"
-														? COLORS.whiteSecondary
-														: COLORS.darkSecondary,
-											},
-										],
+										optionWrapper: styles.menuOption,
 									}}
 									key={item.pid}
 									onSelect={() => {
@@ -347,17 +250,7 @@ const FloatingMenu = ({
 										setRenderPlaylists(false);
 									}}
 								>
-									<Text
-										style={[
-											styles.menuText,
-											{
-												color:
-													colorScheme === "light"
-														? "black"
-														: COLORS.whitePrimary,
-											},
-										]}
-									>
+									<Text style={styles.menuText}>
 										{item.pname}
 									</Text>
 								</MenuOption>
@@ -365,33 +258,23 @@ const FloatingMenu = ({
 					})}
 				<MenuOption
 					customStyles={{
-						optionWrapper: [
-							styles.menuOption,
-							{
-								backgroundColor:
-									colorScheme === "light"
-										? COLORS.whiteSecondary
-										: COLORS.darkSecondary,
-							},
-						],
+						optionWrapper: styles.menuOption,
+					}}
+					onSelect={() => {
+						storageContext?.deleteSong(song.sid);
+					}}
+				>
+					<Text style={styles.menuText}>Delete</Text>
+				</MenuOption>
+				<MenuOption
+					customStyles={{
+						optionWrapper: styles.menuOption,
 					}}
 					onSelect={() => {
 						setRenderPlaylists(false);
 					}}
 				>
-					<Text
-						style={[
-							styles.menuText,
-							{
-								color:
-									colorScheme === "light"
-										? "black"
-										: COLORS.whitePrimary,
-							},
-						]}
-					>
-						Cancel
-					</Text>
+					<Text style={styles.menuText}>Cancel</Text>
 				</MenuOption>
 			</MenuOptions>
 		</Menu>
@@ -411,6 +294,7 @@ const styles = StyleSheet.create({
 		overflow: "scroll",
 	},
 	menuText: {
+		color: COLORS.whitePrimary,
 		fontFamily: FONT.medium,
 		fontSize: 16,
 	},

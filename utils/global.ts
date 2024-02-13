@@ -8,6 +8,14 @@ export const ytTemplate = (str: string) => {
 	return `https://www.youtube.com/watch?v=${str}`;
 };
 
+export const checkSubstring = (substring: string, stringArr: string[]) => {
+	stringArr.forEach((item) => {
+		if (item.includes(substring)) return item;
+	});
+
+	return null;
+};
+
 export const reducedTitle = (str: string, reductionParam: number = 40) => {
 	const filteredString = filter(str);
 	if (filteredString.length > reductionParam) {

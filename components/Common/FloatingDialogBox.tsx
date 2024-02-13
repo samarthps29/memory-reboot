@@ -1,9 +1,9 @@
 import { useContext, useState } from "react";
-import { Pressable, StatusBar, StyleSheet, useColorScheme } from "react-native";
+import { Pressable, StatusBar, StyleSheet, Text, View } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 import { COLORS, FONT, SIZES } from "../../constants/theme";
 import { FloatingContext } from "../../utils/Contexts/FloatingContext";
-import { Text, View } from "./Themed";
+// import { Text, View } from "./Themed";
 
 const FloatingDialogBox = () => {
 	const floatingContext = useContext(FloatingContext);
@@ -20,38 +20,16 @@ const FloatingDialogBox = () => {
 			return placeholder || "";
 		else return "";
 	});
-	const colorScheme = useColorScheme();
 	return (
-		<View
-			style={[
-				styles.container,
-				{
-					backgroundColor:
-						colorScheme === "light" ? "#00000080" : "#00000099",
-				},
-			]}
-		>
-			<View
-				style={[
-					styles.floatContainer,
-					{
-						backgroundColor:
-							colorScheme === "light"
-								? "#fff"
-								: COLORS.darkSecondary,
-					},
-				]}
-			>
+		<View style={styles.container}>
+			<View style={styles.floatContainer}>
 				<View style={styles.titleContainer}>
 					<Text
 						style={{
 							fontFamily: FONT.bold,
 							textAlign: "left",
 							fontSize: 20,
-							color:
-								colorScheme === "light"
-									? "black"
-									: COLORS.whitePrimary,
+							color: COLORS.whitePrimary,
 						}}
 					>
 						{title}
@@ -62,24 +40,8 @@ const FloatingDialogBox = () => {
 					onChangeText={(text) => {
 						setInputVal!(text);
 					}}
-					placeholderTextColor={
-						colorScheme === "light"
-							? COLORS.gray
-							: COLORS.whiteSecondary
-					}
-					style={[
-						styles.inputContainer,
-						{
-							backgroundColor:
-								colorScheme === "light"
-									? COLORS.whiteSecondary
-									: COLORS.darkTertiary,
-							color:
-								colorScheme === "light"
-									? "black"
-									: COLORS.whitePrimary,
-						},
-					]}
+					placeholderTextColor={COLORS.whiteSecondary}
+					style={styles.inputContainer}
 					placeholder={placeholder}
 				/>
 				<View style={styles.buttonContainer}>
@@ -132,6 +94,7 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 		justifyContent: "center",
 		position: "absolute",
+		backgroundColor: "#00000099",
 	},
 	floatContainer: {
 		width: "80%",
@@ -140,6 +103,7 @@ const styles = StyleSheet.create({
 		justifyContent: "center",
 		borderRadius: SIZES.medium,
 		paddingVertical: 40,
+		backgroundColor: COLORS.darkSecondary,
 	},
 	titleContainer: {
 		width: "80%",
@@ -153,6 +117,8 @@ const styles = StyleSheet.create({
 		borderRadius: SIZES.medium,
 		marginBottom: SIZES.small,
 		fontFamily: FONT.regular,
+		backgroundColor: COLORS.darkTertiary,
+		color: COLORS.whitePrimary,
 	},
 	buttonContainer: {
 		width: "80%",

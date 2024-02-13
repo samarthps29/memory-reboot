@@ -1,19 +1,14 @@
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import {
-	DarkTheme,
-	DefaultTheme,
-	ThemeProvider,
-} from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import { SplashScreen, Stack } from "expo-router";
 import { useEffect } from "react";
 import { useColorScheme } from "react-native";
-import { SwitchPageContextProvider } from "../utils/Contexts/SwitchPageContext";
-import { AudioContextProvider } from "../utils/Contexts/AudioContext";
-import { StorageContextProvider } from "../utils/Contexts/StorageContext";
-import { FloatingContextProvider } from "../utils/Contexts/FloatingContext";
 import { MenuProvider } from "react-native-popup-menu";
+import { AudioContextProvider } from "../utils/Contexts/AudioContext";
+import { FloatingContextProvider } from "../utils/Contexts/FloatingContext";
 import { NotificationProvider } from "../utils/Contexts/NotificationContext";
+import { StorageContextProvider } from "../utils/Contexts/StorageContext";
+import { SwitchPageContextProvider } from "../utils/Contexts/SwitchPageContext";
 
 export {
 	// Catch any errors thrown by the Layout component.
@@ -51,27 +46,23 @@ function RootLayoutNav() {
 	const colorScheme = useColorScheme();
 
 	return (
-		<ThemeProvider
-			value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
-		>
-			<MenuProvider>
-				<NotificationProvider>
-					<StorageContextProvider>
-						<FloatingContextProvider>
-							<AudioContextProvider>
-								<SwitchPageContextProvider>
-									<Stack>
-										<Stack.Screen
-											name="index"
-											options={{ headerShown: false }}
-										/>
-									</Stack>
-								</SwitchPageContextProvider>
-							</AudioContextProvider>
-						</FloatingContextProvider>
-					</StorageContextProvider>
-				</NotificationProvider>
-			</MenuProvider>
-		</ThemeProvider>
+		<MenuProvider>
+			<NotificationProvider>
+				<StorageContextProvider>
+					<FloatingContextProvider>
+						<AudioContextProvider>
+							<SwitchPageContextProvider>
+								<Stack>
+									<Stack.Screen
+										name="(tabs)"
+										options={{ headerShown: false }}
+									/>
+								</Stack>
+							</SwitchPageContextProvider>
+						</AudioContextProvider>
+					</FloatingContextProvider>
+				</StorageContextProvider>
+			</NotificationProvider>
+		</MenuProvider>
 	);
 }

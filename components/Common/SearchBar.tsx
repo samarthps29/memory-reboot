@@ -1,9 +1,9 @@
-import { StyleSheet, useColorScheme } from "react-native";
+import { useContext } from "react";
+import { StyleSheet, View } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 import { COLORS, FONT, SIZES } from "../../constants/theme";
-import { View } from "./Themed";
-import { useContext } from "react";
 import { StorageContext } from "../../utils/Contexts/StorageContext";
+// import { View } from "./Themed";
 
 const SearchBar = ({
 	searchTerm,
@@ -16,7 +16,6 @@ const SearchBar = ({
 	source: string;
 	handleSearch: () => void;
 }) => {
-	const colorScheme = useColorScheme();
 	const storageContext = useContext(StorageContext);
 	return (
 		<View style={styles.searchContainer}>
@@ -28,23 +27,12 @@ const SearchBar = ({
 				spellCheck={false}
 				placeholder="Search for your song"
 				selectionColor={COLORS.gray}
-				style={[
-					styles.searchBar,
-					{
-						backgroundColor:
-							colorScheme === "light"
-								? COLORS.whiteSecondary
-								: COLORS.darkSecondary,
-						color: colorScheme === "light" ? "black" : "white",
-					},
-				]}
+				style={styles.searchBar}
 				value={searchTerm}
 				onChangeText={(text) => setSearchTerm(text)}
 				onSubmitEditing={handleSearch}
 				returnKeyType="search"
-				placeholderTextColor={
-					colorScheme === "light" ? COLORS.darkTertiary : COLORS.gray
-				}
+				placeholderTextColor={COLORS.gray}
 			/>
 		</View>
 	);
@@ -60,6 +48,8 @@ const styles = StyleSheet.create({
 		overflow: "hidden",
 	},
 	searchBar: {
+		backgroundColor: COLORS.darkSecondary,
+		color: "white",
 		fontFamily: FONT.medium,
 		fontSize: SIZES.medium,
 		padding: SIZES.medium,

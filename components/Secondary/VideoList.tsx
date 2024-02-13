@@ -1,22 +1,23 @@
+import { useContext } from "react";
 import {
 	ActivityIndicator,
 	Alert,
 	Pressable,
 	StyleSheet,
-	useColorScheme,
+	Text,
+	View,
 } from "react-native";
 import {
 	FlatList,
 	TouchableWithoutFeedback,
 } from "react-native-gesture-handler";
 import { COLORS, FONT, SIZES } from "../../constants/theme";
-import { videoItemType } from "../../utils/TypeDeclarations";
-import { View, Text } from "../Common/Themed";
-import VideoItem from "./VideoItem";
-import { useContext } from "react";
-import { SwitchPageContext } from "../../utils/Contexts/SwitchPageContext";
-import { StorageContext } from "../../utils/Contexts/StorageContext";
 import { FloatingContext } from "../../utils/Contexts/FloatingContext";
+import { StorageContext } from "../../utils/Contexts/StorageContext";
+import { SwitchPageContext } from "../../utils/Contexts/SwitchPageContext";
+import { videoItemType } from "../../utils/TypeDeclarations";
+// import { Text, View } from "../Common/Themed";
+import VideoItem from "./VideoItem";
 
 const VideoList = ({
 	videoData,
@@ -25,7 +26,6 @@ const VideoList = ({
 	videoData: videoItemType[];
 	isLoading: boolean;
 }) => {
-	const colorScheme = useColorScheme();
 	const switchContext = useContext(SwitchPageContext);
 	const storageContext = useContext(StorageContext);
 	const floatingContext = useContext(FloatingContext);
@@ -41,11 +41,7 @@ const VideoList = ({
 				>
 					<ActivityIndicator
 						size={32}
-						color={
-							colorScheme === "light"
-								? COLORS.darkSecondary
-								: COLORS.whiteSecondary
-						}
+						color={COLORS.whiteSecondary}
 					/>
 				</View>
 			) : (
@@ -60,24 +56,11 @@ const VideoList = ({
 						>
 							{!switchContext?.showHeader && (
 								<TouchableWithoutFeedback
-									// delayLongPress={250}
 									onPress={() => {
 										switchContext?.setShowHeader(true);
 									}}
 								>
-									<Text
-										style={[
-											styles.buttonText,
-											{
-												color:
-													colorScheme === "light"
-														? "black"
-														: COLORS.whiteSecondary,
-											},
-										]}
-									>
-										cdz
-									</Text>
+									<Text style={styles.buttonText}>cdz</Text>
 								</TouchableWithoutFeedback>
 							)}
 							<Pressable
@@ -85,38 +68,14 @@ const VideoList = ({
 									storageContext?.importData();
 								}}
 							>
-								<Text
-									style={[
-										styles.buttonText,
-										{
-											color:
-												colorScheme === "light"
-													? "black"
-													: COLORS.whiteSecondary,
-										},
-									]}
-								>
-									Import
-								</Text>
+								<Text style={styles.buttonText}>Import</Text>
 							</Pressable>
 							<Pressable
 								onPress={() => {
 									storageContext?.exportData();
 								}}
 							>
-								<Text
-									style={[
-										styles.buttonText,
-										{
-											color:
-												colorScheme === "light"
-													? "black"
-													: COLORS.whiteSecondary,
-										},
-									]}
-								>
-									Export
-								</Text>
+								<Text style={styles.buttonText}>Export</Text>
 							</Pressable>
 						</View>
 						<View
@@ -177,17 +136,7 @@ const VideoList = ({
 									}
 								}}
 							>
-								<Text
-									style={[
-										styles.buttonText,
-										{
-											color:
-												colorScheme === "light"
-													? "black"
-													: COLORS.whiteSecondary,
-										},
-									]}
-								>
+								<Text style={styles.buttonText}>
 									{storageContext?.apiKey === null
 										? "Set API Key"
 										: "Clear API Key"}
@@ -216,18 +165,20 @@ const styles = StyleSheet.create({
 		flex: 1,
 		width: "100%",
 		backgroundColor: "transparent",
-		marginTop: SIZES.medium,
+		marginTop: SIZES.small, // changed
 	},
 	buttonsContainer: {
 		width: "100%",
 		justifyContent: "space-between",
 		alignItems: "center",
-		marginBottom: SIZES.xxSmall,
+		marginBottom: SIZES.small,
 		flexDirection: "row",
 		gap: SIZES.small,
 		paddingHorizontal: 4,
+		backgroundColor: "transparent",
 	},
 	buttonText: {
 		fontFamily: FONT.regular,
+		color: COLORS.whiteSecondary,
 	},
 });

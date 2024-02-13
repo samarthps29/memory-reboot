@@ -2,18 +2,18 @@ import { SetStateAction, useContext } from "react";
 import {
 	Pressable,
 	StyleSheet,
-	useColorScheme,
 	TouchableWithoutFeedback,
-	Vibration,
+	Text,
+	View,
 } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
-import "react-native-get-random-values";
+// import "react-native-get-random-values";
 import { v4 as uuidv4 } from "uuid";
 import { COLORS, FONT, SIZES } from "../../constants/theme";
 import { FloatingContext } from "../../utils/Contexts/FloatingContext";
 import { StorageContext } from "../../utils/Contexts/StorageContext";
 import { SwitchPageContext } from "../../utils/Contexts/SwitchPageContext";
-import { Text, View } from "./Themed";
+// import { Text, View } from "./Themed";
 
 const HeaderButtons = ({
 	optionsArr,
@@ -29,14 +29,13 @@ const HeaderButtons = ({
 	const switchContext = useContext(SwitchPageContext);
 	const floatingContext = useContext(FloatingContext);
 	const storageContext = useContext(StorageContext);
-	const colorScheme = useColorScheme();
 	return (
 		<View
 			style={{
 				flexDirection: "row",
 				backgroundColor: "transparent",
 				alignItems: "center",
-				marginTop: SIZES.gap,
+				// marginTop: SIZES.gap,
 				gap: 6,
 			}}
 		>
@@ -64,10 +63,7 @@ const HeaderButtons = ({
 					style={[
 						styles.buttonContainer,
 						{
-							backgroundColor:
-								colorScheme === "light"
-									? COLORS.whiteSecondary
-									: COLORS.darkSecondary,
+							backgroundColor: COLORS.darkSecondary,
 						},
 					]}
 				>
@@ -106,10 +102,7 @@ const HeaderButtons = ({
 							style={[
 								styles.buttonText,
 								{
-									color:
-										colorScheme === "light"
-											? "black"
-											: COLORS.whitePrimary,
+									color: COLORS.whitePrimary,
 								},
 							]}
 						>
@@ -135,11 +128,7 @@ const HeaderButtons = ({
 								{
 									backgroundColor:
 										item.pid === selectedHeaderButton
-											? colorScheme === "light"
-												? COLORS.secondary
-												: "#8fd66e"
-											: colorScheme === "light"
-											? COLORS.whiteSecondary
+											? "#8fd66e"
 											: COLORS.darkSecondary,
 								},
 							]}
@@ -241,9 +230,8 @@ const HeaderButtons = ({
 										styles.buttonText,
 										{
 											color:
-												colorScheme === "light" ||
 												selectedHeaderButton ===
-													item.pid
+												item.pid
 													? "black"
 													: COLORS.whitePrimary,
 										},

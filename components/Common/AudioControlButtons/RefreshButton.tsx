@@ -6,7 +6,6 @@ import { useContext } from "react";
 
 const RefreshButton = () => {
 	const storageContext = useContext(StorageContext);
-	const colorScheme = useColorScheme();
 
 	return (
 		<Pressable
@@ -17,9 +16,7 @@ const RefreshButton = () => {
 			<Ionicons
 				name="ios-refresh"
 				size={24}
-				color={
-					colorScheme === "light" ? "black" : COLORS.whiteSecondary
-				}
+				color={COLORS.whiteSecondary}
 			/>
 		</Pressable>
 	);

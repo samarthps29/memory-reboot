@@ -8,8 +8,13 @@ import {
 	useState,
 } from "react";
 import { Alert } from "react-native";
-import { playlistItemType, songItemType } from "../TypeDeclarations";
-import { delimiter } from "../global";
+import {
+	playlistItemType,
+	songItemType,
+	videoItemType,
+} from "../TypeDeclarations";
+import { delimiter, ytTemplate } from "../global";
+import { checkSubstring } from "../global";
 
 export const StorageContext = createContext<{
 	apiKey: string | null;
@@ -31,14 +36,9 @@ export const StorageContext = createContext<{
 	setPlaylistData: React.Dispatch<SetStateAction<playlistItemType[]>>;
 	exportData: () => Promise<void>;
 	importData: () => Promise<void>;
+	pullSong: (video: videoItemType) => Promise<void>;
+	deleteSong: (sid: string) => Promise<void>;
 } | null>(null);
-
-export const checkSubstring = (substring: string, stringArr: string[]) => {
-	for (const idx in stringArr) {
-		if (stringArr[idx].includes(substring)) return stringArr[idx];
-	}
-	return null;
-};
 
 export const StorageContextProvider = ({
 	children,
@@ -157,6 +157,56 @@ export const StorageContextProvider = ({
 		setSaveToggle(false);
 	};
 
+	const pullSong = async (video: videoItemType) => {
+		const files = await SAF.readDirectoryAsync(directoryUri);
+		const dataFileUri = checkSubstring("data.txt", files);
+		if (dataFileUri !== null) {
+			const content = await SAF.readAsStringAsync(dataFileUri);
+			await SAF.writeAsStringAsync(
+				dataFileUri,
+				content + ytTemplate(video.id.videoId) + ";"
+			);
+		} else {
+			const file = await SAF.createFileAsync(
+				directoryUri,
+				"data.txt",
+				"text/plain"
+			);
+			await SAF.writeAsStringAsync(
+				file,
+				ytTemplate(video.id.videoId) + ";"
+			);
+		}
+	};
+
+	const markSongForDeletion = async (sid: string) => {
+		const files = await SAF.readDirectoryAsync(directoryUri);
+		const fileUri = checkSubstring("delete.txt", files);
+		if (fileUri !== null) {
+			const content = await SAF.readAsStringAsync(fileUri);
+			await SAF.writeAsStringAsync(fileUri, content + sid + "\n");
+		} else {
+			const createdfileUri = await SAF.createFileAsync(
+				directoryUri,
+				"delete.txt",
+				"text/plain"
+			);
+			await SAF.writeAsStringAsync(createdfileUri, sid + "\n");
+		}
+	};
+
+	const deleteSong = async (sid: string) => {
+		await markSongForDeletion(sid);
+		setSongData((prev) => {
+			return prev.filter((pitem) => pitem.sid !== sid);
+		});
+		setVidStatusDict((prev) => {
+			if (prev[sid] !== undefined && prev[sid] !== null) delete prev[sid];
+			return prev;
+		});
+		setSaveToggle(true);
+	};
+
 	const exportData = async () => {
 		const files = await SAF.readDirectoryAsync(directoryUri);
 		const fileUri = checkSubstring("exportedData.txt", files);
@@ -184,11 +234,14 @@ export const StorageContextProvider = ({
 						...item,
 						downloaded: false,
 						itemUri: "",
-						playlists: [],
+						// playlists: [],
 					}))
 				) +
 					delimiter +
-					JSON.stringify([]) +
+					// exporting all playlists except the default one
+					JSON.stringify(
+						playlistData.filter((pitem) => pitem.pid !== "0")
+					) +
 					delimiter +
 					JSON.stringify(newVidStatusDict)
 			)
@@ -310,6 +363,8 @@ export const StorageContextProvider = ({
 				setPlaylistData,
 				exportData,
 				importData,
+				pullSong,
+				deleteSong,
 			}}
 		>
 			{children}

@@ -22,7 +22,6 @@ const SecondaryScreen = ({
 				setSelectedHeaderButton={setSelectedHeaderButton}
 				setIsLoading={setIsLoading}
 			/>
-
 			<VideoList videoData={videoData} isLoading={isLoading} />
 		</>
 	);

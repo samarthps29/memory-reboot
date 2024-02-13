@@ -6,6 +6,3 @@ export const getYTdata = (query: string, key: string) => {
 		{ responseType: "json" }
 	);
 };
-
-// use res.data.items as the data arr
-// TODO: VirtualizedList: You have a large list that is slow to update - make sure your renderItem function renders components that follow React performance best practices like PureComponent, shouldComponentUpdate, etc. {"contentLength": 9010.9091796875, "dt": 581, "prevDt": 683}

@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useContext } from "react";
-import { Pressable, useColorScheme } from "react-native";
+import { Pressable } from "react-native";
 import { COLORS } from "../../../constants/theme";
 import { AudioContext } from "../../../utils/Contexts/AudioContext";
 
@@ -14,7 +14,6 @@ const ForwardButton = ({
 	fill?: boolean;
 }) => {
 	const audioContext = useContext(AudioContext);
-	const colorScheme = useColorScheme();
 
 	return (
 		<Pressable
@@ -28,9 +27,7 @@ const ForwardButton = ({
 			<Ionicons
 				name={fill ? "play-skip-forward" : "play-skip-forward-outline"}
 				size={size}
-				color={
-					colorScheme === "light" ? "black" : COLORS.whiteSecondary
-				}
+				color={COLORS.whiteSecondary}
 			/>
 		</Pressable>
 	);

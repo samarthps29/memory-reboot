@@ -1,19 +1,16 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useContext } from "react";
-import { Pressable, useColorScheme } from "react-native";
+import { Pressable, View } from "react-native";
 import { COLORS } from "../../../constants/theme";
 import { AudioContext } from "../../../utils/Contexts/AudioContext";
-import { View } from "../Themed";
 
 const LoopButton = () => {
 	const audioContext = useContext(AudioContext);
-	const colorScheme = useColorScheme();
 
 	return (
 		<Pressable
 			style={{ alignItems: "center", justifyContent: "center" }}
 			onPress={() => {
-				// console.log("Loop pressed");
 				audioContext?.setSongInfo((prev) => {
 					const newLoopValue =
 						prev["loop"] === "no" || prev["loop"] === undefined
@@ -28,11 +25,7 @@ const LoopButton = () => {
 				size={24}
 				color={
 					audioContext?.songInfo["loop"] === "yes"
-						? colorScheme === "light"
-							? "#56497d"
-							: COLORS.primary
-						: colorScheme === "light"
-						? "black"
+						? COLORS.primary
 						: COLORS.whiteSecondary
 				}
 			/>
@@ -41,10 +34,7 @@ const LoopButton = () => {
 					style={{
 						height: 3,
 						width: 3,
-						backgroundColor:
-							colorScheme === "light"
-								? "#56497d"
-								: COLORS.primary,
+						backgroundColor: COLORS.primary,
 						borderRadius: 100,
 						position: "absolute",
 						bottom: -3,

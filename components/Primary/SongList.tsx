@@ -1,6 +1,6 @@
 import { FlashList } from "@shopify/flash-list";
 import { useCallback, useContext, useEffect, useState } from "react";
-import { Pressable, StyleSheet, useColorScheme } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import { COLORS, FONT, SIZES } from "../../constants/theme";
 import { AudioContext } from "../../utils/Contexts/AudioContext";
@@ -8,8 +8,8 @@ import { StorageContext } from "../../utils/Contexts/StorageContext";
 import { SwitchPageContext } from "../../utils/Contexts/SwitchPageContext";
 import { songItemType } from "../../utils/TypeDeclarations";
 import { durstenfeldShuffle } from "../../utils/global";
-import { Text, View } from "../Common/Themed";
 import SongItem from "./SongItem";
+// import { Text, View } from "../Common/Themed";
 
 const SongList = ({
 	searchTerm,
@@ -23,7 +23,6 @@ const SongList = ({
 	const switchContext = useContext(SwitchPageContext);
 	// local song data
 	const [songData, setSongData] = useState<songItemType[]>([]);
-	const colorScheme = useColorScheme();
 
 	const SongListItem = useCallback(
 		({ item, index }: { item: songItemType; index: number }) => (
@@ -33,7 +32,7 @@ const SongList = ({
 				selectedPlaylist={selectedHeaderButton}
 			/>
 		),
-		[]
+		[selectedHeaderButton]
 	);
 
 	const ItemSeparator = useCallback(() => <View style={{ height: 4 }} />, []);
@@ -93,10 +92,7 @@ const SongList = ({
 								style={[
 									styles.buttonText,
 									{
-										color:
-											colorScheme === "light"
-												? "black"
-												: COLORS.whiteSecondary,
+										color: COLORS.whiteSecondary,
 									},
 								]}
 							>
@@ -114,11 +110,7 @@ const SongList = ({
 								styles.buttonText,
 								{
 									color:
-										colorScheme === "light"
-											? audioContext?.showQueue === ""
-												? "black"
-												: COLORS.darkSecondary
-											: audioContext?.showQueue === ""
+										audioContext?.showQueue === ""
 											? COLORS.whitePrimary
 											: COLORS.whiteTertiary,
 								},
@@ -131,7 +123,7 @@ const SongList = ({
 								)
 								.map(
 									(matchingPlaylist) => matchingPlaylist.pname
-								)[0] || "All"}
+								)[0] || "all songs"}
 						</Text>
 					</Pressable>
 					{audioContext?.globalQueue && (
@@ -145,13 +137,8 @@ const SongList = ({
 									styles.buttonText,
 									{
 										color:
-											colorScheme === "light"
-												? audioContext?.showQueue ===
-												  "globalqueue"
-													? "black"
-													: COLORS.darkSecondary
-												: audioContext?.showQueue ===
-												  "globalqueue"
+											audioContext?.showQueue ===
+											"globalqueue"
 												? COLORS.whitePrimary
 												: COLORS.whiteTertiary,
 									},
@@ -172,13 +159,8 @@ const SongList = ({
 									styles.buttonText,
 									{
 										color:
-											colorScheme === "light"
-												? audioContext?.showQueue ===
-												  "userqueue"
-													? "black"
-													: COLORS.darkSecondary
-												: audioContext?.showQueue ===
-												  "userqueue"
+											audioContext?.showQueue ===
+											"userqueue"
 												? COLORS.whitePrimary
 												: COLORS.whiteTertiary,
 									},
@@ -212,10 +194,7 @@ const SongList = ({
 							style={[
 								styles.buttonText,
 								{
-									color:
-										colorScheme === "light"
-											? "black"
-											: COLORS.whiteSecondary,
+									color: COLORS.whiteSecondary,
 								},
 							]}
 						>
@@ -237,10 +216,7 @@ const SongList = ({
 							style={[
 								styles.buttonText,
 								{
-									color:
-										colorScheme === "light"
-											? "black"
-											: COLORS.whiteSecondary,
+									color: COLORS.whiteSecondary,
 								},
 							]}
 						>
@@ -278,16 +254,17 @@ const styles = StyleSheet.create({
 		flex: 1,
 		width: "100%",
 		backgroundColor: "transparent",
-		marginTop: SIZES.medium,
+		marginTop: SIZES.small, // changed
 	},
 	buttonsContainer: {
 		width: "100%",
 		justifyContent: "space-between",
 		alignItems: "center",
-		marginBottom: SIZES.xxSmall,
+		marginBottom: SIZES.small,
 		flexDirection: "row",
 		gap: SIZES.small,
 		paddingHorizontal: 4,
+		backgroundColor: "transparent",
 	},
 	buttonText: {
 		fontFamily: FONT.regular,

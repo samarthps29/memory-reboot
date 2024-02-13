@@ -1,14 +1,12 @@
 import Slider from "@react-native-community/slider";
 import { useContext, useEffect, useState } from "react";
-import { StyleSheet, useColorScheme } from "react-native";
-import { TouchableWithoutFeedback } from "react-native-gesture-handler";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import { COLORS, FONT, SIZES } from "../../constants/theme";
 import { AudioContext } from "../../utils/Contexts/AudioContext";
 import { NotificationContext } from "../../utils/Contexts/NotificationContext";
 import { SwitchPageContext } from "../../utils/Contexts/SwitchPageContext";
 import { queueType } from "../../utils/TypeDeclarations";
-import { convertToTime } from "../../utils/global";
-import { reducedTitle } from "../../utils/global";
+import { convertToTime, reducedTitle } from "../../utils/global";
 import {
 	BackButton,
 	ForwardButton,
@@ -16,13 +14,12 @@ import {
 	PlayButton,
 	RefreshButton,
 } from "./AudioControlButtons";
-import { Text, View } from "./Themed";
+// import { Text, View } from "./Themed";
 
 const AudioPlayer = () => {
 	// TODO: KeyboardAvoidingView from react-native
 	const audioContext = useContext(AudioContext);
 	const [backClickCount, setBackClickCount] = useState<number | null>(null);
-	const colorScheme = useColorScheme();
 	const [expanded, setExpanded] = useState(false);
 	const switchContext = useContext(SwitchPageContext);
 	const notificationContext = useContext(NotificationContext);
@@ -97,172 +94,142 @@ const AudioPlayer = () => {
 	}, [notificationContext?.remoteAction]);
 
 	return (
-		<View
-			style={[
-				styles.container,
-				{
-					width: "100%",
-					backgroundColor:
-						colorScheme === "light"
-							? COLORS.whiteSecondary
-							: "#262626",
-					flexDirection: expanded ? "column" : "row",
-					paddingVertical: expanded ? SIZES.medium : SIZES.small,
-					borderTopRightRadius: expanded ? SIZES.medium : 0,
-					borderTopLeftRadius: expanded ? SIZES.medium : 0,
-				},
-			]}
-		>
+		audioContext?.songInfo["sname"] !== undefined &&
+		audioContext.songInfo["sname"] !== "" && (
 			<View
 				style={[
-					styles.songTitleContainer,
+					styles.container,
 					{
-						alignItems: expanded ? "center" : "flex-start",
-						width: expanded ? "95%" : "60%",
-						marginBottom: expanded ? 14 : 0,
+						flexDirection: expanded ? "column" : "row",
+						paddingVertical: expanded ? SIZES.medium : SIZES.small,
+						// borderTopRightRadius: expanded ? SIZES.medium : 0,
+						// borderTopLeftRadius: expanded ? SIZES.medium : 0,
 					},
 				]}
 			>
-				<TouchableWithoutFeedback
-					delayLongPress={300}
-					onLongPress={() => {
-						// Vibration.vibrate(100);
-						switchContext?.setSwitchPage((prev) => !prev);
-					}}
-					onPress={() => {
-						setExpanded((prev) => !prev);
-					}}
-				>
-					<Text
-						style={[
-							styles.songText,
-							{
-								color:
-									colorScheme === "light"
-										? "black"
-										: COLORS.whitePrimary,
-								textAlign: expanded ? "center" : "left",
-								fontSize: expanded ? 18 : 16,
-							},
-						]}
-						numberOfLines={expanded ? 2 : 1}
-					>
-						{audioContext?.songInfo["sname"] === undefined ||
-						audioContext.songInfo["sname"] === ""
-							? "Play Something"
-							: expanded
-							? reducedTitle(
-									audioContext?.songInfo["sname"] || "",
-									120
-							  )
-							: reducedTitle(
-									audioContext?.songInfo["sname"] || "",
-									120
-							  )}
-					</Text>
-				</TouchableWithoutFeedback>
-			</View>
-			<View
-				style={[
-					styles.buttonContainer,
-					{
-						width: expanded ? "95%" : "40%",
-						alignItems: "center",
-						justifyContent: expanded ? "center" : "flex-end",
-						marginBottom: expanded ? SIZES.large : 0,
-					},
-				]}
-			>
-				{!expanded && <RefreshButton />}
-				{!expanded && <LoopButton />}
-				<BackButton
-					handlePress={handleBack}
-					size={expanded ? 28 : 24}
-					fill={expanded ? true : false}
-				/>
-				<PlayButton
-					size={expanded ? 28 : 24}
-					fill={expanded ? true : false}
-					handlePress={handlePlayPause}
-				/>
-				<ForwardButton
-					handlePress={handleForward}
-					size={expanded ? 28 : 24}
-					fill={expanded ? true : false}
-				/>
-			</View>
-			{expanded && (
 				<View
-					style={{
-						width: "100%",
-						backgroundColor: "transparent",
-						alignItems: "center",
-						justifyContent: "center",
-					}}
+					style={[
+						styles.songTitleContainer,
+						{
+							alignItems: expanded ? "center" : "flex-start",
+							width: expanded ? "95%" : "60%",
+							marginBottom: expanded ? 14 : 0,
+						},
+					]}
 				>
-					<Slider
-						style={{
-							width: "98%",
-							height: 4,
-							marginBottom: SIZES.xxSmall,
+					<Pressable
+						onPress={() => {
+							setExpanded((prev) => !prev);
 						}}
-						minimumValue={0}
-						maximumValue={audioContext?.songDuration}
-						value={audioContext?.songPosition}
-						onSlidingComplete={(value: number) => {
-							audioContext?.sound?.setPositionAsync(value);
-						}}
-						minimumTrackTintColor={
-							colorScheme === "light"
-								? COLORS.darkSecondary
-								: COLORS.whitePrimary
-						}
-						maximumTrackTintColor={
-							colorScheme === "light"
-								? COLORS.darkTertiary
-								: COLORS.whiteSecondary
-						}
-						thumbTintColor={
-							colorScheme === "light" ? "black" : "white"
-						}
-						step={1000}
+					>
+						<Text
+							style={[
+								styles.songText,
+								{
+									textAlign: expanded ? "center" : "left",
+									fontSize: expanded ? 18 : 16,
+								},
+							]}
+							numberOfLines={expanded ? 2 : 1}
+						>
+							{expanded
+								? reducedTitle(
+										audioContext?.songInfo["sname"] || "",
+										120
+								  )
+								: reducedTitle(
+										audioContext?.songInfo["sname"] || "",
+										120
+								  )}
+						</Text>
+					</Pressable>
+				</View>
+				<View
+					style={[
+						styles.buttonContainer,
+						{
+							width: expanded ? "95%" : "40%",
+							alignItems: "center",
+							justifyContent: expanded ? "center" : "flex-end",
+							marginBottom: expanded ? SIZES.large : 0,
+						},
+					]}
+				>
+					{!expanded && <RefreshButton />}
+					{!expanded && <LoopButton />}
+					<BackButton
+						handlePress={handleBack}
+						size={expanded ? 28 : 24}
+						fill={expanded ? true : false}
 					/>
+					<PlayButton
+						size={expanded ? 28 : 24}
+						fill={expanded ? true : false}
+						handlePress={handlePlayPause}
+					/>
+					<ForwardButton
+						handlePress={handleForward}
+						size={expanded ? 28 : 24}
+						fill={expanded ? true : false}
+					/>
+				</View>
+				{expanded && (
 					<View
 						style={{
-							justifyContent: "space-between",
-							alignItems: "center",
-							width: "95%",
+							width: "100%",
 							backgroundColor: "transparent",
-							flexDirection: "row",
-							paddingHorizontal: 8,
+							alignItems: "center",
+							justifyContent: "center",
 						}}
 					>
-						<Text
+						<Slider
 							style={{
-								fontFamily: FONT.regular,
-								color:
-									colorScheme === "light"
-										? "black"
-										: COLORS.whitePrimary,
+								width: "98%",
+								height: 4,
+								marginBottom: SIZES.xxSmall,
+							}}
+							minimumValue={0}
+							maximumValue={audioContext?.songDuration}
+							value={audioContext?.songPosition}
+							onSlidingComplete={(value: number) => {
+								audioContext?.sound?.setPositionAsync(value);
+							}}
+							minimumTrackTintColor={COLORS.whitePrimary}
+							maximumTrackTintColor={COLORS.whiteSecondary}
+							thumbTintColor={"white"}
+							step={1000}
+						/>
+						<View
+							style={{
+								justifyContent: "space-between",
+								alignItems: "center",
+								width: "95%",
+								backgroundColor: "transparent",
+								flexDirection: "row",
+								paddingHorizontal: 8,
 							}}
 						>
-							{convertToTime(audioContext?.songPosition || 0)}
-						</Text>
-						<Text
-							style={{
-								fontFamily: FONT.regular,
-								color:
-									colorScheme === "light"
-										? "black"
-										: COLORS.whiteSecondary,
-							}}
-						>
-							{convertToTime(audioContext?.songDuration || 0)}
-						</Text>
+							<Text
+								style={{
+									fontFamily: FONT.regular,
+									color: COLORS.whitePrimary,
+								}}
+							>
+								{convertToTime(audioContext?.songPosition || 0)}
+							</Text>
+							<Text
+								style={{
+									fontFamily: FONT.regular,
+									color: COLORS.whiteSecondary,
+								}}
+							>
+								{convertToTime(audioContext?.songDuration || 0)}
+							</Text>
+						</View>
 					</View>
-				</View>
-			)}
-		</View>
+				)}
+			</View>
+		)
 	);
 };
 
@@ -273,7 +240,11 @@ const styles = StyleSheet.create({
 		position: "absolute",
 		paddingHorizontal: 14,
 		alignItems: "center",
-		bottom: 0,
+		bottom: 56,
+		left: 6,
+		right: 6,
+		backgroundColor: "#262626",
+		borderRadius: SIZES.xxSmall,
 	},
 	songTitleContainer: {
 		backgroundColor: "transparent",
@@ -281,6 +252,7 @@ const styles = StyleSheet.create({
 	},
 	songText: {
 		fontFamily: FONT.medium,
+		color: COLORS.whitePrimary,
 	},
 	buttonContainer: {
 		backgroundColor: "transparent",

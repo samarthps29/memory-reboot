@@ -2,6 +2,8 @@ import { useContext, useState } from "react";
 import PrimaryHeader from "./PrimaryHeader";
 import SongList from "./SongList";
 import { SwitchPageContext } from "../../utils/Contexts/SwitchPageContext";
+import { View } from "react-native";
+import { COLORS } from "../../constants/theme";
 
 const PrimaryScreen = ({
 	selectedHeaderButton,

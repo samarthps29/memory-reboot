@@ -1,11 +1,10 @@
 import { useContext } from "react";
-import { Image, Pressable, StyleSheet, useColorScheme } from "react-native";
+import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import { COLORS, FONT, SIZES } from "../../constants/theme";
 import { AudioContext } from "../../utils/Contexts/AudioContext";
 import { songItemType } from "../../utils/TypeDeclarations";
 import { reducedTitle } from "../../utils/global";
 import FloatingMenu from "../Common/FloatingMenu";
-import { Text, View } from "../Common/Themed";
 
 const SongItem = ({
 	song,
@@ -17,7 +16,6 @@ const SongItem = ({
 	index: number;
 }) => {
 	const audioContext = useContext(AudioContext);
-	const colorScheme = useColorScheme();
 	return (
 		<Pressable
 			onPress={() => {
@@ -46,23 +44,7 @@ const SongItem = ({
 				});
 			}}
 		>
-			<View
-				style={[
-					styles.container,
-					{
-						backgroundColor:
-							colorScheme === "light"
-								? audioContext?.songInfo["sid"] === song.sid
-									? COLORS.tertiary
-									: COLORS.whiteSecondary
-								: "transparent",
-						paddingHorizontal:
-							colorScheme === "light" ? SIZES.xSmall : SIZES.gap,
-						paddingVertical:
-							colorScheme === "light" ? SIZES.xSmall : SIZES.gap,
-					},
-				]}
-			>
+			<View style={styles.container}>
 				<View style={styles.imageContainer}>
 					<Image
 						source={{ uri: song.thumbnail }}
@@ -95,18 +77,14 @@ const SongItem = ({
 							}}
 						>
 							<Text
-								numberOfLines={colorScheme === "light" ? 2 : 1}
+								numberOfLines={1}
 								style={[
 									styles.songTitle,
 									{
 										color:
 											audioContext?.songInfo["sid"] ===
 											song.sid
-												? colorScheme === "light"
-													? "black"
-													: COLORS.primary
-												: colorScheme === "light"
-												? "black"
+												? COLORS.primary
 												: COLORS.whitePrimary,
 									},
 								]}
@@ -136,19 +114,10 @@ const SongItem = ({
 							justifyContent: "space-between",
 							backgroundColor: "transparent",
 							marginTop: 2,
+							width: "75%",
 						}}
 					>
-						<Text
-							style={[
-								styles.artistTitle,
-								{
-									color:
-										colorScheme === "light"
-											? "black"
-											: COLORS.whiteTertiary,
-								},
-							]}
-						>
+						<Text style={styles.artistTitle} numberOfLines={1}>
 							{reducedTitle(song.aname)}
 						</Text>
 					</View>
@@ -184,9 +153,6 @@ const styles = StyleSheet.create({
 	artistTitle: {
 		fontFamily: FONT.regular,
 		fontSize: 14,
-	},
-	durationTitle: {
-		fontFamily: FONT.regular,
-		fontSize: 14,
+		color: COLORS.whiteTertiary,
 	},
 });

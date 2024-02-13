@@ -1,24 +1,20 @@
 import dayjs from "dayjs";
-import { StorageAccessFramework as SAF } from "expo-file-system";
 import { useContext } from "react";
 import {
 	Image,
 	Linking,
 	Pressable,
 	StyleSheet,
-	useColorScheme,
+	View,
+	Text,
 } from "react-native";
 import { COLORS, FONT, SIZES } from "../../constants/theme";
-import {
-	StorageContext,
-	checkSubstring,
-} from "../../utils/Contexts/StorageContext";
-import { filter, ytTemplate } from "../../utils/global";
+import { StorageContext } from "../../utils/Contexts/StorageContext";
 import { songItemType, videoItemType } from "../../utils/TypeDeclarations";
-import { Text, View } from "../Common/Themed";
+import { filter, ytTemplate } from "../../utils/global";
+// import { Text, View } from "../Common/Themed";
 
 const VideoItem = ({ video }: { video: videoItemType }) => {
-	const colorScheme = useColorScheme();
 	const storageContext = useContext(StorageContext);
 	const handleDownload = async () => {
 		if (
@@ -47,27 +43,7 @@ const VideoItem = ({ video }: { video: videoItemType }) => {
 			});
 
 			// write the url to data.txt
-			const files = await SAF.readDirectoryAsync(
-				storageContext?.directoryUri
-			);
-			const dataFileUri = checkSubstring("data.txt", files);
-			if (dataFileUri !== null) {
-				const content = await SAF.readAsStringAsync(dataFileUri);
-				await SAF.writeAsStringAsync(
-					dataFileUri,
-					content + ytTemplate(video.id.videoId) + ";"
-				);
-			} else {
-				const file = await SAF.createFileAsync(
-					storageContext?.directoryUri,
-					"data.txt",
-					"text/plain"
-				);
-				await SAF.writeAsStringAsync(
-					file,
-					ytTemplate(video.id.videoId) + ";"
-				);
-			}
+			storageContext.pullSong(video);
 		}
 	};
 
@@ -91,17 +67,7 @@ const VideoItem = ({ video }: { video: videoItemType }) => {
 	};
 
 	return (
-		<View
-			style={[
-				styles.container,
-				{
-					backgroundColor:
-						colorScheme === "light"
-							? COLORS.whiteSecondary
-							: COLORS.darkSecondary,
-				},
-			]}
-		>
+		<View style={styles.container}>
 			<View style={styles.imageContainer}>
 				<Image
 					source={{ uri: video.snippet.thumbnails.high.url }}
@@ -132,10 +98,7 @@ const VideoItem = ({ video }: { video: videoItemType }) => {
 					<Text
 						style={{
 							fontFamily: FONT.medium,
-							color:
-								colorScheme === "light"
-									? "black"
-									: COLORS.whiteSecondary,
+							color: COLORS.whiteSecondary,
 						}}
 					>
 						{checkVideoAge(dayjs(video.snippet.publishedAt))}
@@ -147,17 +110,7 @@ const VideoItem = ({ video }: { video: videoItemType }) => {
 							"Download"
 						}
 					>
-						<Text
-							style={[
-								styles.artistTitle,
-								{
-									color:
-										colorScheme === "light"
-											? "black"
-											: COLORS.whiteSecondary,
-								},
-							]}
-						>
+						<Text style={styles.artistTitle}>
 							{checkAvailabilityStatus(video.id.videoId)}
 						</Text>
 					</Pressable>
@@ -175,17 +128,7 @@ const VideoItem = ({ video }: { video: videoItemType }) => {
 							Linking.openURL(ytTemplate(video.id.videoId));
 						}}
 					>
-						<Text
-							style={[
-								styles.videoTitle,
-								{
-									color:
-										colorScheme === "light"
-											? "black"
-											: COLORS.whitePrimary,
-								},
-							]}
-						>
+						<Text style={styles.videoTitle}>
 							{filter(video.snippet.title)}
 						</Text>
 					</Pressable>
@@ -202,10 +145,7 @@ const VideoItem = ({ video }: { video: videoItemType }) => {
 						style={[
 							styles.artistTitle,
 							{
-								color:
-									colorScheme === "light"
-										? "black"
-										: COLORS.whiteSecondary,
+								color: COLORS.whiteSecondary,
 							},
 						]}
 					>
@@ -225,6 +165,7 @@ const styles = StyleSheet.create({
 		// padding: SIZES.xSmall,
 		borderRadius: SIZES.medium,
 		// flexDirection: "row",
+		backgroundColor: COLORS.darkSecondary,
 	},
 	imageContainer: {
 		height: 180,
@@ -236,15 +177,13 @@ const styles = StyleSheet.create({
 	},
 	videoTitle: {
 		// width: "90%",
+		color: COLORS.whitePrimary,
 		fontFamily: FONT.medium,
 		fontSize: 18,
 	},
 	artistTitle: {
+		color: COLORS.whiteSecondary,
 		fontFamily: FONT.regular,
 		fontSize: 15,
-	},
-	durationTitle: {
-		fontFamily: FONT.regular,
-		fontSize: 14,
 	},
 });
